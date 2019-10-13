@@ -12,7 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".controllers.activities.MainActivity">
+        <activity android:name=".controllers.activities.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -21,13 +21,16 @@
         </activity>
 
         <activity
+            android:name=".controllers.activities.MainActivity"
+            android:label="@string/title_main"/>
+        <activity
             android:name=".controllers.activities.YourLunchActivity"
-            android:parentActivityName=".controllers.activities.MainActivity"
-            android:label="@string/title_activity_yourlunch"/>
+            android:label="@string/title_activity_yourlunch"
+            android:parentActivityName=".controllers.activities.MainActivity" />
         <activity
             android:name=".controllers.activities.SettingsActivity"
-            android:parentActivityName=".controllers.activities.MainActivity"
-            android:label="@string/title_activity_settings"/>
+            android:label="@string/title_activity_settings"
+            android:parentActivityName=".controllers.activities.MainActivity" />
     </application>
 
 </manifest>
