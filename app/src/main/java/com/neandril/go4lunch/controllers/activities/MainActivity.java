@@ -5,18 +5,19 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.appcompat.widget.SearchView;
 
+import com.firebase.ui.auth.AuthUI;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.neandril.go4lunch.R;
@@ -101,7 +102,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 startActivity(settings);
                 break;
             case R.id.nav_logout:
-                Toast.makeText(this, "LogOut Clicked", Toast.LENGTH_SHORT).show();
+                signOutUserFromFirebase();
                 break;
         }
         return true;
@@ -151,5 +152,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else {
             super.onBackPressed();
         }
+    }
+
+    private void signOutUserFromFirebase() {
+        AuthUI.getInstance()
+                .signOut(this)
+                .addOnSuccessListener(this, this.updateUIAfterRESTRequestsCompleted());
+    }
+
+    private OnSuccessListener<Void> updateUIAfterRESTRequestsCompleted(){
+        return new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                finish();
+            }
+        };
     }
 }

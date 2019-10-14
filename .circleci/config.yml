@@ -40,8 +40,9 @@ jobs:
       # Build APKs
       - run:
           name: Assemble APKs
-          command: ./gradlew assembleAndroidTest assemble
-
+          #command: ./gradlew assembleAndroidTest assemble
+          command: ./gradlew assembleDebugAndroidTest assembleDebug
+          
       # Configure Google gcloud SDK
       - run:
           name: Dump Google Cloud Credentials to file
