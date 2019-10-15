@@ -6,11 +6,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 
 import com.neandril.go4lunch.R;
+import com.neandril.go4lunch.controllers.base.BaseFragment;
 
-public class MapViewFragment extends Fragment {
+public class MapViewFragment extends BaseFragment {
 
     public MapViewFragment() {
         // Required empty constructor

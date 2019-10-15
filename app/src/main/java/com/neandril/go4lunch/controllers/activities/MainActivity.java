@@ -2,38 +2,65 @@ package com.neandril.go4lunch.controllers.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.neandril.go4lunch.R;
+import com.neandril.go4lunch.controllers.base.BaseActivity;
 import com.neandril.go4lunch.controllers.fragments.ListViewFragment;
 import com.neandril.go4lunch.controllers.fragments.MapViewFragment;
 import com.neandril.go4lunch.controllers.fragments.WorkmatesFragment;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, BottomNavigationView.OnNavigationItemSelectedListener {
+import butterknife.BindView;
 
-    private DrawerLayout mDrawerLayout;
-    private Toolbar mToolbar;
+public class MainActivity extends BaseActivity
+        implements NavigationView.OnNavigationItemSelectedListener,
+        BottomNavigationView.OnNavigationItemSelectedListener {
+
+    // Widgets
+    @BindView(R.id.activity_main_constraint_layout) ConstraintLayout mConstraintLayout;
+    @BindView(R.id.drawer_layout) DrawerLayout mDrawerLayout;
+    @BindView(R.id.nav_view) NavigationView mNavigationView;
+    @BindView(R.id.bottom_navigation_view) BottomNavigationView mBottomNavigationView;
+    @BindView(R.id.toolbar) Toolbar mToolbar;
+
+    /**
+     * BASE METHODS
+     */
+    @Override
+    protected int getActivityLayout() {
+        return R.layout.activity_main;
+    }
+
+    @Override
+    protected View getConstraintLayout() {
+        return mConstraintLayout;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
 
         showFragment(new MapViewFragment());
 
@@ -42,13 +69,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         configureNavigationView();
         configureBottomNavigationView();
 
+        getUserInformations();
     }
 
     /**
-     * UI CONFIGURATION
+     * CONFIGURATIONS
      */
     private void configureToolbar() {
-        this.mToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
         if (getActionBar() != null) {
             getActionBar().setHomeButtonEnabled(true);
@@ -56,7 +83,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void configureDrawer() {
-        this.mDrawerLayout = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this,
                 mDrawerLayout,
@@ -69,13 +95,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void configureNavigationView() {
-        NavigationView mNavigationView = findViewById(R.id.nav_view);
         mNavigationView.setNavigationItemSelectedListener(this);
     }
 
     private void configureBottomNavigationView() {
-        // VARIABLES
-        BottomNavigationView mBottomNavigationView = findViewById(R.id.bottom_navigation_view);
         mBottomNavigationView.setOnNavigationItemSelectedListener(this);
     }
 
@@ -154,6 +177,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
+    /**
+     * REQUESTS
+     */
+
     private void signOutUserFromFirebase() {
         AuthUI.getInstance()
                 .signOut(this)
@@ -161,11 +188,43 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private OnSuccessListener<Void> updateUIAfterRESTRequestsCompleted(){
-        return new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void aVoid) {
-                finish();
+        return aVoid -> finish();
+    }
+
+    /**
+     * UI
+     */
+
+    private void getUserInformations() {
+        mNavigationView.setNavigationItemSelectedListener(this);
+
+        String email;
+        String username;
+
+        View headerView = mNavigationView.getHeaderView(0);
+        ImageView profileThumbnail = headerView.findViewById(R.id.nav_header_profile_thumbnail);
+        TextView tvName = headerView.findViewById(R.id.nav_header_user_name);
+        TextView tvMail = headerView.findViewById(R.id.nav_header_user_email);
+
+        // Fill profile informations into dedicated fields
+        if (this.getCurrentUser() != null) {
+            // If profile picture is found, glide'it
+            if (this.getCurrentUser().getPhotoUrl() != null) {
+                Glide.with(this)
+                        .load(this.getCurrentUser().getPhotoUrl())
+                        .apply(RequestOptions.circleCropTransform())
+                        .into(profileThumbnail);
             }
-        };
+
+            // Get email and username and display them on the header
+            email = TextUtils.isEmpty(this.getCurrentUser().getEmail()) ?
+                    getString(R.string.info_no_email_found) : this.getCurrentUser().getEmail();
+
+            username = TextUtils.isEmpty(this.getCurrentUser().getDisplayName()) ?
+                    getString(R.string.info_no_username_found) : this.getCurrentUser().getDisplayName();
+
+            tvMail.setText(email);
+            tvName.setText(username);
+        }
     }
 }

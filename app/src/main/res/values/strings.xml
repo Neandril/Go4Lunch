@@ -16,9 +16,8 @@
     <string name="menu_home">Your Lunch</string>
     <string name="menu_gallery">Settings</string>
     <string name="menu_slideshow">Logout</string>
-    <string name="username">User Name</string>
-    <string name="user_eMail">user@mail.com</string>
     <string name="profile_content_description">Profile thumbnail</string>
+    <string name="image_nav_view_content_description">Logo</string>
     <string name="info_no_email_found">No email found</string>
     <string name="info_no_username_found">No user name found</string>
 
