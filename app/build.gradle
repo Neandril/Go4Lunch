@@ -30,12 +30,19 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
     implementation 'com.google.android.material:material:1.0.0'
 
+    // DEXTER (permissions management)
+    implementation 'com.karumi:dexter:6.0.0'
+
     // FIREBASE
     implementation "com.google.firebase:firebase-core:17.2.0"
     implementation 'com.firebaseui:firebase-ui-auth:5.1.0'
     implementation 'com.facebook.android:facebook-android-sdk:[4,5)'
 
-    //ButterKnife
+    // GOOGLE
+    implementation 'com.google.android.gms:play-services-maps:17.0.0'
+    implementation 'com.google.android.gms:play-services-location:17.0.0'
+
+    // BUTTERKNIFE
     implementation 'com.jakewharton:butterknife:10.2.0'
     annotationProcessor 'com.jakewharton:butterknife-compiler:10.2.0'
 

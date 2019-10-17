@@ -12,13 +12,14 @@ import com.neandril.go4lunch.controllers.base.BaseFragment;
 
 public class WorkmatesFragment extends BaseFragment {
 
-    public WorkmatesFragment() {
-        // Required empty constructor
-    }
-
-    @Nullable
+    /**
+     * BASE METHODS
+     */
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_workmates, container, false);
+    protected int getFragmentLayout() { return R.layout.fragment_workmates; }
+
+    @Override
+    protected void configureFragment() {
+
     }
 }

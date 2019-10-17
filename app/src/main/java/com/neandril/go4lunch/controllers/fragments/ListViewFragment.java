@@ -12,14 +12,14 @@ import com.neandril.go4lunch.controllers.base.BaseFragment;
 
 public class ListViewFragment extends BaseFragment {
 
-    public ListViewFragment() {
-        // Required empty constructor
-    }
-
-    @Nullable
+    /**
+     * BASE METHODS
+     */
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_listview, container, false);
-    }
+    protected int getFragmentLayout() { return R.layout.fragment_listview; }
 
+    @Override
+    protected void configureFragment() {
+
+    }
 }

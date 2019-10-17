@@ -3,6 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.neandril.go4lunch">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+
     <application
         android:name=".ApplicationInit"
         android:allowBackup="true"
@@ -12,6 +15,11 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyBkjaxczMoqyJzCQnRRIJgeJoubLGdSEK0"/>
+
         <activity android:name=".controllers.activities.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
