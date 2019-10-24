@@ -176,7 +176,6 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback 
      */
 
     private void getLocationSettings() {
-        Log.d(TAG, "getLocationSettings: Retrieving location settings");
         // Create a location request
         LocationRequest mLocationRequest = new LocationRequest();
         mLocationRequest.setInterval(9000);
@@ -195,29 +194,19 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback 
         task.addOnFailureListener(Objects.requireNonNull(getActivity()), e -> {
             int statusCode = ((ApiException) e).getStatusCode();
             switch (statusCode) {
+                // Location Settings are not satisfied
                 case CommonStatusCodes.RESOLUTION_REQUIRED:
-                    // Location settings are not satisfied, but this can be fixed
-                    // by showing the user a dialog.
-                    try {
-                        // Show the dialog by calling startResolutionForResult(),
-                        // and check the result in onActivityResult().
-                        ResolvableApiException resolvable = (ResolvableApiException) e;
-                        resolvable.startResolutionForResult(getActivity(),
-                                REQUEST_CHECK_SETTINGS);
-                    } catch (IntentSender.SendIntentException sendEx) {
-                        // Ignore the error.
-                    }
+                    // Google Play Services not installed, or GPS disabled
+                    Toast.makeText(getContext(), R.string.common_status_code_resolution_required, Toast.LENGTH_LONG).show();
                     break;
                 case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
-                    // Location settings are not satisfied. However, we have no way
-                    // to fix the settings so we will not show the dialog.
+                    Toast.makeText(getContext(), R.string.location_status_code_change_unavailable, Toast.LENGTH_LONG).show();
                     break;
             }
         });
 
         task.addOnSuccessListener(Objects.requireNonNull(getActivity()), locationSettingsResponse -> {
             // All location settings are satisfied. The client can initialize
-            // location requests here.
             getUserCurrentLocation();
         });
     }
