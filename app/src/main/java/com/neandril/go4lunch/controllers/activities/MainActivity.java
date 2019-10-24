@@ -3,6 +3,7 @@ package com.neandril.go4lunch.controllers.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -37,6 +38,8 @@ import butterknife.BindView;
 public class MainActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         BottomNavigationView.OnNavigationItemSelectedListener {
+
+    private static final String TAG = "MainActivity";
 
     // Widgets
     @BindView(R.id.activity_main_constraint_layout) ConstraintLayout mConstraintLayout;
@@ -76,6 +79,7 @@ public class MainActivity extends BaseActivity
      * CONFIGURATIONS
      */
     private void configureToolbar() {
+        Log.d(TAG, "configureToolbar: Toolbar configuration");
         setSupportActionBar(mToolbar);
         if (getActionBar() != null) {
             getActionBar().setHomeButtonEnabled(true);
@@ -83,6 +87,7 @@ public class MainActivity extends BaseActivity
     }
 
     private void configureDrawer() {
+        Log.d(TAG, "configureDrawer: Drawer configuration");
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this,
                 mDrawerLayout,
@@ -95,16 +100,19 @@ public class MainActivity extends BaseActivity
     }
 
     private void configureNavigationView() {
+        Log.d(TAG, "configureNavigationView: NavigationView configuration");
         mNavigationView.setNavigationItemSelectedListener(this);
     }
 
     private void configureBottomNavigationView() {
+        Log.d(TAG, "configureBottomNavigationView: BottomNavigationView configuration");
         mBottomNavigationView.setOnNavigationItemSelectedListener(this);
     }
 
     // Handle click on menus
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+        Log.d(TAG, "onNavigationItemSelected: Navigation items");
         switch (menuItem.getItemId()) {
             case R.id.navigation_map:
                 showFragment(new MapViewFragment());
@@ -134,6 +142,7 @@ public class MainActivity extends BaseActivity
     // Create the searchView
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        Log.d(TAG, "onCreateOptionsMenu: Menu created");
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.menu_search, menu);
         MenuItem searchViewItem = menu.findItem(R.id.menu_search);
@@ -161,6 +170,7 @@ public class MainActivity extends BaseActivity
 
     // Method launching fragments
     private void showFragment(Fragment fragment) {
+        Log.d(TAG, "showFragment: Run selected fragment");
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
                 .replace(R.id.content_frame, fragment)
@@ -170,6 +180,7 @@ public class MainActivity extends BaseActivity
     // Handle back click to close menu
     @Override
     public void onBackPressed() {
+        Log.d(TAG, "onBackPressed: Back button pressed");
         if (this.mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
             mDrawerLayout.closeDrawer(GravityCompat.START);
         } else {
@@ -182,12 +193,14 @@ public class MainActivity extends BaseActivity
      */
 
     private void signOutUserFromFirebase() {
+        Log.d(TAG, "signOutUserFromFirebase: Log out user from Firebase");
         AuthUI.getInstance()
                 .signOut(this)
                 .addOnSuccessListener(this, this.updateUIAfterRESTRequestsCompleted());
     }
 
     private OnSuccessListener<Void> updateUIAfterRESTRequestsCompleted(){
+        Log.d(TAG, "updateUIAfterRESTRequestsCompleted: ");
         return aVoid -> finish();
     }
 
@@ -196,6 +209,7 @@ public class MainActivity extends BaseActivity
      */
 
     private void getUserInformations() {
+        Log.d(TAG, "getUserInformations: Retrieving users informations");
         mNavigationView.setNavigationItemSelectedListener(this);
 
         String email;

@@ -21,6 +21,8 @@ import butterknife.OnClick;
 
 public class LoginActivity extends BaseActivity {
 
+    private static final String TAG = "LoginActivity";
+
     // Identifier for sign-in
     private static final int RC_SIGN_IN = 123;
 
@@ -29,6 +31,7 @@ public class LoginActivity extends BaseActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        Log.d(TAG, "onCreate: onCreate");
         super.onCreate(savedInstanceState);
         if (this.isCurrentUsedLogged()) {
             this.enterInTheApp();
@@ -63,6 +66,7 @@ public class LoginActivity extends BaseActivity {
      * AUTHENTIFICATION
      */
     private void googleSignIn() {
+        Log.d(TAG, "googleSignIn: Google SignIn called");
         startActivityForResult(
                 AuthUI.getInstance()
                 .createSignInIntentBuilder()
@@ -80,6 +84,7 @@ public class LoginActivity extends BaseActivity {
     }
 
     private void facebookSignIn() {
+        Log.d(TAG, "facebookSignIn: Facebook SignIn called");
         startActivityForResult(
                 AuthUI.getInstance()
                         .createSignInIntentBuilder()
@@ -99,6 +104,7 @@ public class LoginActivity extends BaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        Log.d(TAG, "onActivityResult: ");
 
         if (data != null) {
             this.handleResponseAfterSignIn(requestCode, resultCode, data);
@@ -107,6 +113,7 @@ public class LoginActivity extends BaseActivity {
 
     // Method that handles response after SignIn Activity close
     private void handleResponseAfterSignIn(int requestCode, int resultCode, Intent data) {
+        Log.d(TAG, "handleResponseAfterSignIn: ");
         IdpResponse response = IdpResponse.fromResultIntent(data);
         if (requestCode == RC_SIGN_IN) {
             if (resultCode == RESULT_OK) { // SUCCESS
@@ -129,6 +136,7 @@ public class LoginActivity extends BaseActivity {
      */
     // Enter the application
     public void enterInTheApp() {
+        Log.d(TAG, "enterInTheApp: Enter in the application");
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }
