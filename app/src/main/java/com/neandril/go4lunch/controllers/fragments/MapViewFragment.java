@@ -2,13 +2,11 @@ package com.neandril.go4lunch.controllers.fragments;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.content.IntentSender;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.CommonStatusCodes;
-import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
@@ -39,14 +37,13 @@ import butterknife.BindView;
 
 public class MapViewFragment extends BaseFragment implements OnMapReadyCallback {
 
-    private static final String TAG = "MapViewFragment";
+    private static final String TAG = MapViewFragment.class.getSimpleName();
 
     private GoogleMap mMap;
     private SupportMapFragment mMapFragment;
     private FusedLocationProviderClient mFusedLocationProviderClient;
 
     private static final float DEFAULT_ZOOM = 15f;
-    private static final int REQUEST_CHECK_SETTINGS = 920;
     private static final int PROXIMITY_RADIUS = 10000;
     private double latitude,longitude;
 

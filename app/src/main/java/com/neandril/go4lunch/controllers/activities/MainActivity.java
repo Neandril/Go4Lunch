@@ -39,7 +39,7 @@ public class MainActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         BottomNavigationView.OnNavigationItemSelectedListener {
 
-    private static final String TAG = "MainActivity";
+    private static final String TAG = MainActivity.class.getSimpleName();
 
     // Widgets
     @BindView(R.id.activity_main_constraint_layout) ConstraintLayout mConstraintLayout;

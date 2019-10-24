@@ -1,6 +1,5 @@
 package com.neandril.go4lunch.controllers.base;
 
-import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
@@ -15,7 +14,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.neandril.go4lunch.controllers.activities.MainActivity;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -23,6 +21,8 @@ import java.security.NoSuchAlgorithmException;
 import butterknife.ButterKnife;
 
 public abstract class BaseActivity extends AppCompatActivity {
+
+    private static final String TAG = BaseActivity.class.getSimpleName();
 
     // Get objects
     protected abstract int getActivityLayout();
@@ -33,10 +33,13 @@ public abstract class BaseActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         this.setContentView(this.getActivityLayout());
 
+        Log.d(TAG, "onCreate: BaseActivity");
+
         ButterKnife.bind(this);
     }
 
     public void showSnackBar(String message) {
+        Log.d(TAG, "showSnackBar: message : " + message);
         Snackbar.make(getConstraintLayout(), message, Snackbar.LENGTH_LONG).show();
     }
 
@@ -44,10 +47,12 @@ public abstract class BaseActivity extends AppCompatActivity {
      * Permissions
      */
     protected FirebaseUser getCurrentUser() {
+        Log.d(TAG, "getCurrentUser: CurrentUser logged in Firebase");
         return FirebaseAuth.getInstance().getCurrentUser();
     }
 
     protected boolean isCurrentUsedLogged() {
+        Log.d(TAG, "isCurrentUsedLogged: " + this.getCurrentUser());
         return (this.getCurrentUser() != null);
     }
 

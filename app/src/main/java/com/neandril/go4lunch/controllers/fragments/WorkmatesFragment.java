@@ -12,6 +12,8 @@ import com.neandril.go4lunch.controllers.base.BaseFragment;
 
 public class WorkmatesFragment extends BaseFragment {
 
+    private static final String TAG = WorkmatesFragment.class.getSimpleName();
+
     /**
      * BASE METHODS
      */

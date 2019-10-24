@@ -10,7 +10,7 @@ import com.neandril.go4lunch.R;
 
 public class YourLunchActivity extends AppCompatActivity {
 
-    private static final String TAG = "YourLunchActivity";
+    private static final String TAG = YourLunchActivity.class.getSimpleName();
 
     // DESIGN
     private Toolbar mToolbar;

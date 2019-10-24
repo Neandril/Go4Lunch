@@ -1,6 +1,7 @@
 package com.neandril.go4lunch.controllers.base;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,8 @@ import butterknife.ButterKnife;
 
 public abstract class BaseFragment extends Fragment {
 
+    private static final String TAG = BaseFragment.class.getSimpleName();
+
     protected abstract int getFragmentLayout();
     protected abstract void configureFragment();
 
@@ -24,6 +27,7 @@ public abstract class BaseFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(getFragmentLayout(), container, false);
+        Log.d(TAG, "onCreateView: Fragment created");
         ButterKnife.bind(this, view);
         this.configureFragment();
         return (view);
@@ -31,6 +35,7 @@ public abstract class BaseFragment extends Fragment {
 
     @Override
     public void onDestroy() {
+        Log.d(TAG, "onDestroy: Fragment destroyed");
         super.onDestroy();
     }
 

@@ -21,7 +21,7 @@ import butterknife.OnClick;
 
 public class LoginActivity extends BaseActivity {
 
-    private static final String TAG = "LoginActivity";
+    private static final String TAG = LoginActivity.class.getSimpleName();
 
     // Identifier for sign-in
     private static final int RC_SIGN_IN = 123;
@@ -33,6 +33,7 @@ public class LoginActivity extends BaseActivity {
     public void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, "onCreate: onCreate");
         super.onCreate(savedInstanceState);
+
         if (this.isCurrentUsedLogged()) {
             this.enterInTheApp();
         } else {
@@ -65,6 +66,7 @@ public class LoginActivity extends BaseActivity {
     /**
      * AUTHENTIFICATION
      */
+
     private void googleSignIn() {
         Log.d(TAG, "googleSignIn: Google SignIn called");
         startActivityForResult(
@@ -84,7 +86,7 @@ public class LoginActivity extends BaseActivity {
     }
 
     private void facebookSignIn() {
-        Log.d(TAG, "facebookSignIn: Facebook SignIn called");
+        Log.d(TAG, "googleSignIn: Facebook SignIn called");
         startActivityForResult(
                 AuthUI.getInstance()
                         .createSignInIntentBuilder()
@@ -126,6 +128,8 @@ public class LoginActivity extends BaseActivity {
                     showSnackBar("No Internet");
                 } else if (response.getError().getErrorCode() == ErrorCodes.UNKNOWN_ERROR) {
                     showSnackBar("Unknown error");
+                } else {
+                    showSnackBar("An error happened");
                 }
             }
         }

@@ -12,6 +12,8 @@ import com.neandril.go4lunch.controllers.base.BaseFragment;
 
 public class ListViewFragment extends BaseFragment {
 
+    private static final String TAG = ListViewFragment.class.getSimpleName();
+
     /**
      * BASE METHODS
      */
