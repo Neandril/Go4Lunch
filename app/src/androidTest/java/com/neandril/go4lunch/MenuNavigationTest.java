@@ -1,5 +1,6 @@
 package com.neandril.go4lunch;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.Instrumentation;
 
@@ -9,6 +10,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
+import androidx.test.rule.GrantPermissionRule;
 
 import com.neandril.go4lunch.controllers.activities.MainActivity;
 import com.neandril.go4lunch.controllers.activities.YourLunchActivity;
@@ -36,6 +38,9 @@ public class MenuNavigationTest {
 
     @Rule
     public ActivityTestRule<MainActivity> activityTestRule = new ActivityTestRule<>(MainActivity.class);
+
+    @Rule
+    public GrantPermissionRule grantPermissionRule = GrantPermissionRule.grant(Manifest.permission.ACCESS_FINE_LOCATION);
 
     @Before
     public void before() {
