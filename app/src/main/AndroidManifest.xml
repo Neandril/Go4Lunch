@@ -39,6 +39,9 @@
             android:name=".controllers.activities.SettingsActivity"
             android:label="@string/title_activity_settings"
             android:parentActivityName=".controllers.activities.MainActivity" />
+        <activity
+            android:name=".controllers.activities.RestaurantActivity"
+            android:parentActivityName=".controllers.activities.MainActivity" />
     </application>
 
 </manifest>

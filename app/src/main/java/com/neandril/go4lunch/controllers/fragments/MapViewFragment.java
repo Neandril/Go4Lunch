@@ -2,11 +2,14 @@ package com.neandril.go4lunch.controllers.fragments;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.Intent;
+import android.content.IntentSender;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.CommonStatusCodes;
+import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
@@ -20,6 +23,7 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.tasks.Task;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.PermissionToken;
@@ -28,7 +32,9 @@ import com.karumi.dexter.listener.PermissionGrantedResponse;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.single.PermissionListener;
 import com.neandril.go4lunch.R;
+import com.neandril.go4lunch.controllers.activities.RestaurantActivity;
 import com.neandril.go4lunch.controllers.base.BaseFragment;
+import com.neandril.go4lunch.utils.DataParser;
 import com.neandril.go4lunch.utils.GetNearbyPlaces;
 
 import java.util.Objects;
@@ -87,6 +93,18 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback 
     public void onMapReady(GoogleMap googleMap) {
         Log.d(TAG, "onMapReady: Entering onMapReady callback");
         mMap = googleMap;
+
+        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                Log.e(TAG, "Marker clicked: " + marker.getSnippet());
+                GetNearbyPlaces getNearbyPlaces = new GetNearbyPlaces();
+
+                Intent intent = new Intent(getContext(), RestaurantActivity.class);
+                startActivity(intent);
+                return false;
+            }
+        });
     }
 
     /**

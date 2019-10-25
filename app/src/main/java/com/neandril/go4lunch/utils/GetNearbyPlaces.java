@@ -1,11 +1,17 @@
 package com.neandril.go4lunch.utils;
 
+import android.app.Application;
+import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.neandril.go4lunch.controllers.activities.RestaurantActivity;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -66,11 +72,12 @@ public class GetNearbyPlaces extends AsyncTask<Object, String, String> {
             LatLng latLng = new LatLng(lat, lng);
             markerOptions.position(latLng);
             markerOptions.title(placeName + " : " + vicinity);
-            markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
+            markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
 
             mMap.addMarker(markerOptions);
             // mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
             // mMap.animateCamera(CameraUpdateFactory.zoomTo(10));
+
         }
     }
 }

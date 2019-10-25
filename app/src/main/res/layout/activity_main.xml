@@ -10,8 +10,8 @@
     tools:openDrawer="start"
     tools:context=".controllers.activities.MainActivity">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/activity_main_constraint_layout"
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/activity_main_coordinator_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
@@ -55,7 +55,7 @@
 
         </FrameLayout>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
     <!-- NAVIGATION DRAWER -->
     <com.google.android.material.navigation.NavigationView

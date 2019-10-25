@@ -15,7 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
-import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
@@ -42,7 +42,7 @@ public class MainActivity extends BaseActivity
     private static final String TAG = MainActivity.class.getSimpleName();
 
     // Widgets
-    @BindView(R.id.activity_main_constraint_layout) ConstraintLayout mConstraintLayout;
+    @BindView(R.id.activity_main_coordinator_layout) CoordinatorLayout mCoordinatorLayout;
     @BindView(R.id.drawer_layout) DrawerLayout mDrawerLayout;
     @BindView(R.id.nav_view) NavigationView mNavigationView;
     @BindView(R.id.bottom_navigation_view) BottomNavigationView mBottomNavigationView;
@@ -57,8 +57,8 @@ public class MainActivity extends BaseActivity
     }
 
     @Override
-    protected View getConstraintLayout() {
-        return mConstraintLayout;
+    protected View getCoordinatorLayout() {
+        return mCoordinatorLayout;
     }
 
     @Override

@@ -44,4 +44,11 @@
     <string name="location_permission_denied">Location permission denied</string>
     <string name="permission_required_toast">Permission required</string>
     <string name="permission_rationale_location">Permission rationale</string>
+
+    <!-- RESTAURANT VIEW STRINGS -->
+    <string name="restaurant_call">CALL</string>
+    <string name="restaurant_like">LIKE</string>
+    <string name="restaurant_website">WEBSITE</string>
+    <string name="restaurant_background_image_description">Restaurant picture</string>
+
 </resources>
