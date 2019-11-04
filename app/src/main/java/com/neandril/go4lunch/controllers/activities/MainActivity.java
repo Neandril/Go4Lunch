@@ -48,9 +48,9 @@ public class MainActivity extends BaseActivity
     @BindView(R.id.bottom_navigation_view) BottomNavigationView mBottomNavigationView;
     @BindView(R.id.toolbar) Toolbar mToolbar;
 
-    /**
-     * BASE METHODS
-     */
+    // ***************************
+    // BASE METHODS
+    // ***************************
     @Override
     protected int getActivityLayout() {
         return R.layout.activity_main;
@@ -75,9 +75,9 @@ public class MainActivity extends BaseActivity
         getUserInformations();
     }
 
-    /**
-     * CONFIGURATIONS
-     */
+    // ***************************
+    // CONFIGURATIONS
+    // ***************************
     private void configureToolbar() {
         Log.d(TAG, "configureToolbar: Toolbar configuration");
         setSupportActionBar(mToolbar);
@@ -164,9 +164,9 @@ public class MainActivity extends BaseActivity
         return super.onCreateOptionsMenu(menu);
     }
 
-    /**
-     * ACTIONS
-     */
+    // ***************************
+    // ACTIONS
+    // ***************************
 
     // Method launching fragments
     private void showFragment(Fragment fragment) {
@@ -188,9 +188,9 @@ public class MainActivity extends BaseActivity
         }
     }
 
-    /**
-     * REQUESTS
-     */
+    // ***************************
+    // REQUESTS
+    // ***************************
 
     private void signOutUserFromFirebase() {
         Log.d(TAG, "signOutUserFromFirebase: Log out user from Firebase");
@@ -204,9 +204,9 @@ public class MainActivity extends BaseActivity
         return aVoid -> finish();
     }
 
-    /**
-     * UI
-     */
+    // ***************************
+    // UI
+    // ***************************
 
     private void getUserInformations() {
         Log.d(TAG, "getUserInformations: Retrieving users informations");
@@ -231,6 +231,7 @@ public class MainActivity extends BaseActivity
             }
 
             // Get email and username and display them on the header
+            Log.e(TAG, "getUserInformations: mail : " + this.getCurrentUser().getEmail());
             email = TextUtils.isEmpty(this.getCurrentUser().getEmail()) ?
                     getString(R.string.info_no_email_found) : this.getCurrentUser().getEmail();
 

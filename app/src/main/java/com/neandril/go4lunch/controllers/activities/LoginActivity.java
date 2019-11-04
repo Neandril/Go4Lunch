@@ -41,18 +41,19 @@ public class LoginActivity extends BaseActivity {
         }
     }
 
-    /**
-     * BASE METHODS
-     */
+    // ***************************
+    // BASE METHODS
+    // ***************************
     @Override
     protected int getActivityLayout() { return R.layout.activity_login; }
 
     @Override
     protected View getCoordinatorLayout() { return mCoordinatorLayout; }
 
-    /**
-     * ACTIONS
-     */
+    // ***************************
+    // ACTIONS
+    // ***************************
+
     @OnClick(R.id.google_button)
     public void onClickGoogleButton() {
         this.googleSignIn();
@@ -63,9 +64,9 @@ public class LoginActivity extends BaseActivity {
         this.facebookSignIn();
     }
 
-    /**
-     * AUTHENTIFICATION
-     */
+    // ***************************
+    // AUTHENTIFICATIONS
+    // ***************************
 
     private void googleSignIn() {
         Log.d(TAG, "googleSignIn: Google SignIn called");
@@ -119,6 +120,7 @@ public class LoginActivity extends BaseActivity {
         IdpResponse response = IdpResponse.fromResultIntent(data);
         if (requestCode == RC_SIGN_IN) {
             if (resultCode == RESULT_OK) { // SUCCESS
+                this.createUserInFirestore();
                 showSnackBar("Success");
                 this.enterInTheApp();
             } else { // ERRORS
@@ -128,16 +130,22 @@ public class LoginActivity extends BaseActivity {
                     showSnackBar("No Internet");
                 } else if (response.getError().getErrorCode() == ErrorCodes.UNKNOWN_ERROR) {
                     showSnackBar("Unknown error");
-                } else {
-                    showSnackBar("An error happened");
+                } else if (response.getError().getErrorCode() == ErrorCodes.DEVELOPER_ERROR) {
+                    showSnackBar("Adress email already exist");
                 }
             }
         }
     }
 
-    /**
-     * UI
-     */
+    private void createUserInFirestore() {
+        Log.d(TAG, "createUserInFirestore: ");
+
+        Log.e(TAG, "createUserInFirestore: mail :" + this.getCurrentUser().getUid() + " - " + this.getCurrentUser().getEmail());
+    }
+
+    // ***************************
+    // UI
+    // ***************************
     // Enter the application
     public void enterInTheApp() {
         Log.d(TAG, "enterInTheApp: Enter in the application");

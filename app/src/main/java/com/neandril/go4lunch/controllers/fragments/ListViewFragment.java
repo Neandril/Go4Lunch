@@ -14,9 +14,9 @@ public class ListViewFragment extends BaseFragment {
 
     private static final String TAG = ListViewFragment.class.getSimpleName();
 
-    /**
-     * BASE METHODS
-     */
+    // ***************************
+    // BASE METHODS
+    // ***************************
     @Override
     protected int getFragmentLayout() { return R.layout.fragment_listview; }
 

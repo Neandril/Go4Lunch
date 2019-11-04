@@ -42,9 +42,9 @@ public class SettingsActivity extends BaseActivity {
     }
 
 
-    /**
-     * UI
-     */
+    // ***************************
+    // UI
+    // ***************************
     private void configureToolbar() {
         Log.d(TAG, "configureToolbar: Toolbar configuration");
         setSupportActionBar(mToolbar);

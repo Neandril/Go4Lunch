@@ -1,49 +1,37 @@
 package com.neandril.go4lunch.models;
 
 public class User {
-    private String uid;
-    private String username;
-    private String userEmail;
-    private String urlProfilePicture;
+    private String user_id;
+    private String user_name;
+    private String user_profile_picture;
 
-    public User() { }
-
-    public User(String uid, String username, String userEmail, String urlProfilePicture) {
-        this.uid = uid;
-        this.username = username;
-        this.userEmail = userEmail;
-        this.urlProfilePicture = urlProfilePicture;
+    public User(String user_id, String user_name, String user_profile_picture) {
+        this.user_id = user_id;
+        this.user_name = user_name;
+        this.user_profile_picture = user_profile_picture;
     }
 
-    public String getUid() {
-        return uid;
+    public String getUser_id() {
+        return user_id;
     }
 
-    public void setUid(String uid) {
-        this.uid = uid;
+    public void setUser_id(String user_id) {
+        this.user_id = user_id;
     }
 
-    public String getUsername() {
-        return username;
+    public String getUser_name() {
+        return user_name;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setUser_name(String user_name) {
+        this.user_name = user_name;
     }
 
-    public String getUserEmail() {
-        return userEmail;
+    public String getUser_profile_picture() {
+        return user_profile_picture;
     }
 
-    public void setUserEmail(String userEmail) {
-        this.userEmail = userEmail;
-    }
-
-    public String getUrlProfilePicture() {
-        return urlProfilePicture;
-    }
-
-    public void setUrlProfilePicture(String urlProfilePicture) {
-        this.urlProfilePicture = urlProfilePicture;
+    public void setUser_profile_picture(String user_profile_picture) {
+        this.user_profile_picture = user_profile_picture;
     }
 }

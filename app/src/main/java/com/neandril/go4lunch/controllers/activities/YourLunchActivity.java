@@ -41,9 +41,9 @@ public class YourLunchActivity extends BaseActivity {
         configureToolbar();
     }
 
-    /**
-     * UI
-     */
+    // ***************************
+    // UI
+    // ***************************
     private void configureToolbar() {
         Log.d(TAG, "configureToolbar: Toolbar configuration");
         mToolbar = findViewById(R.id.toolbar);

@@ -7,13 +7,17 @@ import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.neandril.go4lunch.R;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -43,9 +47,10 @@ public abstract class BaseActivity extends AppCompatActivity {
         Snackbar.make(getCoordinatorLayout(), message, Snackbar.LENGTH_LONG).show();
     }
 
-    /**
-     * Permissions
-     */
+    // ***************************
+    // PERMISSIONS
+    // ***************************
+
     protected FirebaseUser getCurrentUser() {
         Log.d(TAG, "getCurrentUser: CurrentUser logged in Firebase");
         return FirebaseAuth.getInstance().getCurrentUser();
@@ -56,10 +61,18 @@ public abstract class BaseActivity extends AppCompatActivity {
         return (this.getCurrentUser() != null);
     }
 
+    protected OnFailureListener onFailureListener(){
+        return new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(getApplicationContext(), getString(R.string.error_unknown_error), Toast.LENGTH_LONG).show();
+            }
+        };
+    }
 
-    /**
-     * FOR DEBUG ONLY
-     */
+    // ***************************
+    // FOR DEBUG ONLY
+    // ***************************
     private void getHashKey() {
         PackageInfo info;
         try {

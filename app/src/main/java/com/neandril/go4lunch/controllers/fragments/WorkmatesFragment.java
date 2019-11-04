@@ -14,9 +14,9 @@ public class WorkmatesFragment extends BaseFragment {
 
     private static final String TAG = WorkmatesFragment.class.getSimpleName();
 
-    /**
-     * BASE METHODS
-     */
+    // ***************************
+    // BASE METHODS
+    // ***************************
     @Override
     protected int getFragmentLayout() { return R.layout.fragment_workmates; }
 

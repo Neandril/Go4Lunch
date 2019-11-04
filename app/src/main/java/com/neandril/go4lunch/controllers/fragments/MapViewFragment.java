@@ -3,13 +3,14 @@ package com.neandril.go4lunch.controllers.fragments;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.content.IntentSender;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
+
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.CommonStatusCodes;
-import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
@@ -22,8 +23,10 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.Task;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.PermissionToken;
@@ -34,14 +37,14 @@ import com.karumi.dexter.listener.single.PermissionListener;
 import com.neandril.go4lunch.R;
 import com.neandril.go4lunch.controllers.activities.RestaurantActivity;
 import com.neandril.go4lunch.controllers.base.BaseFragment;
-import com.neandril.go4lunch.utils.DataParser;
-import com.neandril.go4lunch.utils.GetNearbyPlaces;
+import com.neandril.go4lunch.models.PlacesViewModel;
+import com.neandril.go4lunch.models.places.PlacesDetail;
 
 import java.util.Objects;
 
 import butterknife.BindView;
 
-public class MapViewFragment extends BaseFragment implements OnMapReadyCallback {
+public class MapViewFragment extends BaseFragment implements OnMapReadyCallback , GoogleMap.OnMarkerClickListener {
 
     private static final String TAG = MapViewFragment.class.getSimpleName();
 
@@ -50,21 +53,21 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback 
     private FusedLocationProviderClient mFusedLocationProviderClient;
 
     private static final float DEFAULT_ZOOM = 15f;
-    private static final int PROXIMITY_RADIUS = 10000;
     private double latitude,longitude;
+    private String position;
+    private PlacesViewModel viewModel;
 
     @BindView(R.id.map) MapView mapView;
 
-    /**
-     * BASE METHODS
-     */
+    // ***************************
+    // BASE METHODS
+    // ***************************
     @Override
     protected int getFragmentLayout() { return R.layout.fragment_mapview; }
 
     @Override
     protected void configureFragment() {
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(Objects.requireNonNull(getActivity()));
-        // requestPermissions();
         this.configureMap();
     }
 
@@ -75,9 +78,9 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback 
         getLocationSettings();
     }
 
-    /**
-     * CONFIGURATIONS
-     */
+    // ***************************
+    // CONFIGURATIONS
+    // ***************************
 
     private void configureMap() {
         Log.d(TAG, "configureMap: Map configuration");
@@ -93,49 +96,36 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback 
     public void onMapReady(GoogleMap googleMap) {
         Log.d(TAG, "onMapReady: Entering onMapReady callback");
         mMap = googleMap;
-
-        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-            @Override
-            public boolean onMarkerClick(Marker marker) {
-                Log.e(TAG, "Marker clicked: " + marker.getSnippet());
-                GetNearbyPlaces getNearbyPlaces = new GetNearbyPlaces();
-
-                Intent intent = new Intent(getContext(), RestaurantActivity.class);
-                startActivity(intent);
-                return false;
-            }
-        });
+        mMap.setOnMarkerClickListener(this);
     }
 
-    /**
-     * LOCATIONS
-     */
+    // ***************************
+    // LOCATIONS
+    // ***************************
 
-    private void getUserCurrentLocation() {
-        Log.d(TAG, "getUserCurrentLocation: Getting user location");
-        // Manage permissions
-        Dexter
-                .withActivity(getActivity())
-                .withPermission(Manifest.permission.ACCESS_FINE_LOCATION)
-                .withListener(new PermissionListener() {
-                    @SuppressLint("MissingPermission")
-                    @Override
-                    public void onPermissionGranted(PermissionGrantedResponse response) {
-                        getLastKnownLocation();
-                        mMap.setMyLocationEnabled(true);
-                    }
+    private void updateUiWithMarkers(PlacesDetail placesDetail) {
+        Log.e(TAG, "updateUiWithMarkers: size :" + placesDetail.getResults().size());
 
-                    @Override
-                    public void onPermissionDenied(PermissionDeniedResponse response) {
-                        Log.e("Dexter", "Permission Denied");
-                    }
+        if (placesDetail.getResults().size() != 0 || placesDetail.getResults() != null) {
+            for (int i = 0; i < placesDetail.getResults().size(); i++) {
+                Double lat = placesDetail.getResults().get(i).getGeometry().getLocation().getLat();
+                Double lng = placesDetail.getResults().get(i).getGeometry().getLocation().getLng();
+                String placeName = placesDetail.getResults().get(i).getName();
+                String vicinity = placesDetail.getResults().get(i).getVicinity();
+                String id = placesDetail.getResults().get(i).getPlaceId();
+                LatLng latLng = new LatLng(lat, lng);
 
-                    @Override
-                    public void onPermissionRationaleShouldBeShown(PermissionRequest permission, PermissionToken token) {
-                        Log.e("Dexter", "Permission Rationale");
-                    }
-                })
-                .check();
+                Log.e(TAG, "updateUiWithMarkers: Name: " + placeName);
+
+                mMap.addMarker(new MarkerOptions()
+                        .position(latLng)
+                        .title(placeName + " : " + vicinity)
+                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)))
+                        .setTag(id);
+            }
+        } else {
+            Log.e(TAG, "updateUiWithMarkers: no result found");
+        }
     }
 
     @SuppressLint("MissingPermission")
@@ -145,22 +135,25 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback 
         mFusedLocationProviderClient.getLastLocation().addOnSuccessListener(location -> {
             if (location != null) {
                 // Display the current location on the device screen
-                Toast.makeText(getContext(), "Latitude is :" + location.getLatitude() + " and Longitude is: " + location.getLongitude(), Toast.LENGTH_SHORT).show();
+                // Toast.makeText(getContext(), "Latitude is :" + location.getLatitude() + " and Longitude is: " + location.getLongitude(), Toast.LENGTH_SHORT).show();
                 latitude = location.getLatitude();
                 longitude = location.getLongitude();
                 LatLng latLng = new LatLng(latitude, longitude);
+                position = latitude + "," + longitude;
 
+                // buildRetrofitRequest(latitude, longitude);
                 cameraUpdate(latLng);
 
-                mMap.clear();
-                Object[] dataTransfer = new Object[2];
-                GetNearbyPlaces getNearbyPlaces = new GetNearbyPlaces();
-                String restaurant = "restaurant";
-                String url = getUrl(latitude, longitude, restaurant);
-                dataTransfer[0] = mMap;
-                dataTransfer[1] = url;
+                viewModel = ViewModelProviders.of(Objects.requireNonNull(getActivity())).get(PlacesViewModel.class);
+                viewModel.init(position);
+                final Observer<PlacesDetail> observer = (PlacesDetail placesDetail) -> {
+                    Log.e(TAG, "onChanged: " + placesDetail.getResults().size());
+                    updateUiWithMarkers(placesDetail);
+                };
 
-                getNearbyPlaces.execute(dataTransfer);
+                viewModel.getRepository().observe(this, observer);
+
+                //executeRetrofitRequest(position, placesDetail.getNextPageToken());
 
             } else {
                 Toast.makeText(getContext(), "Cannot get user current location at the moment", Toast.LENGTH_SHORT).show();
@@ -168,34 +161,23 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback 
         });
     }
 
-    private String getUrl(double latitude, double longitude, String nearbyPlace) {
-        StringBuilder googlePlaceUrl = new StringBuilder("https://maps.googleapis.com/maps/api/place/nearbysearch/json?");
-        googlePlaceUrl.append("location=").append(latitude).append(",").append(longitude);
-        googlePlaceUrl.append("&radius=").append(PROXIMITY_RADIUS);
-        googlePlaceUrl.append("&type=").append(nearbyPlace);
-        googlePlaceUrl.append("&sensor=true");
-        googlePlaceUrl.append("&key="+"AIzaSyBkjaxczMoqyJzCQnRRIJgeJoubLGdSEK0");
-
-        Log.e("Places", "url = " + googlePlaceUrl.toString());
-
-        return googlePlaceUrl.toString();
-    }
-
     private void cameraUpdate(LatLng latLng) {
         Log.d(TAG, "cameraUpdate: Moving the camera to : lat : " + latLng.latitude + ", lng : " + latLng.longitude);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, DEFAULT_ZOOM));
     }
 
-    /**
-     * PERMISSIONS
-     */
+
+    // ***************************
+    // PERMISSIONS
+    // ***************************
 
     private void getLocationSettings() {
+        Log.d(TAG, "getLocationSettings: ");
         // Create a location request
         LocationRequest mLocationRequest = new LocationRequest();
         mLocationRequest.setInterval(9000);
         mLocationRequest.setFastestInterval(4000);
-        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
 
         // Get current location settings
         LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
@@ -222,7 +204,49 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback 
 
         task.addOnSuccessListener(Objects.requireNonNull(getActivity()), locationSettingsResponse -> {
             // All location settings are satisfied. The client can initialize
-            getUserCurrentLocation();
+            getPermissions();
         });
+    }
+
+    private void getPermissions() {
+        Log.d(TAG, "getPermissions: Getting user location");
+        // Manage permissions
+        Dexter
+                .withActivity(getActivity())
+                .withPermission(Manifest.permission.ACCESS_FINE_LOCATION)
+                .withListener(new PermissionListener() {
+                    @SuppressLint("MissingPermission")
+                    @Override
+                    public void onPermissionGranted(PermissionGrantedResponse response) {
+                        Log.d(TAG, "onPermissionGranted: Granted");
+                        getLastKnownLocation();
+                        mMap.setMyLocationEnabled(true);
+                    }
+
+                    @Override
+                    public void onPermissionDenied(PermissionDeniedResponse response) {
+                        Log.e("Dexter", "Permission Denied");
+                    }
+
+                    @Override
+                    public void onPermissionRationaleShouldBeShown(PermissionRequest permission, PermissionToken token) {
+                        Log.e("Dexter", "Permission Rationale");
+                    }
+                })
+                .check();
+    }
+
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+        Log.d(TAG, "onMarkerClick: Marker:" + marker.getSnippet());
+
+        String test = marker.getTitle();
+
+        Log.e(TAG, "onMarkerClick: Clicked on : Id: " + marker.getId() + ", tag: " + marker.getTag() + ", result: " + test);
+
+        Intent intent = new Intent(getContext(), RestaurantActivity.class);
+        intent.putExtra("restaurantId", Objects.requireNonNull(marker.getTag()).toString());
+        startActivity(intent);
+        return true;
     }
 }
