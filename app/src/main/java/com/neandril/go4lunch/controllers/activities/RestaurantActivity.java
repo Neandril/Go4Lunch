@@ -1,6 +1,7 @@
 package com.neandril.go4lunch.controllers.activities;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -26,12 +27,14 @@ import com.neandril.go4lunch.models.places.PlacesDetail;
 import java.util.Objects;
 
 import butterknife.BindView;
+import butterknife.OnClick;
 
 public class RestaurantActivity extends BaseActivity {
 
     private static final String TAG = RestaurantActivity.class.getSimpleName();
 
     public String placeId;
+    public String mWebsite;
     private DetailViewModel viewModel;
 
     @BindView(R.id.activity_restaurant_main_layout) CoordinatorLayout mCoordinatorLayout;
@@ -74,16 +77,32 @@ public class RestaurantActivity extends BaseActivity {
     }
 
     private void updateUI(Detail detail) {
-        mRestaurantName.setText(detail.getResult().getName());
-        mRestaurantAddress.setText(detail.getResult().getVicinity());
-        String type = detail.getResult().getTypes().get(1);
-        Log.e(TAG, "updateUI: Type:" + type);
+        if (detail.getResult().getName() != null) {
+            mRestaurantName.setText(detail.getResult().getName());
+        }
 
-        String photoRef = detail.getResult().getPhotos().get(0).getPhotoReference();
-        String request = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&maxheight=400&key=AIzaSyBkjaxczMoqyJzCQnRRIJgeJoubLGdSEK0&photoreference=" + photoRef;
+        if (detail.getResult().getVicinity() != null) {
+            mRestaurantAddress.setText(detail.getResult().getVicinity());
+        }
 
-        if (photoRef != null) {
+        if (detail.getResult().getPhotos() != null) {
+            String photoRef = detail.getResult().getPhotos().get(0).getPhotoReference();
+            String request = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&maxheight=400&key=AIzaSyBkjaxczMoqyJzCQnRRIJgeJoubLGdSEK0&photoreference=" + photoRef;
+
             Glide.with(this).load(request).into(mRestaurantBackgroundImg);
         }
+
+        if (detail.getResult().getWebsite() != null) {
+            mWebsite = detail.getResult().getWebsite();
+            Log.e(TAG, "updateUI: website : " + detail.getResult().getWebsite());
+        }
+    }
+
+    @OnClick(R.id.restaurant_website_button)
+    public void onWebsiteButton() {
+        Log.d(TAG, "onWebsiteButton: " + mWebsite);
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(Uri.parse(mWebsite));
+        startActivity(intent);
     }
 }
