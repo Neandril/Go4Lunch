@@ -26,7 +26,7 @@ public class Repository {
     }
 
     private Repository() {
-        googleApiInterface = GoogleApiCall.createService(GoogleApiInterface.class);
+        googleApiInterface = GoogleApiCall.retrofit.create(GoogleApiInterface.class);
     }
 
     // Nearby request

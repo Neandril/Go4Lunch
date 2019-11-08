@@ -153,8 +153,6 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback 
 
                 viewModel.getRepository().observe(this, observer);
 
-                //executeRetrofitRequest(position, placesDetail.getNextPageToken());
-
             } else {
                 Toast.makeText(getContext(), "Cannot get user current location at the moment", Toast.LENGTH_SHORT).show();
             }

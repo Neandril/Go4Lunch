@@ -51,5 +51,6 @@
     <string name="restaurant_like">LIKE</string>
     <string name="restaurant_website">WEBSITE</string>
     <string name="restaurant_background_image_description">Restaurant picture</string>
+    <string name="no_website_found">No website found for this restaurant</string>
 
 </resources>

@@ -55,6 +55,9 @@ public class Result {
     @SerializedName("website")
     @Expose
     private String website;
+    @SerializedName("formatted_phone_number")
+    @Expose
+    private String phoneNumber;
 
     public List<AddressComponent> getAddressComponents() {
         return addressComponents;
@@ -179,5 +182,9 @@ public class Result {
     public String getWebsite() { return website; }
 
     public void setWebsite(String website) { this.website = website; }
+
+    public String getPhoneNumber() { return phoneNumber; }
+
+    public void setPhoneNumber(String phoneNumber) { this.phoneNumber = phoneNumber; }
 
 }

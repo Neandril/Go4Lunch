@@ -35,4 +35,7 @@
         <item name="windowNoTitle">true</item>
         <item name="android:textColorHint">@android:color/white</item>
     </style>
+
+    <style name="customRatingBar" parent="Widget.AppCompat.RatingBar.Small" />
+
 </resources>
