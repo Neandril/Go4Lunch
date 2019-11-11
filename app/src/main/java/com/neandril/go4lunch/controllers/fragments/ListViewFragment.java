@@ -73,7 +73,5 @@ public class ListViewFragment extends BaseFragment {
 
         placesViewModel.getRepository().observe(this, observer);
 
-
-
     }
 }

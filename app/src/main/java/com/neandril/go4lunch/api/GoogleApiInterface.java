@@ -13,7 +13,7 @@ public interface GoogleApiInterface {
 
     String key = BuildConfig.ApiKey;
 
-    //TODO: Manage Api Key via gradle file
+    //TODO: Manage the key inside repository
     @GET("nearbysearch/json?sensor=true&radius=5000&type=restaurant&key=" + key)
     Call<PlacesDetail> getNearbyPlaces(
             @Query("location") String location);

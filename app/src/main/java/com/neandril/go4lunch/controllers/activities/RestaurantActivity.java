@@ -20,6 +20,7 @@ import com.neandril.go4lunch.BuildConfig;
 import com.neandril.go4lunch.R;
 import com.neandril.go4lunch.api.GoogleApiCall;
 import com.neandril.go4lunch.controllers.base.BaseActivity;
+import com.neandril.go4lunch.controllers.fragments.MapViewFragment;
 import com.neandril.go4lunch.models.DetailViewModel;
 import com.neandril.go4lunch.models.PlacesViewModel;
 import com.neandril.go4lunch.models.Restaurant;
@@ -63,7 +64,7 @@ public class RestaurantActivity extends BaseActivity {
 
         Intent intent = getIntent();
 
-        placeId = intent.getStringExtra("restaurantId");
+        placeId = intent.getStringExtra(MapViewFragment.RESTAURANT_TAG);
 
         Log.e(TAG, "onCreate: Marker retrieved :" + placeId);
         retrieveRestaurantDetails();
@@ -80,30 +81,30 @@ public class RestaurantActivity extends BaseActivity {
         viewModel.getRepository().observe(this, observer);
     }
 
-    private void updateUI(Detail detail) {
-        if (detail.getResult().getName() != null) {
-            mRestaurantName.setText(detail.getResult().getName());
-        }
+        private void updateUI(Detail detail) {
+            if (detail.getResult().getName() != null) {
+                mRestaurantName.setText(detail.getResult().getName());
+            }
 
-        if (detail.getResult().getVicinity() != null) {
-            mRestaurantAddress.setText(detail.getResult().getVicinity());
-        }
+            if (detail.getResult().getVicinity() != null) {
+                mRestaurantAddress.setText(detail.getResult().getVicinity());
+            }
 
-        if (detail.getResult().getPhotos() != null) {
-            String photoRef = detail.getResult().getPhotos().get(0).getPhotoReference();
-            String request = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&maxheight=400&key=" +
-                            BuildConfig.ApiKey +
-                            "&photoreference=" + photoRef;
+            if (detail.getResult().getPhotos() != null) {
+                String photoRef = detail.getResult().getPhotos().get(0).getPhotoReference();
+                String request = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&maxheight=400&key=" +
+                        BuildConfig.ApiKey +
+                        "&photoreference=" + photoRef;
 
-            Glide.with(this).load(request).into(mRestaurantBackgroundImg);
-        }
+                Glide.with(this).load(request).into(mRestaurantBackgroundImg);
+            }
 
-        if (detail.getResult().getWebsite() != null) {
-            mWebsite = detail.getResult().getWebsite();
-            Log.e(TAG, "updateUI: website : " + detail.getResult().getWebsite());
-        } else {
-            mWebsite = null;
-        }
+            if (detail.getResult().getWebsite() != null) {
+                mWebsite = detail.getResult().getWebsite();
+                Log.e(TAG, "updateUI: website : " + detail.getResult().getWebsite());
+            } else {
+                mWebsite = null;
+            }
 
         mPhone = detail.getResult().getPhoneNumber();
         Log.e(TAG, "updateUI: phone: " + mPhone);

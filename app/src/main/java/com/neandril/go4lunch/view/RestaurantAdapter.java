@@ -21,7 +21,6 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantViewHolder
     private static final String TAG = "RestaurantAdapter";
 
     private List<PlacesDetail> mPlaceList;
-    private RequestManager mGlide;
 
     public RestaurantAdapter(List<PlacesDetail> mPlaceList) {
         this.mPlaceList = mPlaceList;
@@ -38,7 +37,7 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantViewHolder
     @Override
     public void onBindViewHolder(@NonNull RestaurantViewHolder holder, int position) {
         Log.d(TAG, "onBindViewHolder: ");
-        holder.updateRestaurantsList(mPlaceList.get(0).getResults().get(position), mGlide);
+        holder.updateRestaurantsList(mPlaceList.get(0).getResults().get(position));
     }
 
     @Override

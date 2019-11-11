@@ -47,6 +47,7 @@ import butterknife.BindView;
 public class MapViewFragment extends BaseFragment implements OnMapReadyCallback , GoogleMap.OnMarkerClickListener {
 
     private static final String TAG = MapViewFragment.class.getSimpleName();
+    public static final String RESTAURANT_TAG = "restaurantId";
 
     private GoogleMap mMap;
     private SupportMapFragment mMapFragment;
@@ -145,14 +146,13 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback 
                 cameraUpdate(latLng);
 
                 viewModel = ViewModelProviders.of(Objects.requireNonNull(getActivity())).get(PlacesViewModel.class);
-                viewModel.init(position);
                 final Observer<PlacesDetail> observer = (PlacesDetail placesDetail) -> {
                     Log.e(TAG, "onChanged: " + placesDetail.getResults().size());
                     updateUiWithMarkers(placesDetail);
                 };
 
                 viewModel.getRepository().observe(this, observer);
-
+                viewModel.init(position);
             } else {
                 Toast.makeText(getContext(), "Cannot get user current location at the moment", Toast.LENGTH_SHORT).show();
             }
@@ -240,10 +240,8 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback 
 
         String test = marker.getTitle();
 
-        Log.e(TAG, "onMarkerClick: Clicked on : Id: " + marker.getId() + ", tag: " + marker.getTag() + ", result: " + test);
-
         Intent intent = new Intent(getContext(), RestaurantActivity.class);
-        intent.putExtra("restaurantId", Objects.requireNonNull(marker.getTag()).toString());
+        intent.putExtra(RESTAURANT_TAG, Objects.requireNonNull(marker.getTag()).toString());
         startActivity(intent);
         return true;
     }

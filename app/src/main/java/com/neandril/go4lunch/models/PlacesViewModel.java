@@ -11,14 +11,17 @@ public class PlacesViewModel extends ViewModel {
 
     private MutableLiveData<PlacesDetail> mutableLiveData;
 
+    Repository repository = Repository.getInstance();
+
     public void init(String location) {
         if (mutableLiveData != null) {
             return;
         }
-        Repository repository = Repository.getInstance();
+
         mutableLiveData = repository.getPlaces(location);
     }
 
+    //TODO: rename
     public LiveData<PlacesDetail> getRepository() {
         return mutableLiveData;
     }

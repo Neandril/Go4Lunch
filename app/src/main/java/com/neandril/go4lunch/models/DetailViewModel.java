@@ -10,13 +10,18 @@ import com.neandril.go4lunch.utils.Repository;
 
 public class DetailViewModel extends ViewModel {
 
+    private final Repository repository;
     private MutableLiveData<Detail> mutableLiveData;
+
+    public DetailViewModel() {
+        repository = Repository.getInstance();
+    }
 
     public void init(String placeid) {
         if (mutableLiveData != null) {
             return;
         }
-        Repository repository = Repository.getInstance();
+
         mutableLiveData = repository.getRestaurant(placeid);
     }
 

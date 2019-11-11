@@ -38,12 +38,14 @@ public class RestaurantViewHolder extends RecyclerView.ViewHolder {
         ButterKnife.bind(this, itemView);
     }
 
-    void updateRestaurantsList(Result result, RequestManager glide) {
+    void updateRestaurantsList(Result result) {
         Log.d(TAG, "updateUi: ");
 
+        // Restaurant name and address
         this.mRestaurantName.setText(result.getName());
         this.mRestaurantAddress.setText(result.getVicinity());
 
+        // Get the rating 3-stars indexed
         if (result.getRating() != null) {
             int rating = (int) Math.round(result.getRating() * 3/5);
             switch (rating) {
@@ -63,11 +65,10 @@ public class RestaurantViewHolder extends RecyclerView.ViewHolder {
                     break;
             }
         } else {
-
             mRatingBar.setRating(0);
-
         }
 
+        // Aperture of restaurant
         if (result.getOpeningHours() != null) {
             if (result.getOpeningHours().getOpenNow()) {
                 mOpenningTime.setText("Open now");
@@ -78,19 +79,19 @@ public class RestaurantViewHolder extends RecyclerView.ViewHolder {
             mOpenningTime.setText("Openning time unavailaible");
         }
 
-        if (result.getPhotos() != null) {
-            Log.e(TAG, "updateRestaurantsList: photosRef:");
+        // Try to retrieve the restaurant's picture
+        try {
+            if (result.getPhotos().get(0).getPhotoReference() != null) {
+                Log.e(TAG, "updateRestaurantsList: " + result.getName() + ": ok");
+                String photoRef = result.getPhotos().get(0).getPhotoReference();
+                String request = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&maxheight=400&key=" +
+                        BuildConfig.ApiKey +
+                        "&photoreference=" + photoRef;
+                Glide.with(mRestaurantThumbnail.getContext()).load(request).into(mRestaurantThumbnail);
+            }
+        } catch (IndexOutOfBoundsException e) {
+            Log.e(TAG, "updateRestaurantsList: " + e.getMessage());
+            Glide.with(mRestaurantThumbnail.getContext()).load(R.drawable.background_pic).into(mRestaurantThumbnail);
         }
-
-
-/*        if (result.getPhotos() != null) {
-            String photoRef = result.getPhotos().get(0).getPhotoReference();
-            String request = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&maxheight=400&key=" +
-                    BuildConfig.ApiKey +
-                    "&photoreference=" + photoRef;
-            glide.load(request).into(mRestaurantThumbnail);
-        }*/
-
-
     }
 }
