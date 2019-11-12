@@ -18,8 +18,8 @@ public class SettingsActivity extends BaseActivity {
     private static final String TAG = SettingsActivity.class.getSimpleName();
 
     // DESIGN
-    private Toolbar mToolbar;
     @BindView(R.id.settings_layout) CoordinatorLayout mCoordinatorLayout;
+    @BindView(R.id.toolbar) Toolbar mToolbar;
 
     @Override
     protected int getActivityLayout() {
@@ -34,9 +34,6 @@ public class SettingsActivity extends BaseActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_settings);
-
-        mToolbar = findViewById(R.id.toolbar);
 
         configureToolbar();
     }

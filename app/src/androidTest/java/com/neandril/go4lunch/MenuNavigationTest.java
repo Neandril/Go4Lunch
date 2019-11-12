@@ -41,8 +41,7 @@ public class MenuNavigationTest {
 
     @Rule
     public GrantPermissionRule grantPermissionRule = GrantPermissionRule.grant(
-            Manifest.permission.ACCESS_FINE_LOCATION,
-            Manifest.permission.ACCESS_COARSE_LOCATION);
+            Manifest.permission.ACCESS_FINE_LOCATION);
 
     @Before
     public void before() {
@@ -89,12 +88,14 @@ public class MenuNavigationTest {
      * Check bottom menu items click
      */
     @Test
-    public void bottomNavigation_itemsClick_shouldDiaplayFragments() {
+    public void bottomNavigation_itemsClick_shouldDiaplayFragments() throws InterruptedException {
+        //TODO: Use idling resources instead of sleep
+        Thread.sleep(1000);
         // Check List View Fragment
         onView(
                 allOf(
-                        withId(R.id.smallLabel),
-                        withText("List View")
+                        withId(R.id.navigation_list),
+                        withContentDescription("List View")
                 )
         ).perform(click());
 
@@ -103,8 +104,8 @@ public class MenuNavigationTest {
         // Check Workmates Fragment
         onView(
                 allOf(
-                        withId(R.id.smallLabel),
-                        withText("Workmates")
+                        withId(R.id.navigation_workmates),
+                        withContentDescription("Workmates")
                 )
         ).perform(click());
 
@@ -113,8 +114,8 @@ public class MenuNavigationTest {
         // Check Map View Fragment
         onView(
                 allOf(
-                        withId(R.id.smallLabel),
-                        withText("Map View")
+                        withId(R.id.navigation_map),
+                        withContentDescription("Map View")
                 )
         ).perform(click());
 

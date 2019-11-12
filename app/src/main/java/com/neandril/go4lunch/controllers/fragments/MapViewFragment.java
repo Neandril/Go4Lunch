@@ -146,13 +146,14 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback 
                 cameraUpdate(latLng);
 
                 viewModel = ViewModelProviders.of(Objects.requireNonNull(getActivity())).get(PlacesViewModel.class);
+                viewModel.init(position);
                 final Observer<PlacesDetail> observer = (PlacesDetail placesDetail) -> {
                     Log.e(TAG, "onChanged: " + placesDetail.getResults().size());
                     updateUiWithMarkers(placesDetail);
                 };
 
                 viewModel.getRepository().observe(this, observer);
-                viewModel.init(position);
+
             } else {
                 Toast.makeText(getContext(), "Cannot get user current location at the moment", Toast.LENGTH_SHORT).show();
             }

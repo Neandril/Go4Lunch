@@ -18,8 +18,8 @@ public class YourLunchActivity extends BaseActivity {
     private static final String TAG = YourLunchActivity.class.getSimpleName();
 
     // DESIGN
-    private Toolbar mToolbar;
     @BindView(R.id.your_lunch_layout) CoordinatorLayout mCoordinatorLayout;
+    @BindView(R.id.toolbar) Toolbar mToolbar;
 
     @Override
     protected int getActivityLayout() {
@@ -34,9 +34,6 @@ public class YourLunchActivity extends BaseActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_your_lunch);
-
-        mToolbar = findViewById(R.id.toolbar);
 
         configureToolbar();
     }
@@ -46,7 +43,6 @@ public class YourLunchActivity extends BaseActivity {
     // ***************************
     private void configureToolbar() {
         Log.d(TAG, "configureToolbar: Toolbar configuration");
-        mToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
