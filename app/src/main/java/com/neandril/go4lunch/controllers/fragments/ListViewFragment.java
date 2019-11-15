@@ -1,19 +1,30 @@
 package com.neandril.go4lunch.controllers.fragments;
 
+import android.app.SearchManager;
+import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.SearchView;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.neandril.go4lunch.R;
+import com.neandril.go4lunch.controllers.activities.MainActivity;
+import com.neandril.go4lunch.controllers.activities.RestaurantActivity;
 import com.neandril.go4lunch.controllers.base.BaseFragment;
 import com.neandril.go4lunch.models.DetailViewModel;
 import com.neandril.go4lunch.models.PlacesViewModel;
 import com.neandril.go4lunch.models.details.Detail;
 import com.neandril.go4lunch.models.places.PlacesDetail;
+import com.neandril.go4lunch.utils.ItemClickSupport;
 import com.neandril.go4lunch.view.RestaurantAdapter;
 
 import java.util.ArrayList;
@@ -25,16 +36,12 @@ import butterknife.BindView;
 public class ListViewFragment extends BaseFragment {
 
     private static final String TAG = ListViewFragment.class.getSimpleName();
-
-    private View mListView;
+    public static final String RESTAURANT_TAG = "restaurantId";
 
     @BindView(R.id.fragment_listView_recyclerView) RecyclerView mRecyclerView;
 
     private List<PlacesDetail> mPlaces;
     private RestaurantAdapter mAdapter;
-    private PlacesViewModel placesViewModel;
-    private DetailViewModel detailViewModel;
-
 
     // ***************************
     // BASE METHODS
@@ -46,6 +53,7 @@ public class ListViewFragment extends BaseFragment {
     protected void configureFragment() {
 
         this.configureRecyclerView();
+        this.configureOnClickRecyclerView();
         this.updateList();
     }
 
@@ -59,8 +67,7 @@ public class ListViewFragment extends BaseFragment {
     private void updateList() {
         this.mPlaces.clear();
 
-        placesViewModel = ViewModelProviders.of(Objects.requireNonNull(getActivity())).get(PlacesViewModel.class);
-        detailViewModel = ViewModelProviders.of(Objects.requireNonNull(getActivity())).get(DetailViewModel.class);
+        PlacesViewModel placesViewModel = ViewModelProviders.of(Objects.requireNonNull(getActivity())).get(PlacesViewModel.class);
 
         final Observer<PlacesDetail> observer = (PlacesDetail placesDetail) -> {
             mPlaces.add(placesDetail);
@@ -72,6 +79,16 @@ public class ListViewFragment extends BaseFragment {
         };
 
         placesViewModel.getRepository().observe(this, observer);
+    }
 
+    private void configureOnClickRecyclerView() {
+        ItemClickSupport.addTo(mRecyclerView, R.layout.fragment_listview_recyclerview_item)
+                .setOnItemClickListener((recyclerView, position, v) -> {
+                    String placeId = mAdapter.getmPlaceList().get(0).getResults().get(position).getPlaceId();
+                    Log.e(TAG, "onItemClicked: " + placeId);
+                    Intent intent = new Intent(getContext(), RestaurantActivity.class);
+                    intent.putExtra(RESTAURANT_TAG, placeId);
+                    startActivity(intent);
+                });
     }
 }

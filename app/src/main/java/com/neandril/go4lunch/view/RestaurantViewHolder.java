@@ -10,17 +10,16 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.RequestManager;
 import com.neandril.go4lunch.BuildConfig;
 import com.neandril.go4lunch.R;
-import com.neandril.go4lunch.models.details.Detail;
-import com.neandril.go4lunch.models.places.PlacesDetail;
+import com.neandril.go4lunch.utils.Singleton;
+import com.neandril.go4lunch.utils.Utility;
 import com.neandril.go4lunch.models.places.Result;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class RestaurantViewHolder extends RecyclerView.ViewHolder {
+public class RestaurantViewHolder extends RecyclerView.ViewHolder implements Utility {
 
     private static final String TAG = "RestaurantViewHolder";
 
@@ -32,6 +31,9 @@ public class RestaurantViewHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.imageView_ppl) ImageView mImageViewPpl;
     @BindView(R.id.imageView_restaurant_thumbnail) ImageView mRestaurantThumbnail;
     @BindView(R.id.ratingBar) RatingBar mRatingBar;
+
+    private double lat = Singleton.getInstance().getUserLat();
+    private double lng = Singleton.getInstance().getUserLng();
 
     public RestaurantViewHolder(@NonNull View itemView) {
         super(itemView);
@@ -47,23 +49,7 @@ public class RestaurantViewHolder extends RecyclerView.ViewHolder {
 
         // Get the rating 3-stars indexed
         if (result.getRating() != null) {
-            int rating = (int) Math.round(result.getRating() * 3/5);
-            switch (rating) {
-                case 0:
-                    mRatingBar.setRating(0);
-                    break;
-                case 1:
-                    mRatingBar.setRating(1);
-                    break;
-                case 2:
-                    mRatingBar.setRating(2);
-                    break;
-                case 3:
-                    mRatingBar.setRating(3);
-                    break;
-                default:
-                    break;
-            }
+            mRatingBar.setRating(convertRating(result.getRating()));
         } else {
             mRatingBar.setRating(0);
         }
@@ -77,6 +63,18 @@ public class RestaurantViewHolder extends RecyclerView.ViewHolder {
             }
         } else {
             mOpenningTime.setText("Openning time unavailaible");
+        }
+
+        // Distance
+        try {
+            String resultDistance = distance(
+                    lat,
+                    result.getGeometry().getLocation().getLat(),
+                    lng,
+                    result.getGeometry().getLocation().getLng());
+            mDistance.setText(resultDistance);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         // Try to retrieve the restaurant's picture

@@ -10,7 +10,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
@@ -18,20 +17,13 @@ import androidx.lifecycle.ViewModelProviders;
 import com.bumptech.glide.Glide;
 import com.neandril.go4lunch.BuildConfig;
 import com.neandril.go4lunch.R;
-import com.neandril.go4lunch.api.GoogleApiCall;
 import com.neandril.go4lunch.controllers.base.BaseActivity;
 import com.neandril.go4lunch.controllers.fragments.MapViewFragment;
 import com.neandril.go4lunch.models.DetailViewModel;
-import com.neandril.go4lunch.models.PlacesViewModel;
-import com.neandril.go4lunch.models.Restaurant;
 import com.neandril.go4lunch.models.details.Detail;
-import com.neandril.go4lunch.models.places.PlacesDetail;
-
-import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-import okhttp3.Interceptor;
 
 public class RestaurantActivity extends BaseActivity {
 

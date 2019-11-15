@@ -101,6 +101,7 @@ public class MenuNavigationTest {
 
         onView(withId(R.id.fragment_listView)).check(matches(isDisplayed()));
 
+        Thread.sleep(1000);
         // Check Workmates Fragment
         onView(
                 allOf(
@@ -111,6 +112,7 @@ public class MenuNavigationTest {
 
         onView(withId(R.id.fragment_workmates)).check(matches(isDisplayed()));
 
+        Thread.sleep(1000);
         // Check Map View Fragment
         onView(
                 allOf(

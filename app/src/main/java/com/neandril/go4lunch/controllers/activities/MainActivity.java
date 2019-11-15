@@ -1,6 +1,11 @@
 package com.neandril.go4lunch.controllers.activities;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
+import android.location.LocationManager;
+import android.location.LocationListener;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -12,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
@@ -24,14 +30,29 @@ import androidx.fragment.app.FragmentManager;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.firebase.ui.auth.AuthUI;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.libraries.places.api.Places;
+import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.api.model.RectangularBounds;
+import com.google.android.libraries.places.api.model.TypeFilter;
+import com.google.android.libraries.places.api.net.PlacesClient;
+import com.google.android.libraries.places.widget.Autocomplete;
+import com.google.android.libraries.places.widget.AutocompleteActivity;
+import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
+import com.neandril.go4lunch.BuildConfig;
 import com.neandril.go4lunch.R;
 import com.neandril.go4lunch.controllers.base.BaseActivity;
 import com.neandril.go4lunch.controllers.fragments.ListViewFragment;
 import com.neandril.go4lunch.controllers.fragments.MapViewFragment;
 import com.neandril.go4lunch.controllers.fragments.WorkmatesFragment;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
 
 import butterknife.BindView;
 
@@ -41,12 +62,16 @@ public class MainActivity extends BaseActivity
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
+    int AUTOCOMPLETE_REQUEST_CODE = 1;
+
     // Widgets
     @BindView(R.id.activity_main_coordinator_layout) CoordinatorLayout mCoordinatorLayout;
     @BindView(R.id.drawer_layout) DrawerLayout mDrawerLayout;
     @BindView(R.id.nav_view) NavigationView mNavigationView;
     @BindView(R.id.bottom_navigation_view) BottomNavigationView mBottomNavigationView;
     @BindView(R.id.toolbar) Toolbar mToolbar;
+
+    private LatLngBounds mLatLngBounds;
 
     // ***************************
     // BASE METHODS
@@ -66,6 +91,9 @@ public class MainActivity extends BaseActivity
         super.onCreate(savedInstanceState);
 
         showFragment(new MapViewFragment());
+
+        Places.initialize(this, BuildConfig.ApiKey);
+        PlacesClient placesClient = Places.createClient(this);
 
         configureToolbar();
         configureDrawer();
@@ -139,6 +167,56 @@ public class MainActivity extends BaseActivity
         return true;
     }
 
+    public LatLngBounds getLatLngBounds() {
+        return mLatLngBounds;
+    }
+
+    public void setmLatLngBounds(LatLngBounds latLngBounds) {
+        this.mLatLngBounds = latLngBounds;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_search:
+                Log.e(TAG, "onOptionsItemSelected: Search clicked");
+
+                RectangularBounds rectangularBounds = RectangularBounds.newInstance(getLatLngBounds().southwest, getLatLngBounds().northeast);
+
+                List<Place.Field> fields = Arrays.asList(Place.Field.ID, Place.Field.NAME);
+
+                Intent intent = new Autocomplete.IntentBuilder(
+                        AutocompleteActivityMode.OVERLAY, fields)
+                        .setTypeFilter(TypeFilter.ESTABLISHMENT)
+                        .setCountry("fr")
+                        .setLocationBias(rectangularBounds)
+                        .setHint("Search restaurants")
+                        .build(this);
+                startActivityForResult(intent, AUTOCOMPLETE_REQUEST_CODE);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == AUTOCOMPLETE_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                Place place = Autocomplete.getPlaceFromIntent(data);
+                Log.d(TAG, "onActivityResult: Place name: " + place.getName() + ", Place id: " + place.getId());
+
+            } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
+                // Handle the error
+                Status status = Autocomplete.getStatusFromIntent(data);
+                Log.d(TAG, "onActivityResult: Status: " + status.getStatusMessage());
+            } else if (resultCode == RESULT_CANCELED) {
+                Log.d(TAG, "onActivityResult: Operation canceled");
+            }
+        }
+    }
+
     // Create the searchView
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -146,17 +224,18 @@ public class MainActivity extends BaseActivity
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.menu_search, menu);
         MenuItem searchViewItem = menu.findItem(R.id.menu_search);
-
         final SearchView searchView = (SearchView) searchViewItem.getActionView();
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
+                Log.e(TAG, "onQueryTextSubmit: Query: " + query);
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
+                Log.e(TAG, "onQueryTextChange: NewText: " + newText);
                 return false;
             }
         });

@@ -25,6 +25,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.Task;
@@ -35,8 +36,10 @@ import com.karumi.dexter.listener.PermissionGrantedResponse;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.single.PermissionListener;
 import com.neandril.go4lunch.R;
+import com.neandril.go4lunch.controllers.activities.MainActivity;
 import com.neandril.go4lunch.controllers.activities.RestaurantActivity;
 import com.neandril.go4lunch.controllers.base.BaseFragment;
+import com.neandril.go4lunch.utils.Singleton;
 import com.neandril.go4lunch.models.PlacesViewModel;
 import com.neandril.go4lunch.models.places.PlacesDetail;
 
@@ -136,7 +139,6 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback 
         mFusedLocationProviderClient.getLastLocation().addOnSuccessListener(location -> {
             if (location != null) {
                 // Display the current location on the device screen
-                // Toast.makeText(getContext(), "Latitude is :" + location.getLatitude() + " and Longitude is: " + location.getLongitude(), Toast.LENGTH_SHORT).show();
                 latitude = location.getLatitude();
                 longitude = location.getLongitude();
                 LatLng latLng = new LatLng(latitude, longitude);
@@ -145,6 +147,16 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback 
                 // buildRetrofitRequest(latitude, longitude);
                 cameraUpdate(latLng);
 
+                // Build LatLngBounds and pass it to MainActivity for autocomplete
+                LatLngBounds.Builder builder = new LatLngBounds.Builder();
+                builder.include(latLng);
+                LatLngBounds bounds = builder.build();
+                ((MainActivity) Objects.requireNonNull(getActivity())).setmLatLngBounds(bounds);
+
+                Singleton.getInstance().setUserLat(latitude);
+                Singleton.getInstance().setUserLng(longitude);
+
+                // Request
                 viewModel = ViewModelProviders.of(Objects.requireNonNull(getActivity())).get(PlacesViewModel.class);
                 viewModel.init(position);
                 final Observer<PlacesDetail> observer = (PlacesDetail placesDetail) -> {
@@ -238,8 +250,6 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback 
     @Override
     public boolean onMarkerClick(Marker marker) {
         Log.d(TAG, "onMarkerClick: Marker:" + marker.getSnippet());
-
-        String test = marker.getTitle();
 
         Intent intent = new Intent(getContext(), RestaurantActivity.class);
         intent.putExtra(RESTAURANT_TAG, Objects.requireNonNull(marker.getTag()).toString());

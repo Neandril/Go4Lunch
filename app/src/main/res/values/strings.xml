@@ -53,4 +53,10 @@
     <string name="restaurant_background_image_description">Restaurant picture</string>
     <string name="no_website_found">No website found for this restaurant</string>
 
+    <!-- UTILITY STRINGS -->
+    <string name="closed">Closed</string>
+    <string name="always_open">Open 24/7</string>
+    <string name="open_until">Open until</string>
+    <string name="closes_soon">Closes soon</string>
+
 </resources>

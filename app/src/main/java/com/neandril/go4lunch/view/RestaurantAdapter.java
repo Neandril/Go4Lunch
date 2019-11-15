@@ -45,4 +45,8 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantViewHolder
         Log.d(TAG, "getItemCount: " + mPlaceList.get(0).getResults().size());
         return mPlaceList.get(0).getResults().size();
     }
+
+    public List<PlacesDetail> getmPlaceList() {
+        return mPlaceList;
+    }
 }
