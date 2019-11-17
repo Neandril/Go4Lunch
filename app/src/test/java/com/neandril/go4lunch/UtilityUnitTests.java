@@ -14,16 +14,16 @@ import static org.junit.Assert.*;
  *
  * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
  */
-public class UtilityUnitTests implements Utility {
+public class UtilityUnitTests {
 
-    List<Period> periods;
+    private Utility utility = new Utility() { };
 
     @Test
     public void should_ratingConvertedInto3stars() {
-        assertEquals(0.0f, convertRating(0.0d), 0.0);
-        assertEquals(0.9f, convertRating(1.5d),0.0);
-        assertEquals(2.85f, convertRating(4.75d), 0.0);
-        assertEquals(3.0f, convertRating(5.0d), 0.0);
+        assertEquals(0.0f, utility.convertRating(0.0d), 0.0);
+        assertEquals(0.9f, utility.convertRating(1.5d),0.0);
+        assertEquals(2.85f, utility.convertRating(4.75d), 0.0);
+        assertEquals(3.0f, utility.convertRating(5.0d), 0.0);
     }
 
     @Test
@@ -35,8 +35,6 @@ public class UtilityUnitTests implements Utility {
         double userLat = 48.442296;
         double userLng = -4.411621;
 
-        assertEquals("150m", distance(userLat, targetLat, userLng, targetLng));
+        assertEquals("150m", utility.distance(userLat, targetLat, userLng, targetLng));
     }
-
-
 }

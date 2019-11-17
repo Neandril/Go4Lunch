@@ -30,7 +30,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     // Get objects
     protected abstract int getActivityLayout();
-    protected abstract View getCoordinatorLayout();
+    protected abstract View getConstraintLayout();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -44,7 +44,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     public void showSnackBar(String message) {
         Log.d(TAG, "showSnackBar: message : " + message);
-        Snackbar.make(getCoordinatorLayout(), message, Snackbar.LENGTH_LONG).show();
+        Snackbar.make(getConstraintLayout(), message, Snackbar.LENGTH_LONG).show();
     }
 
     // ***************************

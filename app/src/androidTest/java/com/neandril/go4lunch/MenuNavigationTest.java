@@ -89,7 +89,7 @@ public class MenuNavigationTest {
      */
     @Test
     public void bottomNavigation_itemsClick_shouldDiaplayFragments() throws InterruptedException {
-        //TODO: Use idling resources instead of sleep
+        //TODO: Use idling resources (espresso) instead of sleep
         Thread.sleep(1000);
         // Check List View Fragment
         onView(

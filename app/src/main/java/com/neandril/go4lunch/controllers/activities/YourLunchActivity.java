@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 
@@ -18,7 +17,7 @@ public class YourLunchActivity extends BaseActivity {
     private static final String TAG = YourLunchActivity.class.getSimpleName();
 
     // DESIGN
-    @BindView(R.id.your_lunch_layout) CoordinatorLayout mCoordinatorLayout;
+    @BindView(R.id.your_lunch_layout) CoordinatorLayout mConstraintLayout;
     @BindView(R.id.toolbar) Toolbar mToolbar;
 
     @Override
@@ -27,8 +26,8 @@ public class YourLunchActivity extends BaseActivity {
     }
 
     @Override
-    protected View getCoordinatorLayout() {
-        return mCoordinatorLayout;
+    protected View getConstraintLayout() {
+        return mConstraintLayout;
     }
 
     @Override

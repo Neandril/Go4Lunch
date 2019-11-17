@@ -27,7 +27,7 @@ public class LoginActivity extends BaseActivity {
     private static final int RC_SIGN_IN = 123;
 
     // Layout
-    @BindView(R.id.login_coordinator_layout) ConstraintLayout mCoordinatorLayout;
+    @BindView(R.id.login_constraint_layout) ConstraintLayout mConstraintLayout;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -48,7 +48,7 @@ public class LoginActivity extends BaseActivity {
     protected int getActivityLayout() { return R.layout.activity_login; }
 
     @Override
-    protected View getCoordinatorLayout() { return mCoordinatorLayout; }
+    protected View getConstraintLayout() { return mConstraintLayout; }
 
     // ***************************
     // ACTIONS

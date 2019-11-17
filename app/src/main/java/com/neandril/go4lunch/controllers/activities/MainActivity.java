@@ -1,11 +1,6 @@
 package com.neandril.go4lunch.controllers.activities;
 
-import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
-import android.location.Location;
-import android.location.LocationManager;
-import android.location.LocationListener;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -21,6 +16,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -40,6 +36,8 @@ import com.google.android.libraries.places.api.model.TypeFilter;
 import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.libraries.places.widget.Autocomplete;
 import com.google.android.libraries.places.widget.AutocompleteActivity;
+import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
+import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
@@ -52,7 +50,6 @@ import com.neandril.go4lunch.controllers.fragments.WorkmatesFragment;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 
 import butterknife.BindView;
 
@@ -65,7 +62,7 @@ public class MainActivity extends BaseActivity
     int AUTOCOMPLETE_REQUEST_CODE = 1;
 
     // Widgets
-    @BindView(R.id.activity_main_coordinator_layout) CoordinatorLayout mCoordinatorLayout;
+    @BindView(R.id.activity_main_constraint_layout) ConstraintLayout mConstraintLayout;
     @BindView(R.id.drawer_layout) DrawerLayout mDrawerLayout;
     @BindView(R.id.nav_view) NavigationView mNavigationView;
     @BindView(R.id.bottom_navigation_view) BottomNavigationView mBottomNavigationView;
@@ -82,8 +79,8 @@ public class MainActivity extends BaseActivity
     }
 
     @Override
-    protected View getCoordinatorLayout() {
-        return mCoordinatorLayout;
+    protected View getConstraintLayout() {
+        return mConstraintLayout;
     }
 
     @Override
@@ -181,7 +178,7 @@ public class MainActivity extends BaseActivity
             case R.id.menu_search:
                 Log.e(TAG, "onOptionsItemSelected: Search clicked");
 
-                RectangularBounds rectangularBounds = RectangularBounds.newInstance(getLatLngBounds().southwest, getLatLngBounds().northeast);
+/*                RectangularBounds rectangularBounds = RectangularBounds.newInstance(getLatLngBounds().southwest, getLatLngBounds().northeast);
 
                 List<Place.Field> fields = Arrays.asList(Place.Field.ID, Place.Field.NAME);
 
@@ -192,7 +189,31 @@ public class MainActivity extends BaseActivity
                         .setLocationBias(rectangularBounds)
                         .setHint("Search restaurants")
                         .build(this);
-                startActivityForResult(intent, AUTOCOMPLETE_REQUEST_CODE);
+                startActivityForResult(intent, AUTOCOMPLETE_REQUEST_CODE);*/
+
+
+                // Initialize the AutocompleteSupportFragment.
+                AutocompleteSupportFragment autocompleteFragment = (AutocompleteSupportFragment)
+                        getSupportFragmentManager().findFragmentById(R.id.autocomplete_fragment);
+
+                // Specify the types of place data to return.
+                autocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME));
+
+                // Set up a PlaceSelectionListener to handle the response.
+                autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+                    @Override
+                    public void onPlaceSelected(Place place) {
+                        // TODO: Get info about the selected place.
+                        Log.i(TAG, "Place: " + place.getName() + ", " + place.getId());
+                    }
+
+                    @Override
+                    public void onError(Status status) {
+                        // TODO: Handle the error.
+                        Log.i(TAG, "An error occurred: " + status);
+                    }
+                });
+
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

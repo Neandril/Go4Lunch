@@ -6,6 +6,7 @@ import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 
 import com.neandril.go4lunch.R;
@@ -18,7 +19,7 @@ public class SettingsActivity extends BaseActivity {
     private static final String TAG = SettingsActivity.class.getSimpleName();
 
     // DESIGN
-    @BindView(R.id.settings_layout) CoordinatorLayout mCoordinatorLayout;
+    @BindView(R.id.settings_layout) ConstraintLayout mConstraintLayout;
     @BindView(R.id.toolbar) Toolbar mToolbar;
 
     @Override
@@ -27,8 +28,8 @@ public class SettingsActivity extends BaseActivity {
     }
 
     @Override
-    protected View getCoordinatorLayout() {
-        return mCoordinatorLayout;
+    protected View getConstraintLayout() {
+        return mConstraintLayout;
     }
 
     @Override

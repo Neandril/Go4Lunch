@@ -10,7 +10,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
@@ -34,7 +34,7 @@ public class RestaurantActivity extends BaseActivity {
     public String mPhone;
     private DetailViewModel viewModel;
 
-    @BindView(R.id.activity_restaurant_main_layout) CoordinatorLayout mCoordinatorLayout;
+    @BindView(R.id.activity_restaurant_main_layout) ConstraintLayout mConstraintLayout;
     @BindView(R.id.tv_restaurantName) TextView mRestaurantName;
     @BindView(R.id.tv_restaurantAddress) TextView mRestaurantAddress;
     @BindView(R.id.restaurant_background_picture) ImageView mRestaurantBackgroundImg;
@@ -46,8 +46,8 @@ public class RestaurantActivity extends BaseActivity {
     }
 
     @Override
-    protected View getCoordinatorLayout() {
-        return mCoordinatorLayout;
+    protected View getConstraintLayout() {
+        return mConstraintLayout;
     }
 
     @Override
