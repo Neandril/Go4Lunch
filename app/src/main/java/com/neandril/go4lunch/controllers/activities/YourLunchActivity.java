@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.View;
 
 import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 
 import com.neandril.go4lunch.R;
@@ -17,7 +18,7 @@ public class YourLunchActivity extends BaseActivity {
     private static final String TAG = YourLunchActivity.class.getSimpleName();
 
     // DESIGN
-    @BindView(R.id.your_lunch_layout) CoordinatorLayout mConstraintLayout;
+    @BindView(R.id.your_lunch_layout) ConstraintLayout mConstraintLayout;
     @BindView(R.id.toolbar) Toolbar mToolbar;
 
     @Override

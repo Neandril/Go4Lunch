@@ -8,6 +8,7 @@
 
     <color name="black">#272822</color>
     <color name="white">#FFFFFF</color>
+    <color name="dark_grey">#616161</color>
 
     <color name="google_button">#D54135</color>
     <color name="facebook_button">#4C76BE</color>

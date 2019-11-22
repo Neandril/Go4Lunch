@@ -1,19 +1,22 @@
 package com.neandril.go4lunch.utils;
 
+import com.neandril.go4lunch.models.details.Period;
+
 import java.util.Calendar;
+import java.util.List;
 
 /**
  * Utility Interface containing many usefull methods
  */
 
-public interface Utility {
+public class Utility {
 
     /**
      * Convert 5-stars rating into 3-stars
      * @param rating - retrieved from Google
      * @return - float value
      */
-    default float convertRating(double rating) {
+    public float convertRating(double rating) {
         rating = (rating * 3) / 5;
         return (float) rating;
     }
@@ -22,10 +25,21 @@ public interface Utility {
      * Get the day of today
      * @return - today
      */
-    default Integer dayOfWeek() {
+    public Integer dayOfWeek() {
         Calendar calendar = Calendar.getInstance();
         // 1 = Monday, ... , 7 = Sunday
         return calendar.get(Calendar.DAY_OF_WEEK)-1;
+    }
+
+    public String openingTime(boolean isOpen, List<Period> periodList) {
+
+        return null;
+    }
+
+    public Integer getWeekday() {
+        Calendar calendar = Calendar.getInstance();
+        // Maps Api : Sunday = 0
+        return calendar.get(Calendar.DAY_OF_WEEK) -1;
     }
 
     /**
@@ -37,7 +51,7 @@ public interface Utility {
      * @return - result of the operation superceded by " m" for meters
      */
 
-    default String distance(double userLat, double targetLat, double userLng, double targetLng) {
+    public String distance(double userLat, double targetLat, double userLng, double targetLng) {
 
         final int earth = 6371; // Earth radius
 

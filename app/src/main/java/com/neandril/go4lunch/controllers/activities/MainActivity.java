@@ -1,23 +1,26 @@
 package com.neandril.go4lunch.controllers.activities;
 
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
+import android.text.style.CharacterStyle;
+import android.text.style.StyleSpan;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
@@ -26,19 +29,16 @@ import androidx.fragment.app.FragmentManager;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.firebase.ui.auth.AuthUI;
-import com.google.android.gms.common.api.Status;
+import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.libraries.places.api.Places;
-import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.api.model.AutocompletePrediction;
+import com.google.android.libraries.places.api.model.AutocompleteSessionToken;
 import com.google.android.libraries.places.api.model.RectangularBounds;
 import com.google.android.libraries.places.api.model.TypeFilter;
+import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRequest;
 import com.google.android.libraries.places.api.net.PlacesClient;
-import com.google.android.libraries.places.widget.Autocomplete;
-import com.google.android.libraries.places.widget.AutocompleteActivity;
-import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
-import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
-import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.neandril.go4lunch.BuildConfig;
@@ -47,8 +47,11 @@ import com.neandril.go4lunch.controllers.base.BaseActivity;
 import com.neandril.go4lunch.controllers.fragments.ListViewFragment;
 import com.neandril.go4lunch.controllers.fragments.MapViewFragment;
 import com.neandril.go4lunch.controllers.fragments.WorkmatesFragment;
+import com.neandril.go4lunch.models.RestaurantAutocompleteModel;
+import com.neandril.go4lunch.utils.UserHelper;
+import com.neandril.go4lunch.view.AutocompleteAdapter;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -60,6 +63,7 @@ public class MainActivity extends BaseActivity
     private static final String TAG = MainActivity.class.getSimpleName();
 
     int AUTOCOMPLETE_REQUEST_CODE = 1;
+    private static final CharacterStyle STYLE_BOLD = new StyleSpan(Typeface.BOLD);
 
     // Widgets
     @BindView(R.id.activity_main_constraint_layout) ConstraintLayout mConstraintLayout;
@@ -67,8 +71,12 @@ public class MainActivity extends BaseActivity
     @BindView(R.id.nav_view) NavigationView mNavigationView;
     @BindView(R.id.bottom_navigation_view) BottomNavigationView mBottomNavigationView;
     @BindView(R.id.toolbar) Toolbar mToolbar;
+    @BindView(R.id.layout_autocomplete) LinearLayout mLayoutAutocomplete;
+    @BindView(R.id.autocompleteTextView) AutoCompleteTextView mAutoCompleteTextView;
 
     private LatLngBounds mLatLngBounds;
+    private String restaurantName;
+    private String restaurantVicinity;
 
     // ***************************
     // BASE METHODS
@@ -90,7 +98,6 @@ public class MainActivity extends BaseActivity
         showFragment(new MapViewFragment());
 
         Places.initialize(this, BuildConfig.ApiKey);
-        PlacesClient placesClient = Places.createClient(this);
 
         configureToolbar();
         configureDrawer();
@@ -172,96 +179,43 @@ public class MainActivity extends BaseActivity
         this.mLatLngBounds = latLngBounds;
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_search:
-                Log.e(TAG, "onOptionsItemSelected: Search clicked");
+    private void configurePredictions(Editable str) {
+        Log.d(TAG, "configurePredictions: " + str.toString());
+        PlacesClient placesClient = Places.createClient(this);
 
-/*                RectangularBounds rectangularBounds = RectangularBounds.newInstance(getLatLngBounds().southwest, getLatLngBounds().northeast);
+        AutocompleteSessionToken token = AutocompleteSessionToken.newInstance();
+        RectangularBounds rectangularBounds = RectangularBounds.newInstance(getLatLngBounds().southwest, getLatLngBounds().northeast);
 
-                List<Place.Field> fields = Arrays.asList(Place.Field.ID, Place.Field.NAME);
+        FindAutocompletePredictionsRequest request = FindAutocompletePredictionsRequest.builder()
+                .setLocationBias(rectangularBounds)
+                .setCountry("FR")
+                .setQuery(str.toString())
+                .setTypeFilter(TypeFilter.ESTABLISHMENT)
+                .setSessionToken(token)
+                .build();
 
-                Intent intent = new Autocomplete.IntentBuilder(
-                        AutocompleteActivityMode.OVERLAY, fields)
-                        .setTypeFilter(TypeFilter.ESTABLISHMENT)
-                        .setCountry("fr")
-                        .setLocationBias(rectangularBounds)
-                        .setHint("Search restaurants")
-                        .build(this);
-                startActivityForResult(intent, AUTOCOMPLETE_REQUEST_CODE);*/
+        placesClient.findAutocompletePredictions(request).addOnSuccessListener((response) -> {
+            List<RestaurantAutocompleteModel> restaurants = new ArrayList<>();
 
+            for (AutocompletePrediction prediction : response.getAutocompletePredictions()) {
+                restaurantName = prediction.getPrimaryText(STYLE_BOLD).toString();
+                restaurantVicinity = prediction.getSecondaryText(null).toString();
 
-                // Initialize the AutocompleteSupportFragment.
-                AutocompleteSupportFragment autocompleteFragment = (AutocompleteSupportFragment)
-                        getSupportFragmentManager().findFragmentById(R.id.autocomplete_fragment);
-
-                // Specify the types of place data to return.
-                autocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME));
-
-                // Set up a PlaceSelectionListener to handle the response.
-                autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
-                    @Override
-                    public void onPlaceSelected(Place place) {
-                        // TODO: Get info about the selected place.
-                        Log.i(TAG, "Place: " + place.getName() + ", " + place.getId());
-                    }
-
-                    @Override
-                    public void onError(Status status) {
-                        // TODO: Handle the error.
-                        Log.i(TAG, "An error occurred: " + status);
-                    }
-                });
-
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == AUTOCOMPLETE_REQUEST_CODE) {
-            if (resultCode == RESULT_OK) {
-                Place place = Autocomplete.getPlaceFromIntent(data);
-                Log.d(TAG, "onActivityResult: Place name: " + place.getName() + ", Place id: " + place.getId());
-
-            } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
-                // Handle the error
-                Status status = Autocomplete.getStatusFromIntent(data);
-                Log.d(TAG, "onActivityResult: Status: " + status.getStatusMessage());
-            } else if (resultCode == RESULT_CANCELED) {
-                Log.d(TAG, "onActivityResult: Operation canceled");
-            }
-        }
-    }
-
-    // Create the searchView
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        Log.d(TAG, "onCreateOptionsMenu: Menu created");
-        MenuInflater menuInflater = getMenuInflater();
-        menuInflater.inflate(R.menu.menu_search, menu);
-        MenuItem searchViewItem = menu.findItem(R.id.menu_search);
-        final SearchView searchView = (SearchView) searchViewItem.getActionView();
-
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                Log.e(TAG, "onQueryTextSubmit: Query: " + query);
-                return false;
+                restaurants.add(new RestaurantAutocompleteModel(
+                        prediction.getPlaceId(),
+                        restaurantName,
+                        restaurantVicinity));
             }
 
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                Log.e(TAG, "onQueryTextChange: NewText: " + newText);
-                return false;
+            AutocompleteAdapter adapter = new AutocompleteAdapter(this, restaurants);
+            mAutoCompleteTextView.setAdapter(adapter);
+
+        }).addOnFailureListener((exception) -> {
+            if (exception instanceof ApiException) {
+                ApiException apiException = (ApiException) exception;
+                Log.e(TAG, "Place not found: " + apiException.getStatusCode());
             }
         });
-
-        return super.onCreateOptionsMenu(menu);
     }
 
     // ***************************
@@ -281,8 +235,9 @@ public class MainActivity extends BaseActivity
     @Override
     public void onBackPressed() {
         Log.d(TAG, "onBackPressed: Back button pressed");
-        if (this.mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
+        if ((this.mDrawerLayout.isDrawerOpen(GravityCompat.START) || mLayoutAutocomplete.getVisibility() == View.VISIBLE)) {
             mDrawerLayout.closeDrawer(GravityCompat.START);
+            mLayoutAutocomplete.setVisibility(View.GONE);
         } else {
             super.onBackPressed();
         }
@@ -341,5 +296,54 @@ public class MainActivity extends BaseActivity
             tvMail.setText(email);
             tvName.setText(username);
         }
+    }
+
+/*    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_search, menu);
+
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        searchView.setIconifiedByDefault(false);
+
+        return true;
+    }*/
+
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        MenuItem menuItem = menu.add(Menu.NONE, Menu.FIRST, Menu.NONE, R.string.search_restaurants)
+                .setIcon(R.drawable.ic_search);
+        menuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        menuItem.setOnMenuItemClickListener(item -> {
+
+            if (mLayoutAutocomplete.getVisibility() == View.GONE) {
+                mLayoutAutocomplete.setVisibility(View.VISIBLE);
+            } else {
+                mLayoutAutocomplete.setVisibility(View.GONE);
+            }
+
+            mAutoCompleteTextView.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) { }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+                    if (s.length() > 2) {
+                        Log.e(TAG, "onQueryTextChange: NewText: " + s);
+                        configurePredictions(s);
+                    }
+                }
+            });
+
+            return true;
+        });
+
+        return super.onPrepareOptionsMenu(menu);
     }
 }

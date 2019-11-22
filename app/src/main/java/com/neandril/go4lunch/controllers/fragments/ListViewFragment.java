@@ -16,6 +16,7 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.libraries.places.api.model.Place;
 import com.neandril.go4lunch.R;
 import com.neandril.go4lunch.controllers.activities.MainActivity;
 import com.neandril.go4lunch.controllers.activities.RestaurantActivity;
@@ -67,18 +68,23 @@ public class ListViewFragment extends BaseFragment {
     private void updateList() {
         this.mPlaces.clear();
 
-        PlacesViewModel placesViewModel = ViewModelProviders.of(Objects.requireNonNull(getActivity())).get(PlacesViewModel.class);
+        try {
+            PlacesViewModel placesViewModel = ViewModelProviders.of(Objects.requireNonNull(getActivity())).get(PlacesViewModel.class);
 
-        final Observer<PlacesDetail> observer = (PlacesDetail placesDetail) -> {
-            mPlaces.add(placesDetail);
-            mAdapter.notifyDataSetChanged();
-            for (int i = 0; i < mPlaces.get(0).getResults().size(); i++) {
-                Log.e(TAG, "updateList: Name: " + mPlaces.get(0).getResults().get(i).getName() + " - " + mPlaces.get(0).getResults().get(i).getVicinity());
-            }
+            final Observer<PlacesDetail> observer = (PlacesDetail placesDetail) -> {
+                mPlaces.add(placesDetail);
+                mAdapter.notifyDataSetChanged();
+                for (int i = 0; i < mPlaces.get(0).getResults().size(); i++) {
+                    Log.e(TAG, "updateList: Name: " + mPlaces.get(0).getResults().get(i).getName() + " - " + mPlaces.get(0).getResults().get(i).getVicinity());
+                }
 
-        };
+            };
+            placesViewModel.getRepository().observe(this, observer);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-        placesViewModel.getRepository().observe(this, observer);
+
     }
 
     private void configureOnClickRecyclerView() {

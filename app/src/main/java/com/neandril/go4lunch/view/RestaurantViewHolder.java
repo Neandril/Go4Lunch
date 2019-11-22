@@ -13,13 +13,13 @@ import com.bumptech.glide.Glide;
 import com.neandril.go4lunch.BuildConfig;
 import com.neandril.go4lunch.R;
 import com.neandril.go4lunch.utils.Singleton;
-import com.neandril.go4lunch.utils.Utility;
 import com.neandril.go4lunch.models.places.Result;
+import com.neandril.go4lunch.utils.Utility;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class RestaurantViewHolder extends RecyclerView.ViewHolder implements Utility {
+public class RestaurantViewHolder extends RecyclerView.ViewHolder {
 
     private static final String TAG = "RestaurantViewHolder";
 
@@ -43,13 +43,15 @@ public class RestaurantViewHolder extends RecyclerView.ViewHolder implements Uti
     void updateRestaurantsList(Result result) {
         Log.d(TAG, "updateUi: ");
 
+        Utility utility = new Utility();
+
         // Restaurant name and address
         this.mRestaurantName.setText(result.getName());
         this.mRestaurantAddress.setText(result.getVicinity());
 
         // Get the rating 3-stars indexed
         if (result.getRating() != null) {
-            mRatingBar.setRating(convertRating(result.getRating()));
+            mRatingBar.setRating(utility.convertRating(result.getRating()));
         } else {
             mRatingBar.setRating(0);
         }
@@ -67,7 +69,7 @@ public class RestaurantViewHolder extends RecyclerView.ViewHolder implements Uti
 
         // Distance
         try {
-            String resultDistance = distance(
+            String resultDistance = utility.distance(
                     lat,
                     result.getGeometry().getLocation().getLat(),
                     lng,

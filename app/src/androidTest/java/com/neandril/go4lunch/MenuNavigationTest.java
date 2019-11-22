@@ -15,6 +15,7 @@ import androidx.test.rule.GrantPermissionRule;
 import com.neandril.go4lunch.controllers.activities.MainActivity;
 import com.neandril.go4lunch.controllers.activities.YourLunchActivity;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -43,9 +44,17 @@ public class MenuNavigationTest {
     public GrantPermissionRule grantPermissionRule = GrantPermissionRule.grant(
             Manifest.permission.ACCESS_FINE_LOCATION);
 
+    public MenuNavigationTest() {
+    }
+
     @Before
     public void before() {
         activityTestRule.getActivity();
+    }
+
+    @After
+    public void tearDown() {
+        activityTestRule.finishActivity();
     }
 
     /**
@@ -90,7 +99,7 @@ public class MenuNavigationTest {
     @Test
     public void bottomNavigation_itemsClick_shouldDiaplayFragments() throws InterruptedException {
         //TODO: Use idling resources (espresso) instead of sleep
-        Thread.sleep(1000);
+/*        Thread.sleep(1000);
         // Check List View Fragment
         onView(
                 allOf(
@@ -99,7 +108,7 @@ public class MenuNavigationTest {
                 )
         ).perform(click());
 
-        onView(withId(R.id.fragment_listView)).check(matches(isDisplayed()));
+        onView(withId(R.id.fragment_listView)).check(matches(isDisplayed()));*/
 
         Thread.sleep(1000);
         // Check Workmates Fragment

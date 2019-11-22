@@ -13,6 +13,7 @@ import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.IdpResponse;
 import com.neandril.go4lunch.R;
 import com.neandril.go4lunch.controllers.base.BaseActivity;
+import com.neandril.go4lunch.utils.UserHelper;
 
 import java.util.Collections;
 
@@ -138,9 +139,13 @@ public class LoginActivity extends BaseActivity {
     }
 
     private void createUserInFirestore() {
-        Log.d(TAG, "createUserInFirestore: ");
+        if (getCurrentUser() != null) {
+            String username = this.getCurrentUser().getDisplayName();
+            String uid = this.getCurrentUser().getUid();
+            String urlPicture = (this.getCurrentUser().getPhotoUrl() != null) ? this.getCurrentUser().getPhotoUrl().toString() : null;
 
-        Log.e(TAG, "createUserInFirestore: mail :" + this.getCurrentUser().getUid() + " - " + this.getCurrentUser().getEmail());
+            UserHelper.createUser(uid, username, urlPicture, null, null);
+        }
     }
 
     // ***************************

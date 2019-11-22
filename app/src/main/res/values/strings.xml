@@ -8,6 +8,7 @@
 
     <string name="common_status_code_resolution_required">Your need to enable your GPS</string>
     <string name="location_status_code_change_unavailable">You can\'t use location services</string>
+    <string name="not_implemented">This option is not implemented yet</string>
 
     <!-- NAVIGATION DRAWER STRINGS -->
     <string name="navigation_drawer_open">Open navigation drawer</string>

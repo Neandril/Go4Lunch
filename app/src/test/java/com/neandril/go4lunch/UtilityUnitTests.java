@@ -16,7 +16,7 @@ import static org.junit.Assert.*;
  */
 public class UtilityUnitTests {
 
-    private Utility utility = new Utility() { };
+    Utility utility = new Utility();
 
     @Test
     public void should_ratingConvertedInto3stars() {
