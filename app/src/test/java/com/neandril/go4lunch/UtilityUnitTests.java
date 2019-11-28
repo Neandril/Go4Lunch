@@ -37,4 +37,10 @@ public class UtilityUnitTests {
 
         assertEquals("150m", utility.distance(userLat, targetLat, userLng, targetLng));
     }
+
+    @Test
+    public void openingTimeTest() {
+
+        assertEquals(Integer.valueOf(2), utility.getWeekday());
+    }
 }

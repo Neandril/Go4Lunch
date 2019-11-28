@@ -120,7 +120,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 app:backgroundTint="@color/colorPrimary"
-                android:background="@drawable/ic_like" />
+                android:background="@drawable/ic_star_empty" />
 
             <TextView
                 android:id="@+id/tv_restaurant_like"

@@ -1,24 +1,27 @@
 package com.neandril.go4lunch.controllers.activities;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.text.Editable;
 import android.text.TextUtils;
-import android.text.TextWatcher;
 import android.text.style.CharacterStyle;
 import android.text.style.StyleSpan;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AutoCompleteTextView;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.view.GravityCompat;
@@ -29,7 +32,6 @@ import androidx.fragment.app.FragmentManager;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.firebase.ui.auth.AuthUI;
-import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.libraries.places.api.Places;
@@ -48,7 +50,8 @@ import com.neandril.go4lunch.controllers.fragments.ListViewFragment;
 import com.neandril.go4lunch.controllers.fragments.MapViewFragment;
 import com.neandril.go4lunch.controllers.fragments.WorkmatesFragment;
 import com.neandril.go4lunch.models.RestaurantAutocompleteModel;
-import com.neandril.go4lunch.utils.UserHelper;
+import com.neandril.go4lunch.models.places.PlacesDetail;
+import com.neandril.go4lunch.utils.Utility;
 import com.neandril.go4lunch.view.AutocompleteAdapter;
 
 import java.util.ArrayList;
@@ -61,6 +64,7 @@ public class MainActivity extends BaseActivity
         BottomNavigationView.OnNavigationItemSelectedListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
+    public static final String RESTAURANT_TAG = "restaurantId";
 
     int AUTOCOMPLETE_REQUEST_CODE = 1;
     private static final CharacterStyle STYLE_BOLD = new StyleSpan(Typeface.BOLD);
@@ -71,12 +75,15 @@ public class MainActivity extends BaseActivity
     @BindView(R.id.nav_view) NavigationView mNavigationView;
     @BindView(R.id.bottom_navigation_view) BottomNavigationView mBottomNavigationView;
     @BindView(R.id.toolbar) Toolbar mToolbar;
-    @BindView(R.id.layout_autocomplete) LinearLayout mLayoutAutocomplete;
-    @BindView(R.id.autocompleteTextView) AutoCompleteTextView mAutoCompleteTextView;
+    //@BindView(R.id.layout_autocomplete) LinearLayout mLayoutAutocomplete;
+    //@BindView(R.id.autocompleteTextView) AutoCompleteTextView mAutoCompleteTextView;
 
+    private SearchView.SearchAutoComplete mSearchAutocomplete;
     private LatLngBounds mLatLngBounds;
     private String restaurantName;
     private String restaurantVicinity;
+    private ArrayAdapter<String> mArrayAdapter;
+    private AutocompleteAdapter mAutocompleteAdapter;
 
     // ***************************
     // BASE METHODS
@@ -105,6 +112,9 @@ public class MainActivity extends BaseActivity
         configureBottomNavigationView();
 
         getUserInformations();
+
+        Utility utility = new Utility();
+        utility.getWeekday();
     }
 
     // ***************************
@@ -179,8 +189,9 @@ public class MainActivity extends BaseActivity
         this.mLatLngBounds = latLngBounds;
     }
 
-    private void configurePredictions(Editable str) {
-        Log.d(TAG, "configurePredictions: " + str.toString());
+
+    private void configurePredictions(String str) {
+        Log.d(TAG, "configurePredictions: " + str);
         PlacesClient placesClient = Places.createClient(this);
 
         AutocompleteSessionToken token = AutocompleteSessionToken.newInstance();
@@ -189,7 +200,7 @@ public class MainActivity extends BaseActivity
         FindAutocompletePredictionsRequest request = FindAutocompletePredictionsRequest.builder()
                 .setLocationBias(rectangularBounds)
                 .setCountry("FR")
-                .setQuery(str.toString())
+                .setQuery(str)
                 .setTypeFilter(TypeFilter.ESTABLISHMENT)
                 .setSessionToken(token)
                 .build();
@@ -205,18 +216,16 @@ public class MainActivity extends BaseActivity
                         prediction.getPlaceId(),
                         restaurantName,
                         restaurantVicinity));
+                Log.d(TAG, "configurePredictions: Name:" + prediction.getPrimaryText(STYLE_BOLD).toString());
+                Log.d(TAG, "configurePredictions: Id:" + prediction.getPlaceId());
             }
 
-            AutocompleteAdapter adapter = new AutocompleteAdapter(this, restaurants);
-            mAutoCompleteTextView.setAdapter(adapter);
+            mAutocompleteAdapter = new AutocompleteAdapter(this, restaurants);
+            mSearchAutocomplete.setAdapter(mAutocompleteAdapter);
 
-        }).addOnFailureListener((exception) -> {
-            if (exception instanceof ApiException) {
-                ApiException apiException = (ApiException) exception;
-                Log.e(TAG, "Place not found: " + apiException.getStatusCode());
-            }
         });
     }
+
 
     // ***************************
     // ACTIONS
@@ -231,15 +240,32 @@ public class MainActivity extends BaseActivity
                 .commit();
     }
 
-    // Handle back click to close menu
+    // Handle back click to close menu, or exit the app
     @Override
     public void onBackPressed() {
         Log.d(TAG, "onBackPressed: Back button pressed");
-        if ((this.mDrawerLayout.isDrawerOpen(GravityCompat.START) || mLayoutAutocomplete.getVisibility() == View.VISIBLE)) {
+        if (this.mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
             mDrawerLayout.closeDrawer(GravityCompat.START);
-            mLayoutAutocomplete.setVisibility(View.GONE);
         } else {
-            super.onBackPressed();
+            // Create an alertDialog to ask the user if he want to exit the app
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle(R.string.alert_dialog_title);
+            builder.setMessage(R.string.alert_dialog_message);
+            builder.setPositiveButton(
+                    R.string.positive_button,
+                    (dialog, which) -> {
+                        Intent a = new Intent(Intent.ACTION_MAIN);
+                        a.addCategory(Intent.CATEGORY_HOME);
+                        a.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(a);
+                    }
+            ).setNegativeButton(
+                    R.string.negative_button,
+                    (dialog, which) -> dialog.cancel()
+            );
+
+            AlertDialog alertDialog = builder.create();
+            alertDialog.show();
         }
     }
 
@@ -298,52 +324,44 @@ public class MainActivity extends BaseActivity
         }
     }
 
-/*    @Override
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_search, menu);
 
-        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-        searchView.setIconifiedByDefault(false);
 
-        return true;
-    }*/
+        mSearchAutocomplete = searchView.findViewById(androidx.appcompat.R.id.search_src_text);
+        mSearchAutocomplete.setHint(R.string.search_restaurants);
 
+        // Handle click event : start RestaurantActivity with the Id of the picked restaurant
+        mSearchAutocomplete.setOnItemClickListener((adapterView, view, itemIndex, id) -> {
+            RestaurantAutocompleteModel queryString = (RestaurantAutocompleteModel)adapterView.getItemAtPosition(itemIndex);
+            mSearchAutocomplete.setText(queryString.getRestaurantName());
 
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        MenuItem menuItem = menu.add(Menu.NONE, Menu.FIRST, Menu.NONE, R.string.search_restaurants)
-                .setIcon(R.drawable.ic_search);
-        menuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-        menuItem.setOnMenuItemClickListener(item -> {
-
-            if (mLayoutAutocomplete.getVisibility() == View.GONE) {
-                mLayoutAutocomplete.setVisibility(View.VISIBLE);
-            } else {
-                mLayoutAutocomplete.setVisibility(View.GONE);
-            }
-
-            mAutoCompleteTextView.addTextChangedListener(new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
-
-                @Override
-                public void onTextChanged(CharSequence s, int start, int before, int count) { }
-
-                @Override
-                public void afterTextChanged(Editable s) {
-                    if (s.length() > 2) {
-                        Log.e(TAG, "onQueryTextChange: NewText: " + s);
-                        configurePredictions(s);
-                    }
-                }
-            });
-
-            return true;
+            Intent intent = new Intent(this, RestaurantActivity.class);
+            intent.putExtra(RESTAURANT_TAG, queryString.getRestaurantId());
+            startActivity(intent);
         });
 
-        return super.onPrepareOptionsMenu(menu);
+        // Below event is triggered when submit search query.
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                Log.d(TAG, "onQueryTextChange: " + newText);
+                if (newText.length() > 2 ) {
+                    configurePredictions(newText);
+                }
+
+                return false;
+            }
+        });
+
+        return true;
     }
 }

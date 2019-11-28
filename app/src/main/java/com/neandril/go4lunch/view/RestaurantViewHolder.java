@@ -1,5 +1,6 @@
 package com.neandril.go4lunch.view;
 
+import android.graphics.Color;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -12,14 +13,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.neandril.go4lunch.BuildConfig;
 import com.neandril.go4lunch.R;
-import com.neandril.go4lunch.utils.Singleton;
 import com.neandril.go4lunch.models.places.Result;
+import com.neandril.go4lunch.utils.Singleton;
 import com.neandril.go4lunch.utils.Utility;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class RestaurantViewHolder extends RecyclerView.ViewHolder {
+class RestaurantViewHolder extends RecyclerView.ViewHolder {
 
     private static final String TAG = "RestaurantViewHolder";
 
@@ -59,12 +60,14 @@ public class RestaurantViewHolder extends RecyclerView.ViewHolder {
         // Aperture of restaurant
         if (result.getOpeningHours() != null) {
             if (result.getOpeningHours().getOpenNow()) {
-                mOpenningTime.setText("Open now");
+                mOpenningTime.setText(itemView.getContext().getString(R.string.open_now));
+                mOpenningTime.setTextColor(Color.GREEN);
             } else {
-                mOpenningTime.setText("Closed");
+                mOpenningTime.setText(itemView.getContext().getString(R.string.closed));
+                mOpenningTime.setTextColor(Color.RED);
             }
         } else {
-            mOpenningTime.setText("Openning time unavailaible");
+            mOpenningTime.setText(itemView.getContext().getString(R.string.opening_time_unavailable));
         }
 
         // Distance

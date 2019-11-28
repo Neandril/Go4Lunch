@@ -144,7 +144,7 @@ public class LoginActivity extends BaseActivity {
             String uid = this.getCurrentUser().getUid();
             String urlPicture = (this.getCurrentUser().getPhotoUrl() != null) ? this.getCurrentUser().getPhotoUrl().toString() : null;
 
-            UserHelper.createUser(uid, username, urlPicture, null, null);
+            UserHelper.createUser(uid, username, urlPicture, "", "", null);
         }
     }
 

@@ -6,7 +6,6 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class Result {
-
     @SerializedName("address_components")
     @Expose
     private List<AddressComponent> addressComponents = null;
@@ -16,6 +15,9 @@ public class Result {
     @SerializedName("formatted_address")
     @Expose
     private String formattedAddress;
+    @SerializedName("formatted_phone_number")
+    @Expose
+    private String formattedPhoneNumber;
     @SerializedName("geometry")
     @Expose
     private Geometry geometry;
@@ -25,15 +27,27 @@ public class Result {
     @SerializedName("id")
     @Expose
     private String id;
+    @SerializedName("international_phone_number")
+    @Expose
+    private String internationalPhoneNumber;
     @SerializedName("name")
     @Expose
     private String name;
+    @SerializedName("opening_hours")
+    @Expose
+    private OpeningHours openingHours;
     @SerializedName("photos")
     @Expose
     private List<Photo> photos = null;
     @SerializedName("place_id")
     @Expose
     private String placeId;
+    @SerializedName("plus_code")
+    @Expose
+    private PlusCode plusCode;
+    @SerializedName("rating")
+    @Expose
+    private Double rating;
     @SerializedName("reference")
     @Expose
     private String reference;
@@ -46,6 +60,9 @@ public class Result {
     @SerializedName("url")
     @Expose
     private String url;
+    @SerializedName("user_ratings_total")
+    @Expose
+    private Integer userRatingsTotal;
     @SerializedName("utc_offset")
     @Expose
     private Integer utcOffset;
@@ -55,9 +72,6 @@ public class Result {
     @SerializedName("website")
     @Expose
     private String website;
-    @SerializedName("formatted_phone_number")
-    @Expose
-    private String phoneNumber;
 
     public List<AddressComponent> getAddressComponents() {
         return addressComponents;
@@ -81,6 +95,14 @@ public class Result {
 
     public void setFormattedAddress(String formattedAddress) {
         this.formattedAddress = formattedAddress;
+    }
+
+    public String getFormattedPhoneNumber() {
+        return formattedPhoneNumber;
+    }
+
+    public void setFormattedPhoneNumber(String formattedPhoneNumber) {
+        this.formattedPhoneNumber = formattedPhoneNumber;
     }
 
     public Geometry getGeometry() {
@@ -107,12 +129,28 @@ public class Result {
         this.id = id;
     }
 
+    public String getInternationalPhoneNumber() {
+        return internationalPhoneNumber;
+    }
+
+    public void setInternationalPhoneNumber(String internationalPhoneNumber) {
+        this.internationalPhoneNumber = internationalPhoneNumber;
+    }
+
     public String getName() {
         return name;
     }
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public OpeningHours getOpeningHours() {
+        return openingHours;
+    }
+
+    public void setOpeningHours(OpeningHours openingHours) {
+        this.openingHours = openingHours;
     }
 
     public List<Photo> getPhotos() {
@@ -129,6 +167,22 @@ public class Result {
 
     public void setPlaceId(String placeId) {
         this.placeId = placeId;
+    }
+
+    public PlusCode getPlusCode() {
+        return plusCode;
+    }
+
+    public void setPlusCode(PlusCode plusCode) {
+        this.plusCode = plusCode;
+    }
+
+    public Double getRating() {
+        return rating;
+    }
+
+    public void setRating(Double rating) {
+        this.rating = rating;
     }
 
     public String getReference() {
@@ -163,6 +217,14 @@ public class Result {
         this.url = url;
     }
 
+    public Integer getUserRatingsTotal() {
+        return userRatingsTotal;
+    }
+
+    public void setUserRatingsTotal(Integer userRatingsTotal) {
+        this.userRatingsTotal = userRatingsTotal;
+    }
+
     public Integer getUtcOffset() {
         return utcOffset;
     }
@@ -179,12 +241,11 @@ public class Result {
         this.vicinity = vicinity;
     }
 
-    public String getWebsite() { return website; }
+    public String getWebsite() {
+        return website;
+    }
 
-    public void setWebsite(String website) { this.website = website; }
-
-    public String getPhoneNumber() { return phoneNumber; }
-
-    public void setPhoneNumber(String phoneNumber) { this.phoneNumber = phoneNumber; }
-
+    public void setWebsite(String website) {
+        this.website = website;
+    }
 }

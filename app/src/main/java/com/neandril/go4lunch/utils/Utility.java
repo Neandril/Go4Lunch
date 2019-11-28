@@ -1,5 +1,7 @@
 package com.neandril.go4lunch.utils;
 
+import android.util.Log;
+
 import com.neandril.go4lunch.models.details.Period;
 
 import java.util.Calendar;
@@ -21,24 +23,35 @@ public class Utility {
         return (float) rating;
     }
 
-    /**
-     * Get the day of today
-     * @return - today
-     */
-    public Integer dayOfWeek() {
-        Calendar calendar = Calendar.getInstance();
-        // 1 = Monday, ... , 7 = Sunday
-        return calendar.get(Calendar.DAY_OF_WEEK)-1;
-    }
-
     public String openingTime(boolean isOpen, List<Period> periodList) {
+        if (isOpen) {
 
+            Log.d("Utility", "openingTime: " + periodList.get(getWeekday()).getClose());
+
+        }
         return null;
     }
 
+    /**
+     * Get the current time in Google api's format
+     * Ex : 10:50 = 1050
+     * @return - current time
+     */
+    public String getCurrentTime() {
+        Calendar calendar = Calendar.getInstance();
+
+        int currentHour = calendar.get(Calendar.HOUR);
+        int currentMinutes = calendar.get(Calendar.MINUTE);
+
+        return Integer.toString(currentHour) + currentMinutes;
+    }
+
+    /**
+     * Get the current day
+     * @return - day
+     */
     public Integer getWeekday() {
         Calendar calendar = Calendar.getInstance();
-        // Maps Api : Sunday = 0
         return calendar.get(Calendar.DAY_OF_WEEK) -1;
     }
 
@@ -65,7 +78,7 @@ public class Utility {
 
         double height = 0.0 - 0.0;
         distance = Math.pow(distance, 2) + Math.pow(height, 2);
-        //Rounded
+        // Rounded
         return Math.round(Math.sqrt(distance)) + "m";
     }
 

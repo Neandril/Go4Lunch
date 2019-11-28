@@ -9,7 +9,7 @@
     android:theme="@style/ToolbarTheme"
     app:titleTextColor="@color/white" >
 
-    <LinearLayout
+    <!--<LinearLayout
         android:id="@+id/layout_autocomplete"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -18,7 +18,7 @@
         android:orientation="horizontal"
         android:visibility="visible">
 
-        <!-- Autocomplete editText-->
+        &lt;!&ndash; Autocomplete editText&ndash;&gt;
         <AutoCompleteTextView
             android:id="@+id/autocompleteTextView"
             android:layout_width="0dp"
@@ -36,6 +36,6 @@
             android:textColor="#000"
             android:textSize="15sp" />
 
-    </LinearLayout>
+    </LinearLayout>-->
 
 </androidx.appcompat.widget.Toolbar>

@@ -1,21 +1,26 @@
 package com.neandril.go4lunch.models;
 
+import java.util.List;
+import java.util.Map;
+
 public class User {
     private String user_id;
     private String user_name;
     private String user_profile_picture;
     private String restaurantId;
     private String restaurantName;
+    private List<String> restaurantLikedList;
 
     // Required for Firestore
     public User() { }
 
-    public User(String user_id, String user_name, String user_profile_picture, String restaurantId, String restaurantName) {
+    public User(String user_id, String user_name, String user_profile_picture, String restaurantId, String restaurantName, List<String> restaurantLikedList) {
         this.user_id = user_id;
         this.user_name = user_name;
         this.user_profile_picture = user_profile_picture;
         this.restaurantId = restaurantId;
         this.restaurantName = restaurantName;
+        this.restaurantLikedList = restaurantLikedList;
     }
 
     public String getUser_id() {
@@ -56,5 +61,13 @@ public class User {
 
     public void setRestaurantName(String restaurantName) {
         this.restaurantName = restaurantName;
+    }
+
+    public List<String> getRestaurantLikedList() {
+        return restaurantLikedList;
+    }
+
+    public void setRestaurantLikedList(List<String> restaurantLikedList) {
+        this.restaurantLikedList = restaurantLikedList;
     }
 }

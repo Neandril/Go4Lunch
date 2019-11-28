@@ -54,10 +54,24 @@
     <string name="restaurant_background_image_description">Restaurant picture</string>
     <string name="no_website_found">No website found for this restaurant</string>
 
+    <!-- WORKMATES -->
+    <string name="user_is_eating_here">%1$s is eating %2$s</string>
+    <string name="user_hasnt_decided_yet">%1$s hasn\'t decided yet</string>
+
+
     <!-- UTILITY STRINGS -->
     <string name="closed">Closed</string>
     <string name="always_open">Open 24/7</string>
     <string name="open_until">Open until</string>
     <string name="closes_soon">Closes soon</string>
+    <string name="open_now">Open now</string>
+    <string name="opening_time_unavailable">Opening time unavailable</string>
+
+    <!-- ALERT DIALOG -->
+    <string name="positive_button">Yes</string>
+    <string name="negative_button">No</string>
+    <string name="alert_dialog_title">Exit</string>
+    <string name="alert_dialog_message">Are you sure want to quit the application ?</string>
+
 
 </resources>

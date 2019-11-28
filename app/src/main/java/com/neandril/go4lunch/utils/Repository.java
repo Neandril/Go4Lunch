@@ -7,7 +7,10 @@ import androidx.lifecycle.MutableLiveData;
 import com.neandril.go4lunch.api.GoogleApiCall;
 import com.neandril.go4lunch.api.GoogleApiInterface;
 import com.neandril.go4lunch.models.details.Detail;
+import com.neandril.go4lunch.models.details.Result;
 import com.neandril.go4lunch.models.places.PlacesDetail;
+
+import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;

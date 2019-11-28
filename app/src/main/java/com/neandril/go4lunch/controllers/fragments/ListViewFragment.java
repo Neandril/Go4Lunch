@@ -24,8 +24,10 @@ import com.neandril.go4lunch.controllers.base.BaseFragment;
 import com.neandril.go4lunch.models.DetailViewModel;
 import com.neandril.go4lunch.models.PlacesViewModel;
 import com.neandril.go4lunch.models.details.Detail;
+import com.neandril.go4lunch.models.details.Result;
 import com.neandril.go4lunch.models.places.PlacesDetail;
 import com.neandril.go4lunch.utils.ItemClickSupport;
+import com.neandril.go4lunch.utils.Utility;
 import com.neandril.go4lunch.view.RestaurantAdapter;
 
 import java.util.ArrayList;
@@ -83,8 +85,6 @@ public class ListViewFragment extends BaseFragment {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-
     }
 
     private void configureOnClickRecyclerView() {

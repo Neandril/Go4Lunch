@@ -1,6 +1,5 @@
 package com.neandril.go4lunch.view;
 
-import android.location.Location;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,9 +8,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.RequestManager;
 import com.neandril.go4lunch.R;
-import com.neandril.go4lunch.models.details.Detail;
 import com.neandril.go4lunch.models.places.PlacesDetail;
 
 import java.util.List;

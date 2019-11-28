@@ -19,4 +19,5 @@
     <dimen name="text_size">12sp</dimen>
     <dimen name="button_inner_padding_start">30dp</dimen>
     <dimen name="button_inner_padding_end">36dp</dimen>
+
 </resources>
