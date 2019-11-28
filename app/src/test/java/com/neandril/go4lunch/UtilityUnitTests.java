@@ -1,13 +1,10 @@
 package com.neandril.go4lunch;
 
-import com.neandril.go4lunch.models.details.Period;
 import com.neandril.go4lunch.utils.Utility;
 
 import org.junit.Test;
 
-import java.util.List;
-
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Example local unit test, which will execute on the development machine (host).
@@ -38,9 +35,4 @@ public class UtilityUnitTests {
         assertEquals("150m", utility.distance(userLat, targetLat, userLng, targetLng));
     }
 
-    @Test
-    public void openingTimeTest() {
-
-        assertEquals(Integer.valueOf(2), utility.getWeekday());
-    }
 }
