@@ -135,25 +135,6 @@ public class MenuNavigationTest {
 
     @Test
     public void navDrawer_itemsClick_shouldOpenCorrectAcitivties() {
-        // Prepare next activity
-        Instrumentation.ActivityMonitor activityMonitor = InstrumentationRegistry.getInstrumentation()
-                .addMonitor(YourLunchActivity.class.getName(), null, false);
-
-        // Check "Your Lunch" drawer item
-        onView(
-                withContentDescription(R.string.navigation_drawer_open)
-        ).perform(click());
-
-        onView(
-                withId(R.id.nav_view)
-        ).perform(navigateTo(R.id.nav_your_lunch));
-
-        onView(withId(R.id.your_lunch_layout)).check(matches(isDisplayed()));
-        Activity nextActivity = InstrumentationRegistry
-                .getInstrumentation()
-                .waitForMonitor(activityMonitor);
-        onView(withContentDescription(getToolbarNavigationContentDescription(nextActivity, R.id.toolbar))).perform(click());
-
         // Check "Settings" drawer item
         onView(
                 withContentDescription(R.string.navigation_drawer_open)

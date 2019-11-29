@@ -11,14 +11,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
-import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.Query;
 import com.neandril.go4lunch.BuildConfig;
 import com.neandril.go4lunch.R;
 import com.neandril.go4lunch.controllers.base.BaseActivity;
@@ -27,7 +29,9 @@ import com.neandril.go4lunch.models.DetailViewModel;
 import com.neandril.go4lunch.models.User;
 import com.neandril.go4lunch.models.details.Detail;
 import com.neandril.go4lunch.utils.UserHelper;
+import com.neandril.go4lunch.view.WorkmateCheckedInAdapter;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -43,15 +47,15 @@ public class RestaurantActivity extends BaseActivity {
     public String mPhone;
     public String mRestaurantName;
     private DetailViewModel viewModel;
+    private WorkmateCheckedInAdapter mAdapter;
+    private List<User> userList = new ArrayList<>();
 
     @BindView(R.id.activity_restaurant_main_layout) ConstraintLayout mConstraintLayout;
     @BindView(R.id.tv_restaurantName) TextView tvRestaurantName;
     @BindView(R.id.tv_restaurantAddress) TextView tvRestaurantAddress;
     @BindView(R.id.restaurant_background_picture) ImageView ivRestaurantBackgroundImg;
     @BindView(R.id.floatting_action_button) FloatingActionButton mFab;
-    @BindView(R.id.cardview) CardView mCardView;
-    @BindView(R.id.cv_workmate_picture) ImageView ivWorkmatePicture;
-    @BindView(R.id.cv_workmate_name) TextView tvWorkmateName;
+    @BindView(R.id.recyclerView_workmates_checkedIn) RecyclerView mRecyclerView;
     @BindView(R.id.restaurant_like_button) ImageButton mLikeButton;
 
     // ***************************
@@ -79,6 +83,7 @@ public class RestaurantActivity extends BaseActivity {
         this.retrieveRestaurantDetails();
         this.updateFabStatus();
         this.checkLikes();
+
     }
 
     // ***************************
@@ -227,6 +232,22 @@ public class RestaurantActivity extends BaseActivity {
     private void updateFabStatus() {
         Log.d(TAG, "updateFabStatus: ");
 
+        // Instanciate a new Firestore query object
+        Query query = UserHelper.getAllUsers().whereEqualTo("restaurantId", placeId);
+
+        Log.d(TAG, "updateFabStatus: Query: " + UserHelper.getAllUsers().toString());
+
+        // Configure Firestore recycler options
+        FirestoreRecyclerOptions<User> options = new FirestoreRecyclerOptions.Builder<User>()
+                .setQuery(query, User.class)
+                .setLifecycleOwner(this)
+                .build();
+
+        this.mAdapter = new WorkmateCheckedInAdapter(options);
+        this.mRecyclerView.setHasFixedSize(true);
+        this.mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        this.mRecyclerView.setAdapter(mAdapter);
+
         UserHelper.getUser(this.getCurrentUser().getUid()).addOnSuccessListener(documentSnapshot -> {
             User user = documentSnapshot.toObject(User.class);
             String restaurantId = Objects.requireNonNull(user).getRestaurantId();
@@ -234,13 +255,6 @@ public class RestaurantActivity extends BaseActivity {
             if (restaurantId != null) {
                 if (restaurantId.equals(placeId)) {
                     mFab.setImageResource(R.drawable.fab_green_checkmark);
-                    tvWorkmateName.setText(RestaurantActivity.this.getCurrentUser().getDisplayName());
-
-                    if (RestaurantActivity.this.getCurrentUser().getPhotoUrl() != null) {
-                        Glide.with(this).load(RestaurantActivity.this.getCurrentUser().getPhotoUrl()).into(ivWorkmatePicture);
-                    } else {
-                        Glide.with(this).load(R.drawable.background_pic).into(ivWorkmatePicture);
-                    }
                 } else {
                     mFab.setImageResource(R.drawable.fab_red_cross);
                 }
@@ -253,22 +267,6 @@ public class RestaurantActivity extends BaseActivity {
      * Check likes
      */
     public void checkLikes() {
-        UserHelper.getUserLikes(this.getCurrentUser().getUid()).addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                Log.e(TAG, "checkLikes: " + Objects.requireNonNull(task.getResult()).getDocuments());
-                if (task.getResult().isEmpty()) {
-                    Log.e(TAG, "checkLikes: No likes for this user");
-                } else {
-                    for (DocumentSnapshot restaurant : task.getResult()) {
-                        if (restaurant.getId().equals(placeId)) {
-                            Log.e(TAG, "checkLikes: don't like");
-                            break;
-                        } else {
-                            Log.e(TAG, "checkLikes: like");
-                        }
-                    }
-                }
-            }
-        });
+
     }
 }

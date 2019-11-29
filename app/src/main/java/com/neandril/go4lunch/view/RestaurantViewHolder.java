@@ -15,7 +15,10 @@ import com.neandril.go4lunch.BuildConfig;
 import com.neandril.go4lunch.R;
 import com.neandril.go4lunch.models.places.Result;
 import com.neandril.go4lunch.utils.Singleton;
+import com.neandril.go4lunch.utils.UserHelper;
 import com.neandril.go4lunch.utils.Utility;
+
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -36,7 +39,7 @@ class RestaurantViewHolder extends RecyclerView.ViewHolder {
     private double lat = Singleton.getInstance().getUserLat();
     private double lng = Singleton.getInstance().getUserLng();
 
-    public RestaurantViewHolder(@NonNull View itemView) {
+    RestaurantViewHolder(@NonNull View itemView) {
         super(itemView);
         ButterKnife.bind(this, itemView);
     }
@@ -58,6 +61,7 @@ class RestaurantViewHolder extends RecyclerView.ViewHolder {
         }
 
         // Aperture of restaurant
+        mOpenningTime.setTextColor(Color.BLACK);
         if (result.getOpeningHours() != null) {
             if (result.getOpeningHours().getOpenNow()) {
                 mOpenningTime.setText(itemView.getContext().getString(R.string.open_now));
@@ -96,5 +100,21 @@ class RestaurantViewHolder extends RecyclerView.ViewHolder {
             Log.e(TAG, "updateRestaurantsList: " + e.getMessage());
             Glide.with(mRestaurantThumbnail.getContext()).load(R.drawable.background_pic).into(mRestaurantThumbnail);
         }
+
+        // Display number of participant
+        UserHelper.getRestaurant(result.getPlaceId()).addOnCompleteListener(task -> {
+           if (task.isSuccessful()) {
+               if (Objects.requireNonNull(task.getResult()).size() > 0) {
+                   mImageViewPpl.setVisibility(View.VISIBLE);
+                   mNumberOfParticipants.setText(itemView.getContext().getString(
+                           R.string.nb_of_participants,
+                           task.getResult().size()));
+               } else {
+                   mImageViewPpl.setVisibility(View.INVISIBLE);
+               }
+           } else {
+               mImageViewPpl.setVisibility(View.INVISIBLE);
+           }
+        });
     }
 }

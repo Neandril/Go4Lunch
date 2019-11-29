@@ -1,14 +1,9 @@
 package com.neandril.go4lunch.utils;
 
-import android.util.Log;
-
-import com.neandril.go4lunch.models.details.Period;
-
 import java.util.Calendar;
-import java.util.List;
 
 /**
- * Utility Interface containing many usefull methods
+ * Utility class containing many usefull methods
  */
 
 public class Utility {
@@ -21,15 +16,6 @@ public class Utility {
     public float convertRating(double rating) {
         rating = (rating * 3) / 5;
         return (float) rating;
-    }
-
-    public String openingTime(boolean isOpen, List<Period> periodList) {
-        if (isOpen) {
-
-            Log.d("Utility", "openingTime: " + periodList.get(getWeekday()).getClose());
-
-        }
-        return null;
     }
 
     /**

@@ -50,12 +50,15 @@ import com.neandril.go4lunch.controllers.fragments.ListViewFragment;
 import com.neandril.go4lunch.controllers.fragments.MapViewFragment;
 import com.neandril.go4lunch.controllers.fragments.WorkmatesFragment;
 import com.neandril.go4lunch.models.RestaurantAutocompleteModel;
+import com.neandril.go4lunch.models.User;
 import com.neandril.go4lunch.models.places.PlacesDetail;
+import com.neandril.go4lunch.utils.UserHelper;
 import com.neandril.go4lunch.utils.Utility;
 import com.neandril.go4lunch.view.AutocompleteAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import butterknife.BindView;
 
@@ -167,8 +170,7 @@ public class MainActivity extends BaseActivity
                 break;
 
             case R.id.nav_your_lunch:
-                Intent yourLunch = new Intent(this, YourLunchActivity.class);
-                startActivity(yourLunch);
+                startYourLunchActivy();
                 break;
             case R.id.nav_settings:
                 Intent settings = new Intent(this, SettingsActivity.class);
@@ -188,7 +190,6 @@ public class MainActivity extends BaseActivity
     public void setmLatLngBounds(LatLngBounds latLngBounds) {
         this.mLatLngBounds = latLngBounds;
     }
-
 
     private void configurePredictions(String str) {
         Log.d(TAG, "configurePredictions: " + str);
@@ -225,7 +226,6 @@ public class MainActivity extends BaseActivity
 
         });
     }
-
 
     // ***************************
     // ACTIONS
@@ -363,5 +363,23 @@ public class MainActivity extends BaseActivity
         });
 
         return true;
+    }
+
+    /**
+     * Start your lunch with the restaurant picked
+     */
+    private void startYourLunchActivy() {
+        UserHelper.getUser(this.getCurrentUser().getUid()).addOnSuccessListener(documentSnapshot -> {
+           User user = documentSnapshot.toObject(User.class);
+           String restaurantId = Objects.requireNonNull(user).getRestaurantId();
+
+           if (!restaurantId.equals("")) {
+               Intent intent = new Intent(this, RestaurantActivity.class);
+               intent.putExtra(RESTAURANT_TAG, restaurantId);
+               startActivity(intent);
+           } else {
+               showSnackBar(getResources().getString(R.string.no_restaurant_picked));
+           }
+        });
     }
 }
