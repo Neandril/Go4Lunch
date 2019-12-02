@@ -29,6 +29,7 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.Query;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.PermissionToken;
 import com.karumi.dexter.listener.PermissionDeniedResponse;
@@ -39,9 +40,11 @@ import com.neandril.go4lunch.R;
 import com.neandril.go4lunch.controllers.activities.MainActivity;
 import com.neandril.go4lunch.controllers.activities.RestaurantActivity;
 import com.neandril.go4lunch.controllers.base.BaseFragment;
+import com.neandril.go4lunch.models.User;
 import com.neandril.go4lunch.utils.Singleton;
 import com.neandril.go4lunch.models.PlacesViewModel;
 import com.neandril.go4lunch.models.places.PlacesDetail;
+import com.neandril.go4lunch.utils.UserHelper;
 
 import java.util.Objects;
 
@@ -121,11 +124,26 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback 
 
                 Log.e(TAG, "updateUiWithMarkers: Name: " + placeName);
 
-                mMap.addMarker(new MarkerOptions()
-                        .position(latLng)
-                        .title(placeName + " : " + vicinity)
-                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)))
-                        .setTag(id);
+
+                // Get all users, then, if the query size is positive, place a green marker (an orange one otherwise)
+                Query query = UserHelper.getAllUsers().whereEqualTo("restaurantId", id);
+                query.addSnapshotListener((queryDocumentSnapshots, e) -> {
+
+                    if (Objects.requireNonNull(queryDocumentSnapshots).size() == 0) {
+                        mMap.addMarker(new MarkerOptions()
+                                .position(latLng)
+                                .title(placeName + " : " + vicinity)
+                                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)))
+                                .setTag(id);
+                    } else {
+                        mMap.addMarker(new MarkerOptions()
+                                .position(latLng)
+                                .title(placeName + " : " + vicinity)
+                                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)))
+                                .setTag(id);
+                    }
+                });
+
             }
         } else {
             Log.e(TAG, "updateUiWithMarkers: no result found");

@@ -135,7 +135,7 @@ public class MenuNavigationTest {
 
     @Test
     public void navDrawer_itemsClick_shouldOpenCorrectAcitivties() {
-        // Check "Settings" drawer item
+        //        // Check "Settings" drawer item
         onView(
                 withContentDescription(R.string.navigation_drawer_open)
         ).perform(click());

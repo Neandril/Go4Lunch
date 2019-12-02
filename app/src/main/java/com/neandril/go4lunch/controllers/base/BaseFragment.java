@@ -10,6 +10,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 import butterknife.ButterKnife;
 
 public abstract class BaseFragment extends Fragment {
@@ -38,5 +41,11 @@ public abstract class BaseFragment extends Fragment {
         Log.d(TAG, "onDestroy: Fragment destroyed");
         super.onDestroy();
     }
+
+    protected FirebaseUser getCurrentUser() {
+        Log.d(TAG, "getCurrentUser: CurrentUser logged in Firebase");
+        return FirebaseAuth.getInstance().getCurrentUser();
+    }
+
 
 }

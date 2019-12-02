@@ -50,7 +50,6 @@ public class WorkmateCheckedInAdapter extends FirestoreRecyclerAdapter<User, Wor
         }
 
         void updateList(User user) {
-
             if (!user.getRestaurantName().equals("")) {
                 this.tv_workmate_name.setText(itemView.getContext().getString(
                         R.string.user_is_joining,
