@@ -73,5 +73,12 @@
     <string name="alert_dialog_title">Exit</string>
     <string name="alert_dialog_message">Are you sure want to quit the application ?</string>
 
+    <!-- SETTINGS STRINGS -->
+    <string name="language">Language of the application</string>
+    <string-array name="languages_array">
+        <item>English</item>
+        <item>French</item>
+    </string-array>
+    <string name="notification_enabled">Enable notifications</string>
 
 </resources>

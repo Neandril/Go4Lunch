@@ -3,6 +3,8 @@ package com.neandril.go4lunch.controllers.activities;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -37,6 +39,8 @@ public class SettingsActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
 
         configureToolbar();
+        configureSpinner();
+
     }
 
 
@@ -49,5 +53,14 @@ public class SettingsActivity extends BaseActivity {
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
+    }
+
+    private void configureSpinner() {
+        Spinner spinner = findViewById(R.id.spinner_lang);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.languages_array, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+
     }
 }

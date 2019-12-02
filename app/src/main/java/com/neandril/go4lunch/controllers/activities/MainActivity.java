@@ -357,7 +357,6 @@ public class MainActivity extends BaseActivity
                 if (newText.length() > 2 ) {
                     configurePredictions(newText);
                 }
-
                 return false;
             }
         });
