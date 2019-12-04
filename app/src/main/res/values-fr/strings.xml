@@ -1,0 +1,83 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="app_name">Go4Lunch</string>
+    <string name="app_desc">Trouver un restaurant sympa pour déjeuner avec vos collègues.</string>
+
+    <!-- FACEBOOK PURPOSE -->
+    <string name="facebook_application_id" translatable="false">618856551978201</string>
+    <string name="facebook_login_protocol_scheme" translatable="false" tools:ignore="UnusedResources">fb618856551978201</string>
+
+    <string name="common_status_code_resolution_required">Vous devez activer votre GPS</string>
+    <string name="location_status_code_change_unavailable">Vous ne pouvez pas utiliser les services de localisation</string>
+    <string name="not_implemented">Cette option n\'est pas encore implémentée</string>
+
+    <!-- NAVIGATION DRAWER STRINGS -->
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Paramètres</string>
+    <string name="menu_home">Votre déjeuner</string>
+    <string name="menu_gallery">Paramètres</string>
+    <string name="menu_slideshow">Déconnexion</string>
+    <string name="profile_content_description">Image de profil</string>
+    <string name="image_nav_view_content_description">Logo</string>
+    <string name="info_no_email_found">eMail introuvable</string>
+    <string name="info_no_username_found">Nom d\'utilisateur non trouvé</string>
+    <string name="no_restaurant_picked">Vous n\'avez pas encore choisi de restaurant</string>
+
+    <!-- BOTTOM NAVIGATION VIEW STRINGS -->
+    <string name="menu_map_view">Vue carte</string>
+    <string name="menu_list_view">Vue liste</string>
+    <string name="menu_workmates">Collègues</string>
+
+    <string name="search_restaurants">Recherche de restaurants</string>
+    <string name="search_workmates">Recherche de collègues</string>
+    <string name="title_activity_settings">Paramètres</string>
+    <string name="title_activity_yourlunch">Votre déjeuner</string>
+    <string name="title_main">J\'ai faim !</string>
+
+    <!-- LOGIN STRINGS -->
+    <string name="google_signIn">Connexion avec Google</string>
+    <string name="facebook_signIn">Connexion avec Facebook</string>
+    <string name="background_image_desc">Background image</string>
+
+    <string name="location_permission_denied">Permission de localisation refusée</string>
+    <string name="permission_required_toast">Permission requise</string>
+    <string name="permission_rationale_location">Permission rationale</string>
+    <string name="error_unknown_error">Erreur inconnue</string>
+
+    <!-- RESTAURANT VIEW STRINGS -->
+    <string name="restaurant_call">APPEL</string>
+    <string name="restaurant_like">AIMER</string>
+    <string name="restaurant_website">SITE WEB</string>
+    <string name="restaurant_background_image_description">Image du restaurant</string>
+    <string name="no_website_found">Pas de site web trouvé pour ce restaurant</string>
+    <string name="nb_of_participants">(%1$d)</string>
+
+    <!-- WORKMATES -->
+    <string name="user_is_eating_here">%1$s mange à %2$s</string>
+    <string name="user_hasnt_decided_yet">%1$s n\'a pas encore décidé</string>
+    <string name="user_is_joining">%1$s est de la partie !</string>
+
+    <!-- UTILITY STRINGS -->
+    <string name="closed">Fermé</string>
+    <string name="always_open">Ouvert 24/7</string>
+    <string name="open_until">Ouvert jusqu\'à</string>
+    <string name="closes_soon">Ferme bientôt</string>
+    <string name="open_now">Ouvert</string>
+    <string name="opening_time_unavailable">Horaires d\'ouverture introuvable</string>
+
+    <!-- ALERT DIALOG -->
+    <string name="positive_button">Oui</string>
+    <string name="negative_button">Non</string>
+    <string name="alert_dialog_title">Quitter</string>
+    <string name="alert_dialog_message">Voulez-vous vraiment quitter l\'application ?</string>
+
+    <!-- SETTINGS STRINGS -->
+    <string name="language">Langue de l\'application</string>
+    <string-array name="languages_array">
+        <item>Anglais</item>
+        <item>Français</item>
+    </string-array>
+    <string name="notification_enabled">Notifications activées</string>
+
+</resources>

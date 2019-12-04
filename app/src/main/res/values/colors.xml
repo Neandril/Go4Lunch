@@ -13,6 +13,9 @@
     <color name="google_button">#D54135</color>
     <color name="facebook_button">#4C76BE</color>
 
+    <color name="custom_green">#318534</color>
+    <color name="custom_red">#D54135</color>
+
     <!--Transparency-->
     <color name="trans">#272822</color>
 

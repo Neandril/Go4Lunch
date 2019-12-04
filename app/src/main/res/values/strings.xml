@@ -38,7 +38,6 @@
     <!-- LOGIN STRINGS -->
     <string name="google_signIn">Sign in with Google</string>
     <string name="facebook_signIn">Sign in with Facebook</string>
-    <string name="title_activity_welcome">WelcomeActivity</string>
     <string name="background_image_desc">Background image</string>
 
     <string name="location_permission_denied">Location permission denied</string>

@@ -312,15 +312,22 @@ public class MainActivity extends BaseActivity
             }
 
             // Get email and username and display them on the header
-            Log.e(TAG, "getUserInformations: mail : " + this.getCurrentUser().getEmail());
             email = TextUtils.isEmpty(this.getCurrentUser().getEmail()) ?
                     getString(R.string.info_no_email_found) : this.getCurrentUser().getEmail();
 
-            username = TextUtils.isEmpty(this.getCurrentUser().getDisplayName()) ?
-                    getString(R.string.info_no_username_found) : this.getCurrentUser().getDisplayName();
+            UserHelper.getUser(this.getCurrentUser().getUid()).addOnSuccessListener(documentSnapshot -> {
+               User user = documentSnapshot.toObject(User.class);
+
+               if (Objects.requireNonNull(user).getUser_name() != null) {
+                   tvName.setText(user.getUser_name());
+               } else {
+                   tvName.setText(R.string.info_no_username_found);
+               }
+
+            });
 
             tvMail.setText(email);
-            tvName.setText(username);
+
         }
     }
 

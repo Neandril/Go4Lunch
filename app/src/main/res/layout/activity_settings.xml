@@ -14,15 +14,50 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_margin="@dimen/margin"
         android:orientation="vertical"
-        app:layout_constraintTop_toBottomOf="@id/toolbar">
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        tools:layout_editor_absoluteX="8dp">
+
+        <ImageView
+            android:id="@+id/profile_thumbnail"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center"
+            android:layout_margin="@dimen/margin"
+            android:clickable="true"
+            android:focusable="true"
+            tools:srcCompat="@tools:sample/avatars[5]" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin"
+            android:layout_marginEnd="@dimen/margin"
+            tools:text="Name changing" />
+
+        <EditText
+            android:id="@+id/editText_user_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin"
+            android:layout_marginEnd="@dimen/margin"
+            android:layout_marginBottom="@dimen/margin"
+            android:text="TEXT" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_marginTop="@dimen/margin"
+            android:layout_marginBottom="@dimen/margin" />
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal">
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin"
+            android:orientation="horizontal" >
 
             <TextView
                 android:layout_width="wrap_content"
@@ -40,7 +75,8 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin"
             android:orientation="horizontal" >
 
             <TextView
@@ -50,6 +86,7 @@
                 android:text="@string/notification_enabled" />
 
             <Switch
+                android:id="@+id/notif_switch"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.2"
@@ -58,6 +95,50 @@
 
         </LinearLayout>
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_marginTop="@dimen/margin"
+            android:layout_marginBottom="@dimen/margin" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="horizontal"
+        android:layout_margin="@dimen/margin"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="@dimen/margin"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/btn_save"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/custom_green_button"
+                android:layout_marginBottom="@dimen/margin"
+                android:textColor="@color/white"
+                android:shadowRadius="25"
+                android:text="SAVE" />
+
+            <Button
+                android:id="@+id/btn_delete_account"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin"
+                android:textColor="@color/white"
+                android:shadowRadius="25"
+                android:background="@drawable/custom_red_button"
+                android:text="DELETE" />
+
+        </LinearLayout>
 
 
     </LinearLayout>
