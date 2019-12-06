@@ -42,10 +42,12 @@ import com.google.android.libraries.places.api.model.TypeFilter;
 import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRequest;
 import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.bottomnavigation.LabelVisibilityMode;
 import com.google.android.material.navigation.NavigationView;
 import com.neandril.go4lunch.BuildConfig;
 import com.neandril.go4lunch.R;
 import com.neandril.go4lunch.controllers.base.BaseActivity;
+import com.neandril.go4lunch.controllers.fragments.ChatFragment;
 import com.neandril.go4lunch.controllers.fragments.ListViewFragment;
 import com.neandril.go4lunch.controllers.fragments.MapViewFragment;
 import com.neandril.go4lunch.controllers.fragments.WorkmatesFragment;
@@ -57,6 +59,7 @@ import com.neandril.go4lunch.utils.Utility;
 import com.neandril.go4lunch.view.AutocompleteAdapter;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Objects;
 
@@ -167,6 +170,9 @@ public class MainActivity extends BaseActivity
                 break;
             case R.id.navigation_workmates:
                 showFragment(new WorkmatesFragment());
+                break;
+            case R.id.navigation_chat:
+                showFragment(new ChatFragment());
                 break;
 
             case R.id.nav_your_lunch:
@@ -281,7 +287,7 @@ public class MainActivity extends BaseActivity
     }
 
     private OnSuccessListener<Void> updateUIAfterRESTRequestsCompleted(){
-        Log.d(TAG, "updateUIAfterRESTRequestsCompleted: ");
+        Log.d(TAG, "updateUIAfterRESTRequestsCompleted: logged off");
         return aVoid -> finish();
     }
 
@@ -303,17 +309,11 @@ public class MainActivity extends BaseActivity
 
         // Fill profile informations into dedicated fields
         if (this.getCurrentUser() != null) {
-            // If profile picture is found, glide'it
-            if (this.getCurrentUser().getPhotoUrl() != null) {
-                Glide.with(this)
-                        .load(this.getCurrentUser().getPhotoUrl())
-                        .apply(RequestOptions.circleCropTransform())
-                        .into(profileThumbnail);
-            }
-
             // Get email and username and display them on the header
             email = TextUtils.isEmpty(this.getCurrentUser().getEmail()) ?
                     getString(R.string.info_no_email_found) : this.getCurrentUser().getEmail();
+
+            tvMail.setText(email);
 
             UserHelper.getUser(this.getCurrentUser().getUid()).addOnSuccessListener(documentSnapshot -> {
                User user = documentSnapshot.toObject(User.class);
@@ -324,10 +324,19 @@ public class MainActivity extends BaseActivity
                    tvName.setText(R.string.info_no_username_found);
                }
 
+               if (user.getUser_profile_picture() != null) {
+                   Glide.with(this)
+                           .load(user.getUser_profile_picture())
+                           .apply(RequestOptions.circleCropTransform())
+                           .into(profileThumbnail);
+               } else {
+                   Glide.with(this)
+                           .load(R.mipmap.ic_launcher)
+                           .apply(RequestOptions.circleCropTransform())
+                           .into(profileThumbnail);
+               }
+
             });
-
-            tvMail.setText(email);
-
         }
     }
 

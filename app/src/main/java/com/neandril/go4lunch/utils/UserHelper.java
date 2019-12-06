@@ -2,6 +2,7 @@ package com.neandril.go4lunch.utils;
 
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -21,6 +22,7 @@ public class UserHelper {
     private static final String USER_NAME = "user_name";
     private static final String RESTAURANT_ID = "restaurantId";
     private static final String RESTAURANT_NAME = "restaurantName";
+    public static final String PICTURE_URL = "user_profile_picture";
 
     // --- COLLECTION REFERENCE ---
 
@@ -67,6 +69,10 @@ public class UserHelper {
 
     public static Task<Void> updateRestaurantLiked(String uid, List<String> like) {
         return UserHelper.getUsersCollection().document(uid).update("restaurantLikeList", like);
+    }
+
+    public static Task<Void> updateProfilePicture(String urlImage, String uid) {
+        return UserHelper.getUsersCollection().document(uid).update(PICTURE_URL, urlImage);
     }
 
     // --- DELETE ---

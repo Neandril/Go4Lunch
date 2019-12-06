@@ -11,11 +11,14 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.IdpResponse;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.neandril.go4lunch.R;
 import com.neandril.go4lunch.controllers.base.BaseActivity;
+import com.neandril.go4lunch.models.User;
 import com.neandril.go4lunch.utils.UserHelper;
 
 import java.util.Collections;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -123,7 +126,7 @@ public class LoginActivity extends BaseActivity {
             if (resultCode == RESULT_OK) { // SUCCESS
                 this.createUserInFirestore();
                 showSnackBar("Success");
-                this.enterInTheApp();
+
             } else { // ERRORS
                 if (response == null) {
                     showSnackBar("Canceled");
@@ -139,13 +142,28 @@ public class LoginActivity extends BaseActivity {
     }
 
     private void createUserInFirestore() {
-        if (getCurrentUser() != null) {
-            String username = this.getCurrentUser().getDisplayName();
-            String uid = this.getCurrentUser().getUid();
-            String urlPicture = (this.getCurrentUser().getPhotoUrl() != null) ? this.getCurrentUser().getPhotoUrl().toString() : null;
-            
-            UserHelper.createUser(uid, username, urlPicture, "", "", null);
-        }
+        UserHelper.getUser(this.getCurrentUser().getUid()).addOnCompleteListener(task -> {
+           if (task.isSuccessful()) {
+               DocumentSnapshot documentSnapshot = task.getResult();
+               if (Objects.requireNonNull(documentSnapshot).exists()) {
+                   Log.d(TAG, "createUserInFirestore: Existing user");
+                   this.enterInTheApp();
+               } else {
+                   Log.d(TAG, "createUserInFirestore: User don't exists");
+                   if (getCurrentUser() != null) {
+                       String username = this.getCurrentUser().getDisplayName();
+                       String uid = this.getCurrentUser().getUid();
+                       String urlPicture = (this.getCurrentUser().getPhotoUrl() != null) ? this.getCurrentUser().getPhotoUrl().toString() : null;
+
+                       UserHelper.createUser(uid, username, urlPicture, "", "", null);
+
+                       this.enterInTheApp();
+                   }
+               }
+           }
+        }).addOnFailureListener(this.onFailureListener());
+
+
     }
 
     // ***************************

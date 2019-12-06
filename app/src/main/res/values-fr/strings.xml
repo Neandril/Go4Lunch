@@ -28,6 +28,7 @@
     <string name="menu_map_view">Vue carte</string>
     <string name="menu_list_view">Vue liste</string>
     <string name="menu_workmates">Collègues</string>
+    <string name="menu_chat">Discussion</string>
 
     <string name="search_restaurants">Recherche de restaurants</string>
     <string name="search_workmates">Recherche de collègues</string>
@@ -71,6 +72,8 @@
     <string name="negative_button">Non</string>
     <string name="alert_dialog_title">Quitter</string>
     <string name="alert_dialog_message">Voulez-vous vraiment quitter l\'application ?</string>
+    <string name="delete_account">Voulez-vous vraiment supprimer votre compte ? Cette action est définitive.</string>
+    <string name="delete_account_title">Suppression de compte</string>
 
     <!-- SETTINGS STRINGS -->
     <string name="language">Langue de l\'application</string>
@@ -79,5 +82,6 @@
         <item>Français</item>
     </string-array>
     <string name="notification_enabled">Notifications activées</string>
+    <string name="changes_saved">Modifications enregistrées !</string>
 
 </resources>

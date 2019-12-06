@@ -28,6 +28,7 @@
     <string name="menu_map_view">Map View</string>
     <string name="menu_list_view">List View</string>
     <string name="menu_workmates">Workmates</string>
+    <string name="menu_chat">Chat</string>
 
     <string name="search_restaurants">Search restaurants</string>
     <string name="search_workmates">Search workmates</string>
@@ -66,11 +67,13 @@
     <string name="open_now">Open now</string>
     <string name="opening_time_unavailable">Opening time unavailable</string>
 
-    <!-- ALERT DIALOG -->
+    <!-- ALERT DIALOGS -->
     <string name="positive_button">Yes</string>
     <string name="negative_button">No</string>
     <string name="alert_dialog_title">Exit</string>
     <string name="alert_dialog_message">Are you sure want to quit the application ?</string>
+    <string name="delete_account">Are you sure to delete your account ? This can\'t be undone.</string>
+    <string name="delete_account_title">Delete account</string>
 
     <!-- SETTINGS STRINGS -->
     <string name="language">Language of the application</string>
@@ -79,5 +82,6 @@
         <item>French</item>
     </string-array>
     <string name="notification_enabled">Enable notifications</string>
+    <string name="changes_saved">Changes saved!</string>
 
 </resources>

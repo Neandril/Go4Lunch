@@ -1,6 +1,11 @@
 package com.neandril.go4lunch.controllers.activities;
 
+import android.Manifest;
+import android.app.AlertDialog;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -8,19 +13,35 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 
 import com.bumptech.glide.Glide;
+import com.firebase.ui.auth.AuthUI;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.PermissionToken;
+import com.karumi.dexter.listener.PermissionDeniedResponse;
+import com.karumi.dexter.listener.PermissionGrantedResponse;
+import com.karumi.dexter.listener.PermissionRequest;
+import com.karumi.dexter.listener.single.PermissionListener;
 import com.neandril.go4lunch.R;
 import com.neandril.go4lunch.controllers.base.BaseActivity;
 import com.neandril.go4lunch.models.User;
 import com.neandril.go4lunch.utils.UserHelper;
 
 import java.util.Objects;
+import java.util.UUID;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -28,6 +49,8 @@ import butterknife.OnClick;
 public class SettingsActivity extends BaseActivity {
 
     private static final String TAG = SettingsActivity.class.getSimpleName();
+    public static final int RC_CHOOSE_PHOTO = 200;
+    private Uri localImage;
 
     // DESIGN
     @BindView(R.id.settings_layout) ConstraintLayout mConstraintLayout;
@@ -35,6 +58,7 @@ public class SettingsActivity extends BaseActivity {
     @BindView(R.id.profile_thumbnail) ImageView mProfileThumbnail;
     @BindView(R.id.editText_user_name) EditText mUserNameEditText;
     @BindView(R.id.btn_save) Button mBtnSave;
+    @BindView(R.id.btn_delete_account) Button mBtnDeleteAccount;
 
     @Override
     protected int getActivityLayout() {
@@ -54,6 +78,13 @@ public class SettingsActivity extends BaseActivity {
         this.configureSpinner();
         this.configureUi();
 
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        this.handleResponse(requestCode, resultCode, data);
     }
 
 
@@ -92,10 +123,99 @@ public class SettingsActivity extends BaseActivity {
         });
     }
 
+    // ***************************
+    // ACTIONS
+    // ***************************
+
+    @OnClick(R.id.btn_delete_account)
+    void btnDeleteAcountOnClick() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(R.string.delete_account_title);
+        builder.setMessage(R.string.delete_account);
+        builder.setPositiveButton(
+                R.string.positive_button,
+                (dialog, which) -> {
+                    if (this.getCurrentUser() != null) {
+                        UserHelper.deleteUser(this.getCurrentUser().getUid());
+                        Log.d(TAG, "btnDeleteAcountOnClick: account deleted");
+                        finish();
+                    }
+                }
+        ).setNegativeButton(
+                R.string.negative_button,
+                (dialog, which) -> dialog.cancel()
+        );
+
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
+
     @OnClick(R.id.btn_save)
     void btnSaveOnClick() {
         String new_UserName = mUserNameEditText.getText().toString();
 
-       UserHelper.updateUsername(new_UserName, this.getCurrentUser().getUid());
+        UserHelper.updateUsername(new_UserName, this.getCurrentUser().getUid());
+        uploadProfilePictureAndUpdateUser();
+
+        showSnackBar(getResources().getString(R.string.changes_saved));
+    }
+
+    @OnClick(R.id.profile_thumbnail)
+    void profileThumbnailOnClick() {
+        Log.d(TAG, "profileThumbnailOnClick: Clicked! ");
+
+        // Get storage read permission
+        Dexter
+                .withActivity(this)
+                .withPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
+                .withListener(new PermissionListener() {
+            @Override
+            public void onPermissionGranted(PermissionGrantedResponse response) {
+                Log.d(TAG, "onPermissionGranted: Granted");
+                chooseLocalPicture();
+            }
+
+            @Override
+            public void onPermissionDenied(PermissionDeniedResponse response) {
+                Log.d(TAG, "onPermissionDenied: Denied");
+            }
+
+            @Override
+            public void onPermissionRationaleShouldBeShown(PermissionRequest permission, PermissionToken token) {
+                Log.d(TAG, "onPermissionRationaleShouldBeShown: Rationale");
+            }
+        })
+                .check();
+    }
+
+    private void chooseLocalPicture() {
+        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(intent, RC_CHOOSE_PHOTO);
+    }
+
+    private void handleResponse(int requestCode, int resultCode, Intent data) {
+        Log.d(TAG, "handleResponse: ");
+        if (requestCode == RC_CHOOSE_PHOTO) {
+            if (resultCode == RESULT_OK) {
+                this.localImage = data.getData();
+                Glide.with(this).load(localImage).into(mProfileThumbnail);
+            } else {
+                Toast.makeText(this, "No image selected", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    private void uploadProfilePictureAndUpdateUser() {
+        String uuid = UUID.randomUUID().toString();
+        String userId = this.getCurrentUser().getUid();
+        StorageReference storageReference = FirebaseStorage.getInstance().getReference(uuid);
+        storageReference.putFile(localImage).addOnSuccessListener(taskSnapshot -> {
+
+            storageReference.getDownloadUrl().addOnSuccessListener(uri -> {
+                Log.d(TAG, "onSuccess: Uri: " + uri.toString());
+                UserHelper.updateProfilePicture(uri.toString(), userId);
+            });
+
+        }).addOnFailureListener(this.onFailureListener());
     }
 }

@@ -129,18 +129,22 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback 
                 Query query = UserHelper.getAllUsers().whereEqualTo("restaurantId", id);
                 query.addSnapshotListener((queryDocumentSnapshots, e) -> {
 
-                    if (Objects.requireNonNull(queryDocumentSnapshots).size() == 0) {
-                        mMap.addMarker(new MarkerOptions()
-                                .position(latLng)
-                                .title(placeName + " : " + vicinity)
-                                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)))
-                                .setTag(id);
-                    } else {
-                        mMap.addMarker(new MarkerOptions()
-                                .position(latLng)
-                                .title(placeName + " : " + vicinity)
-                                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)))
-                                .setTag(id);
+                    try {
+                        if (Objects.requireNonNull(queryDocumentSnapshots).size() == 0) {
+                            mMap.addMarker(new MarkerOptions()
+                                    .position(latLng)
+                                    .title(placeName + " : " + vicinity)
+                                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)))
+                                    .setTag(id);
+                        } else {
+                            mMap.addMarker(new MarkerOptions()
+                                    .position(latLng)
+                                    .title(placeName + " : " + vicinity)
+                                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)))
+                                    .setTag(id);
+                        }
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
                     }
                 });
 
