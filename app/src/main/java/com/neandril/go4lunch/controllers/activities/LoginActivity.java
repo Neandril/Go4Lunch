@@ -1,7 +1,10 @@
 package com.neandril.go4lunch.controllers.activities;
 
 import android.content.Intent;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 
@@ -16,8 +19,10 @@ import com.neandril.go4lunch.R;
 import com.neandril.go4lunch.controllers.base.BaseActivity;
 import com.neandril.go4lunch.models.User;
 import com.neandril.go4lunch.utils.UserHelper;
+import com.neandril.go4lunch.utils.Utility;
 
 import java.util.Collections;
+import java.util.Locale;
 import java.util.Objects;
 
 import butterknife.BindView;
@@ -26,6 +31,8 @@ import butterknife.OnClick;
 public class LoginActivity extends BaseActivity {
 
     private static final String TAG = LoginActivity.class.getSimpleName();
+
+    Utility utility = new Utility();
 
     // Identifier for sign-in
     private static final int RC_SIGN_IN = 123;
@@ -37,6 +44,20 @@ public class LoginActivity extends BaseActivity {
     public void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, "onCreate: onCreate");
         super.onCreate(savedInstanceState);
+
+        // Update language
+        String language = Locale.getDefault().getLanguage();
+        String storedLocale = utility.retriveLocaleFromPrefs(getBaseContext());
+
+        if (!language.equals(storedLocale)) {
+            Locale locale = new Locale(storedLocale);
+            Resources res = getResources();
+            DisplayMetrics metrics = res.getDisplayMetrics();
+            Configuration conf = res.getConfiguration();
+            conf.setLocale(locale);
+            conf.setLocale(new Locale(storedLocale.toLowerCase()));
+            res.updateConfiguration(conf, metrics);
+        }
 
         if (this.isCurrentUsedLogged()) {
             this.enterInTheApp();

@@ -1,33 +1,22 @@
 package com.neandril.go4lunch.controllers.fragments;
 
-import android.app.SearchManager;
-import android.content.Context;
 import android.content.Intent;
+import android.graphics.Typeface;
+import android.text.style.CharacterStyle;
+import android.text.style.StyleSpan;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.SearchView;
 
-import androidx.annotation.NonNull;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.libraries.places.api.model.Place;
 import com.neandril.go4lunch.R;
-import com.neandril.go4lunch.controllers.activities.MainActivity;
 import com.neandril.go4lunch.controllers.activities.RestaurantActivity;
 import com.neandril.go4lunch.controllers.base.BaseFragment;
-import com.neandril.go4lunch.models.DetailViewModel;
 import com.neandril.go4lunch.models.PlacesViewModel;
-import com.neandril.go4lunch.models.details.Detail;
-import com.neandril.go4lunch.models.details.Result;
 import com.neandril.go4lunch.models.places.PlacesDetail;
 import com.neandril.go4lunch.utils.ItemClickSupport;
-import com.neandril.go4lunch.utils.Utility;
 import com.neandril.go4lunch.view.RestaurantAdapter;
 
 import java.util.ArrayList;
@@ -42,6 +31,8 @@ public class ListViewFragment extends BaseFragment {
     public static final String RESTAURANT_TAG = "restaurantId";
 
     @BindView(R.id.fragment_listView_recyclerView) RecyclerView mRecyclerView;
+
+    private static final CharacterStyle STYLE_BOLD = new StyleSpan(Typeface.BOLD);
 
     private List<PlacesDetail> mPlaces;
     private RestaurantAdapter mAdapter;
@@ -97,4 +88,5 @@ public class ListViewFragment extends BaseFragment {
                     startActivity(intent);
                 });
     }
+
 }

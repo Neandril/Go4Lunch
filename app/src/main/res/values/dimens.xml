@@ -9,7 +9,7 @@
 
     <!-- FAB dimens -->
     <dimen name="fab_margin">16dp</dimen>
-    <dimen name="design_fab_image_size" tools:override="true">40dp</dimen>
+    <dimen name="design_fab_image_size" tools:override="true">30dp</dimen>
 
     <!-- LOGIN SCREEN DIMENS -->
     <dimen name="margin">8dp</dimen>

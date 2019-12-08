@@ -81,6 +81,9 @@
         <item>English</item>
         <item>French</item>
     </string-array>
+    <string name="display_name">Display name</string>
+    <string name="btn_save">SAVE</string>
+    <string name="btn_delete_account">DELETE ACCOUNT</string>
     <string name="notification_enabled">Enable notifications</string>
     <string name="changes_saved">Changes saved!</string>
 

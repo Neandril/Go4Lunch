@@ -1,11 +1,15 @@
 package com.neandril.go4lunch.controllers.activities;
 
+import android.app.AlarmManager;
 import android.app.AlertDialog;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.telecom.Call;
 import android.text.TextUtils;
 import android.text.style.CharacterStyle;
 import android.text.style.StyleSpan;
@@ -54,6 +58,7 @@ import com.neandril.go4lunch.controllers.fragments.WorkmatesFragment;
 import com.neandril.go4lunch.models.RestaurantAutocompleteModel;
 import com.neandril.go4lunch.models.User;
 import com.neandril.go4lunch.models.places.PlacesDetail;
+import com.neandril.go4lunch.utils.NotificationsReceiver;
 import com.neandril.go4lunch.utils.UserHelper;
 import com.neandril.go4lunch.utils.Utility;
 import com.neandril.go4lunch.view.AutocompleteAdapter;
@@ -64,6 +69,7 @@ import java.util.List;
 import java.util.Objects;
 
 import butterknife.BindView;
+import butterknife.OnClick;
 
 public class MainActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener,
@@ -116,6 +122,7 @@ public class MainActivity extends BaseActivity
         configureDrawer();
         configureNavigationView();
         configureBottomNavigationView();
+        configAlarm();
 
         getUserInformations();
 
@@ -132,6 +139,8 @@ public class MainActivity extends BaseActivity
         if (getActionBar() != null) {
             getActionBar().setHomeButtonEnabled(true);
         }
+        setTitle(R.string.title_main);
+        //mToolbar.setTitle(R.string.title_main);
     }
 
     private void configureDrawer() {
@@ -372,7 +381,19 @@ public class MainActivity extends BaseActivity
                 Log.d(TAG, "onQueryTextChange: " + newText);
                 if (newText.length() > 2 ) {
                     configurePredictions(newText);
+                } else {
+                    Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
+                    if (fragment instanceof ListViewFragment) {
+                        Toast.makeText(MainActivity.this, "ListView Fragment", Toast.LENGTH_SHORT).show();
+                    } else if (fragment instanceof MapViewFragment) {
+                        Toast.makeText(MainActivity.this, "MapView Fragment", Toast.LENGTH_SHORT).show();
+                    } else if (fragment instanceof WorkmatesFragment) {
+                        Toast.makeText(MainActivity.this, "Not implemented yet", Toast.LENGTH_SHORT).show();
+                        mSearchAutocomplete.setHint("Not implemented yet");
+                        searchView.setEnabled(false);
+                    }
                 }
+
                 return false;
             }
         });
@@ -396,5 +417,18 @@ public class MainActivity extends BaseActivity
                showSnackBar(getResources().getString(R.string.no_restaurant_picked));
            }
         });
+    }
+
+    private void configAlarm() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, 12);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+
+        AlarmManager alarmManager = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(this, NotificationsReceiver.class);
+
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
     }
 }

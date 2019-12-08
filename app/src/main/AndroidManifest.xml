@@ -43,6 +43,10 @@
         <activity
             android:name=".controllers.activities.RestaurantActivity"
             android:parentActivityName=".controllers.activities.MainActivity" />
+
+        <receiver
+            android:name=".utils.NotificationsReceiver"
+            android:exported="true" />
     </application>
 
 </manifest>

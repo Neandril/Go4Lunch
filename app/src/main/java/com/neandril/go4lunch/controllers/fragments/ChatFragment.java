@@ -1,5 +1,6 @@
 package com.neandril.go4lunch.controllers.fragments;
 
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -19,6 +20,8 @@ import com.neandril.go4lunch.models.Message;
 import com.neandril.go4lunch.models.User;
 import com.neandril.go4lunch.utils.MessageHelper;
 import com.neandril.go4lunch.utils.UserHelper;
+
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -73,6 +76,10 @@ public class ChatFragment extends BaseFragment implements MessageAdapter.listene
 
     @OnClick(R.id.btn_chat_message_send)
     public void onClickSendMessage() {
+        if (!TextUtils.isEmpty(mInputEditText.getText()) && currentUser != null) {
+            MessageHelper.createMessageForChat(Objects.requireNonNull(mInputEditText.getText()).toString(), currentUser);
+            this.mInputEditText.setText("");
+        }
 
     }
 

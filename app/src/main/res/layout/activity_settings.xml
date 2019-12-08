@@ -36,7 +36,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin"
             android:layout_marginEnd="@dimen/margin"
-            tools:text="Name changing" />
+            android:text="Your name :" />
 
         <EditText
             android:id="@+id/editText_user_name"
@@ -45,7 +45,7 @@
             android:layout_marginStart="@dimen/margin"
             android:layout_marginEnd="@dimen/margin"
             android:layout_marginBottom="@dimen/margin"
-            android:text="TEXT" />
+            android:text="@string/display_name" />
 
         <View
             android:layout_width="match_parent"
@@ -126,7 +126,7 @@
                 android:layout_marginBottom="@dimen/margin"
                 android:textColor="@color/white"
                 android:shadowRadius="25"
-                android:text="SAVE" />
+                android:text="@string/btn_save" />
 
             <Button
                 android:id="@+id/btn_delete_account"
@@ -136,7 +136,7 @@
                 android:textColor="@color/white"
                 android:shadowRadius="25"
                 android:background="@drawable/custom_red_button"
-                android:text="DELETE" />
+                android:text="@string/btn_delete_account" />
 
         </LinearLayout>
 

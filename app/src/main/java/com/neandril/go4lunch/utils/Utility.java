@@ -1,5 +1,10 @@
 package com.neandril.go4lunch.utils;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.res.Configuration;
+
 import java.util.Calendar;
 
 /**
@@ -7,6 +12,9 @@ import java.util.Calendar;
  */
 
 public class Utility {
+
+    public static final String PREFS = "com.neandril.go4lunch.prefs";
+    public static final String LOCALE_KEY = "locale";
 
     /**
      * Convert 5-stars rating into 3-stars
@@ -66,6 +74,26 @@ public class Utility {
         distance = Math.pow(distance, 2) + Math.pow(height, 2);
         // Rounded
         return Math.round(Math.sqrt(distance)) + "m";
+    }
+
+    /**
+     * PREFERENCES - sharedpreferences ; get and set locale ;
+     * @param context - context
+     * @return - prefs
+     */
+    private SharedPreferences getSharedPreferences(Context context) {
+        return context.getSharedPreferences(PREFS, Context.MODE_PRIVATE);
+    }
+
+    public String retriveLocaleFromPrefs(Context context) {
+        return getSharedPreferences(context).getString(LOCALE_KEY, "en");
+    }
+
+    public void setLocaleInPrefs(Context context, String locale) {
+        getSharedPreferences(context)
+                .edit()
+                .putString(LOCALE_KEY, locale)
+                .apply();
     }
 
 }

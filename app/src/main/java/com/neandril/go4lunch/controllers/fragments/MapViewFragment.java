@@ -4,6 +4,7 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.util.Log;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.lifecycle.Observer;
@@ -18,6 +19,7 @@ import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResponse;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.android.gms.location.SettingsClient;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -49,6 +51,7 @@ import com.neandril.go4lunch.utils.UserHelper;
 import java.util.Objects;
 
 import butterknife.BindView;
+import butterknife.OnClick;
 
 public class MapViewFragment extends BaseFragment implements OnMapReadyCallback , GoogleMap.OnMarkerClickListener {
 
@@ -199,6 +202,12 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback 
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, DEFAULT_ZOOM));
     }
 
+    @OnClick(R.id.fab_mylocation)
+    void myLocationOnClick() {
+        Log.d(TAG, "myLocationOnClick: clicked!");
+        getLastKnownLocation();
+    }
+
 
     // ***************************
     // PERMISSIONS
@@ -253,7 +262,7 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback 
                     public void onPermissionGranted(PermissionGrantedResponse response) {
                         Log.d(TAG, "onPermissionGranted: Granted");
                         getLastKnownLocation();
-                        mMap.setMyLocationEnabled(true);
+                        mMap.setMyLocationEnabled(false);
                     }
 
                     @Override

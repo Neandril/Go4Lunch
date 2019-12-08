@@ -1,11 +1,16 @@
 package com.neandril.go4lunch.controllers.activities;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -39,7 +44,9 @@ import com.neandril.go4lunch.R;
 import com.neandril.go4lunch.controllers.base.BaseActivity;
 import com.neandril.go4lunch.models.User;
 import com.neandril.go4lunch.utils.UserHelper;
+import com.neandril.go4lunch.utils.Utility;
 
+import java.util.Locale;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -59,6 +66,9 @@ public class SettingsActivity extends BaseActivity {
     @BindView(R.id.editText_user_name) EditText mUserNameEditText;
     @BindView(R.id.btn_save) Button mBtnSave;
     @BindView(R.id.btn_delete_account) Button mBtnDeleteAccount;
+    @BindView(R.id.spinner_lang) Spinner mSpinner;
+
+    Utility utility = new Utility();
 
     @Override
     protected int getActivityLayout() {
@@ -76,6 +86,7 @@ public class SettingsActivity extends BaseActivity {
 
         this.configureToolbar();
         this.configureSpinner();
+        this.getLocale();
         this.configureUi();
 
     }
@@ -100,11 +111,10 @@ public class SettingsActivity extends BaseActivity {
     }
 
     private void configureSpinner() {
-        Spinner spinner = findViewById(R.id.spinner_lang);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.languages_array, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(adapter);
+        mSpinner.setAdapter(adapter);
     }
 
     private void configureUi() {
@@ -155,7 +165,19 @@ public class SettingsActivity extends BaseActivity {
         String new_UserName = mUserNameEditText.getText().toString();
 
         UserHelper.updateUsername(new_UserName, this.getCurrentUser().getUid());
-        uploadProfilePictureAndUpdateUser();
+
+        String locale = "";
+        int spinner_pos = mSpinner.getSelectedItemPosition();
+        switch (spinner_pos) {
+            case 0:
+                locale = "en";
+                break;
+            case 1:
+                locale = "fr";
+                break;
+        }
+        setLocale(locale);
+        Log.d(TAG, "btnSaveOnClick: Spinner: " + locale);
 
         showSnackBar(getResources().getString(R.string.changes_saved));
     }
@@ -199,6 +221,7 @@ public class SettingsActivity extends BaseActivity {
             if (resultCode == RESULT_OK) {
                 this.localImage = data.getData();
                 Glide.with(this).load(localImage).into(mProfileThumbnail);
+                uploadProfilePictureAndUpdateUser();
             } else {
                 Toast.makeText(this, "No image selected", Toast.LENGTH_SHORT).show();
             }
@@ -217,5 +240,37 @@ public class SettingsActivity extends BaseActivity {
             });
 
         }).addOnFailureListener(this.onFailureListener());
+    }
+
+    private void setLocale(String lang) {
+        Log.d(TAG, "setLocale: Lang: " + lang);
+        Locale locale = new Locale(lang);
+        Resources res = getResources();
+        DisplayMetrics metrics = res.getDisplayMetrics();
+        Configuration conf = res.getConfiguration();
+        conf.setLocale(locale);
+        conf.setLocale(new Locale(lang.toLowerCase()));
+        res.updateConfiguration(conf, metrics);
+
+        utility.setLocaleInPrefs(this, lang);
+
+        restart(this);
+    }
+
+    private void getLocale() {
+        Log.d(TAG, "getLocale: current locale: " + utility.retriveLocaleFromPrefs(this));
+        String locale = utility.retriveLocaleFromPrefs(this);
+
+        if (locale.equals("fr")) {
+            mSpinner.setSelection(1);
+        } else {
+            mSpinner.setSelection(0);
+        }
+    }
+
+    private void restart(Activity activity) {
+        Intent intent = new Intent(activity, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        activity.startActivity(intent);
     }
 }

@@ -81,6 +81,9 @@
         <item>Anglais</item>
         <item>Français</item>
     </string-array>
+    <string name="display_name">Nom affiché</string>
+    <string name="btn_save">SAUVER</string>
+    <string name="btn_delete_account">SUPPRIMER LE COMPTE</string>
     <string name="notification_enabled">Notifications activées</string>
     <string name="changes_saved">Modifications enregistrées !</string>
 
