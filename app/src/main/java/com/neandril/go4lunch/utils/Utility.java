@@ -1,11 +1,15 @@
 package com.neandril.go4lunch.utils;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.res.Configuration;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 /**
  * Utility class containing many usefull methods
@@ -13,8 +17,10 @@ import java.util.Calendar;
 
 public class Utility {
 
-    public static final String PREFS = "com.neandril.go4lunch.prefs";
-    public static final String LOCALE_KEY = "locale";
+    private static final String PREFS = "com.neandril.go4lunch.prefs";
+    private static final String LOCALE_KEY = "locale";
+    private static final String PREFS_LIKES = "likes";
+    private final Gson gson = new Gson();
 
     /**
      * Convert 5-stars rating into 3-stars
@@ -96,4 +102,28 @@ public class Utility {
                 .apply();
     }
 
+    /**
+     * PREFERENCES - sharedpreferences ; get and set likes list ;
+     * @param context - context
+     */
+    public void setLikeListInPrefs(Context context, List<String> likeList) {
+        String json = gson.toJson(likeList);
+        getSharedPreferences(context)
+                .edit()
+                .putString(PREFS_LIKES, json)
+                .apply();
+    }
+
+    public List<String> retriveLikeList(Context context) {
+        String json = getSharedPreferences(context).getString(PREFS_LIKES, "[]");
+        ArrayList<String> list;
+        if (json == null || json.isEmpty()) {
+            list = new ArrayList<>();
+        } else {
+            Type type = new TypeToken<ArrayList<String>>() {}.getType();
+            list = gson.fromJson(json, type);
+        }
+
+        return list;
+    }
 }

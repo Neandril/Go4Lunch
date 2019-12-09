@@ -29,9 +29,9 @@ import com.neandril.go4lunch.models.DetailViewModel;
 import com.neandril.go4lunch.models.User;
 import com.neandril.go4lunch.models.details.Detail;
 import com.neandril.go4lunch.utils.UserHelper;
+import com.neandril.go4lunch.utils.Utility;
 import com.neandril.go4lunch.view.WorkmateCheckedInAdapter;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -46,9 +46,8 @@ public class RestaurantActivity extends BaseActivity {
     public String mWebsite;
     public String mPhone;
     public String mRestaurantName;
-    private DetailViewModel viewModel;
-    private WorkmateCheckedInAdapter mAdapter;
-    private List<User> userList = new ArrayList<>();
+
+    Utility utility = new Utility();
 
     @BindView(R.id.activity_restaurant_main_layout) ConstraintLayout mConstraintLayout;
     @BindView(R.id.tv_restaurantName) TextView tvRestaurantName;
@@ -90,11 +89,8 @@ public class RestaurantActivity extends BaseActivity {
     // REQUEST
     // ***************************
 
-    /**
-     * Request
-     */
     private void retrieveRestaurantDetails() {
-        viewModel = ViewModelProviders.of(this).get(DetailViewModel.class);
+        DetailViewModel viewModel = ViewModelProviders.of(this).get(DetailViewModel.class);
         viewModel.init(placeId);
         final Observer<Detail> observer = this::updateUI;
 
@@ -105,10 +101,6 @@ public class RestaurantActivity extends BaseActivity {
     // UI
     // ***************************
 
-    /**
-     * Update the UI
-     * @param detail - Restaurant details
-     */
     private void updateUI(Detail detail) {
         mRestaurantName = detail.getResult().getName();
         if (detail.getResult().getName() != null) {
@@ -141,9 +133,6 @@ public class RestaurantActivity extends BaseActivity {
     // ACTIONS
     // ***************************
 
-    /**
-     * Handle website click
-     */
     @OnClick(R.id.restaurant_website_button)
     public void onWebsiteButton() {
         Log.d(TAG, "onWebsiteButton: " + mWebsite);
@@ -156,38 +145,36 @@ public class RestaurantActivity extends BaseActivity {
         }
     }
 
-    /**
-     * Handle Like click
-     */
     @OnClick(R.id.restaurant_like_button)
     public void onLikeButton() {
+        Log.d(TAG, "onLikeButton: like clicked : " + placeId);
 
-        Log.d(TAG, "onLikeButton: Try to like : " + placeId);
+        // Get the like list from prefs
+        List<String> likeList = utility.retriveLikeList(this);
+        mLikeButton.setColorFilter(this.getResources().getColor(R.color.colorPrimary));
 
         UserHelper.getUser(this.getCurrentUser().getUid()).addOnCompleteListener(task -> {
 
             if (task.isSuccessful()) {
                 User user = Objects.requireNonNull(task.getResult()).toObject(User.class);
-                List<String> likes = Objects.requireNonNull(user).getRestaurantLikedList();
 
-                if (user.getRestaurantLikedList() != null) {
-                    if (likes.contains(placeId)) {
-                        Log.d(TAG, "onLikeButton: Already Liked");
-                    } else {
-                        Log.d(TAG, "onLikeButton: Not liked yet");
-                    }
+                // Compare the lists in firebase and from prefs, and update icon and list accordingly
+                if (Objects.requireNonNull(user).getRestaurantLikeList().contains(placeId)) {
+                    Log.d(TAG, "onLikeButton: Already liked");
+                    likeList.remove(placeId);
+                    mLikeButton.setImageResource(R.drawable.ic_star_empty);
                 } else {
-                    // likes.add(placeId);
-                    Log.d(TAG, "onLikeButton: Attempt to like: " + placeId);
+                    Log.d(TAG, "onLikeButton: Not liked yet");
+                    likeList.add(placeId);
+                    mLikeButton.setImageResource(R.drawable.ic_like);
                 }
-
+                // Save the final list
+                utility.setLikeListInPrefs(this, likeList);
+                UserHelper.updateRestaurantLiked(this.getCurrentUser().getUid(), likeList);
             }
         });
     }
 
-    /**
-     * Handle Phone click
-     */
     @OnClick(R.id.restaurant_call_button)
     public void onPhoneButton() {
         Log.d(TAG, "onPhoneButton: " + mPhone);
@@ -197,9 +184,6 @@ public class RestaurantActivity extends BaseActivity {
         startActivity(intent);
     }
 
-    /**
-     * Handle FAB click
-     */
     @OnClick(R.id.floatting_action_button)
     public void onFabClick() {
         Log.d(TAG, "onFabClick: ");
@@ -243,7 +227,7 @@ public class RestaurantActivity extends BaseActivity {
                 .setLifecycleOwner(this)
                 .build();
 
-        this.mAdapter = new WorkmateCheckedInAdapter(options);
+        WorkmateCheckedInAdapter mAdapter = new WorkmateCheckedInAdapter(options);
         this.mRecyclerView.setHasFixedSize(true);
         this.mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         this.mRecyclerView.setAdapter(mAdapter);
@@ -264,9 +248,34 @@ public class RestaurantActivity extends BaseActivity {
     }
 
     /**
-     * Check likes
+     * Check likes, and update UI
      */
     public void checkLikes() {
+        Log.d(TAG, "checkLikes: ");
 
+        List<String> likeList = utility.retriveLikeList(this);
+        mLikeButton.setColorFilter(this.getResources().getColor(R.color.colorPrimary));
+
+        // If local list is empty, retrieve the remote list, and save it
+        UserHelper.getUser(this.getCurrentUser().getUid()).addOnSuccessListener(documentSnapshot -> {
+            User user = documentSnapshot.toObject(User.class);
+
+            if (likeList == null || likeList.isEmpty()) {
+                List<String> remoteList = Objects.requireNonNull(user).getRestaurantLikeList();
+                Log.d(TAG, "checkLikes: remote list : " + remoteList);
+                utility.setLikeListInPrefs(this, remoteList);
+                if (remoteList.contains(placeId)) {
+                    mLikeButton.setImageResource(R.drawable.ic_like);
+                } else {
+                    mLikeButton.setImageResource(R.drawable.ic_star_empty);
+                }
+            } else {
+                if (likeList.contains(placeId)) {
+                    mLikeButton.setImageResource(R.drawable.ic_like);
+                } else {
+                    mLikeButton.setImageResource(R.drawable.ic_star_empty);
+                }
+            }
+        });
     }
 }

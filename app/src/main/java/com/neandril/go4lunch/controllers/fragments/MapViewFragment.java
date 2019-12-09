@@ -4,7 +4,6 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.util.Log;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.lifecycle.Observer;
@@ -19,7 +18,6 @@ import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResponse;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.android.gms.location.SettingsClient;
-import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -42,10 +40,9 @@ import com.neandril.go4lunch.R;
 import com.neandril.go4lunch.controllers.activities.MainActivity;
 import com.neandril.go4lunch.controllers.activities.RestaurantActivity;
 import com.neandril.go4lunch.controllers.base.BaseFragment;
-import com.neandril.go4lunch.models.User;
-import com.neandril.go4lunch.utils.Singleton;
 import com.neandril.go4lunch.models.PlacesViewModel;
 import com.neandril.go4lunch.models.places.PlacesDetail;
+import com.neandril.go4lunch.utils.Singleton;
 import com.neandril.go4lunch.utils.UserHelper;
 
 import java.util.Objects;
@@ -127,7 +124,6 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback 
 
                 Log.e(TAG, "updateUiWithMarkers: Name: " + placeName);
 
-
                 // Get all users, then, if the query size is positive, place a green marker (an orange one otherwise)
                 Query query = UserHelper.getAllUsers().whereEqualTo("restaurantId", id);
                 query.addSnapshotListener((queryDocumentSnapshots, e) -> {
@@ -137,13 +133,13 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback 
                             mMap.addMarker(new MarkerOptions()
                                     .position(latLng)
                                     .title(placeName + " : " + vicinity)
-                                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)))
+                                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_restaurant_marker_orange)))
                                     .setTag(id);
                         } else {
                             mMap.addMarker(new MarkerOptions()
                                     .position(latLng)
                                     .title(placeName + " : " + vicinity)
-                                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)))
+                                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_restaurant_marker_green)))
                                     .setTag(id);
                         }
                     } catch (Exception ex) {

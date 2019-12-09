@@ -1,7 +1,6 @@
 package com.neandril.go4lunch.models;
 
 import java.util.List;
-import java.util.Map;
 
 public class User {
     private String user_id;
@@ -9,7 +8,7 @@ public class User {
     private String user_profile_picture;
     private String restaurantId;
     private String restaurantName;
-    private List<String> restaurantLikedList;
+    private List<String> restaurantLikeList;
 
     // Required for Firestore
     public User() { }
@@ -20,7 +19,7 @@ public class User {
         this.user_profile_picture = user_profile_picture;
         this.restaurantId = restaurantId;
         this.restaurantName = restaurantName;
-        this.restaurantLikedList = restaurantLikedList;
+        this.restaurantLikeList = restaurantLikedList;
     }
 
     public String getUser_id() {
@@ -63,11 +62,11 @@ public class User {
         this.restaurantName = restaurantName;
     }
 
-    public List<String> getRestaurantLikedList() {
-        return restaurantLikedList;
+    public List<String> getRestaurantLikeList() {
+        return restaurantLikeList;
     }
 
-    public void setRestaurantLikedList(List<String> restaurantLikedList) {
-        this.restaurantLikedList = restaurantLikedList;
+    public void setRestaurantLikeList(List<String> restaurantLikeList) {
+        this.restaurantLikeList = restaurantLikeList;
     }
 }
