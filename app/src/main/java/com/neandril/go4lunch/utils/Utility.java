@@ -1,10 +1,17 @@
 package com.neandril.go4lunch.utils;
 
+import android.app.Activity;
+import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
+
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.neandril.go4lunch.models.DetailViewModel;
+import com.neandril.go4lunch.models.details.Detail;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -20,6 +27,7 @@ public class Utility {
     private static final String PREFS = "com.neandril.go4lunch.prefs";
     private static final String LOCALE_KEY = "locale";
     private static final String PREFS_LIKES = "likes";
+    private static final String PREFS_TOGGLE = "toggle";
     private final Gson gson = new Gson();
 
     /**
@@ -126,4 +134,16 @@ public class Utility {
 
         return list;
     }
+
+    public void setNotifToggleInPrefs(Context context, boolean toggle) {
+        getSharedPreferences(context)
+                .edit()
+                .putBoolean(PREFS_TOGGLE, toggle)
+                .apply();
+    }
+
+    public boolean retrieveToggleFromPrefs(Context context) {
+        return getSharedPreferences(context).getBoolean(PREFS_TOGGLE, true);
+    }
+
 }

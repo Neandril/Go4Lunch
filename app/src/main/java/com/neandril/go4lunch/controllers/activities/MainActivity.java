@@ -4,12 +4,9 @@ import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.PendingIntent;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.telecom.Call;
 import android.text.TextUtils;
 import android.text.style.CharacterStyle;
 import android.text.style.StyleSpan;
@@ -46,7 +43,6 @@ import com.google.android.libraries.places.api.model.TypeFilter;
 import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRequest;
 import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.bottomnavigation.LabelVisibilityMode;
 import com.google.android.material.navigation.NavigationView;
 import com.neandril.go4lunch.BuildConfig;
 import com.neandril.go4lunch.R;
@@ -57,8 +53,7 @@ import com.neandril.go4lunch.controllers.fragments.MapViewFragment;
 import com.neandril.go4lunch.controllers.fragments.WorkmatesFragment;
 import com.neandril.go4lunch.models.RestaurantAutocompleteModel;
 import com.neandril.go4lunch.models.User;
-import com.neandril.go4lunch.models.places.PlacesDetail;
-import com.neandril.go4lunch.utils.NotificationsReceiver;
+import com.neandril.go4lunch.utils.NotificationReceiver;
 import com.neandril.go4lunch.utils.UserHelper;
 import com.neandril.go4lunch.utils.Utility;
 import com.neandril.go4lunch.view.AutocompleteAdapter;
@@ -69,7 +64,6 @@ import java.util.List;
 import java.util.Objects;
 
 import butterknife.BindView;
-import butterknife.OnClick;
 
 public class MainActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener,
@@ -122,7 +116,6 @@ public class MainActivity extends BaseActivity
         configureDrawer();
         configureNavigationView();
         configureBottomNavigationView();
-        configAlarm();
 
         getUserInformations();
 
@@ -417,18 +410,5 @@ public class MainActivity extends BaseActivity
                showSnackBar(getResources().getString(R.string.no_restaurant_picked));
            }
         });
-    }
-
-    private void configAlarm() {
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.HOUR_OF_DAY, 12);
-        calendar.set(Calendar.MINUTE, 0);
-        calendar.set(Calendar.SECOND, 0);
-
-        AlarmManager alarmManager = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
-        Intent intent = new Intent(this, NotificationsReceiver.class);
-
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
     }
 }

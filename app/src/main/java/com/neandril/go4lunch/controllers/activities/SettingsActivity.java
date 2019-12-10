@@ -2,7 +2,10 @@ package com.neandril.go4lunch.controllers.activities;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.AlarmManager;
 import android.app.AlertDialog;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
@@ -15,9 +18,11 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -43,14 +48,17 @@ import com.karumi.dexter.listener.single.PermissionListener;
 import com.neandril.go4lunch.R;
 import com.neandril.go4lunch.controllers.base.BaseActivity;
 import com.neandril.go4lunch.models.User;
+import com.neandril.go4lunch.utils.NotificationReceiver;
 import com.neandril.go4lunch.utils.UserHelper;
 import com.neandril.go4lunch.utils.Utility;
 
+import java.util.Calendar;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.UUID;
 
 import butterknife.BindView;
+import butterknife.OnCheckedChanged;
 import butterknife.OnClick;
 
 public class SettingsActivity extends BaseActivity {
@@ -67,6 +75,7 @@ public class SettingsActivity extends BaseActivity {
     @BindView(R.id.btn_save) Button mBtnSave;
     @BindView(R.id.btn_delete_account) Button mBtnDeleteAccount;
     @BindView(R.id.spinner_lang) Spinner mSpinner;
+    @BindView(R.id.notif_switch) Switch mSwitch;
 
     Utility utility = new Utility();
 
@@ -86,11 +95,10 @@ public class SettingsActivity extends BaseActivity {
 
         this.configureToolbar();
         this.configureSpinner();
-        this.getLocale();
+        this.getPrefs();
         this.configureUi();
 
     }
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -177,7 +185,18 @@ public class SettingsActivity extends BaseActivity {
                 break;
         }
         setLocale(locale);
-        Log.d(TAG, "btnSaveOnClick: Spinner: " + locale);
+
+        if (mSwitch.isChecked()) {
+            Log.d(TAG, "switchOnCheckedChanged: checked");
+            showSnackBar("Notifications enabled");
+            configAlarm();
+        } else {
+            Log.d(TAG, "switchOnCheckedChanged: not checked");
+            showSnackBar("Notifications disabled");
+            cancelAlarm();
+        }
+
+        utility.setNotifToggleInPrefs(this, mSwitch.isChecked());
 
         showSnackBar(getResources().getString(R.string.changes_saved));
     }
@@ -232,14 +251,11 @@ public class SettingsActivity extends BaseActivity {
         String uuid = UUID.randomUUID().toString();
         String userId = this.getCurrentUser().getUid();
         StorageReference storageReference = FirebaseStorage.getInstance().getReference(uuid);
-        storageReference.putFile(localImage).addOnSuccessListener(taskSnapshot -> {
-
-            storageReference.getDownloadUrl().addOnSuccessListener(uri -> {
-                Log.d(TAG, "onSuccess: Uri: " + uri.toString());
-                UserHelper.updateProfilePicture(uri.toString(), userId);
-            });
-
-        }).addOnFailureListener(this.onFailureListener());
+        storageReference.putFile(localImage).addOnSuccessListener(taskSnapshot ->
+                storageReference.getDownloadUrl().addOnSuccessListener(uri -> {
+            Log.d(TAG, "onSuccess: Uri: " + uri.toString());
+            UserHelper.updateProfilePicture(uri.toString(), userId);
+        })).addOnFailureListener(this.onFailureListener());
     }
 
     private void setLocale(String lang) {
@@ -257,15 +273,61 @@ public class SettingsActivity extends BaseActivity {
         restart(this);
     }
 
-    private void getLocale() {
-        Log.d(TAG, "getLocale: current locale: " + utility.retriveLocaleFromPrefs(this));
-        String locale = utility.retriveLocaleFromPrefs(this);
+    @OnCheckedChanged(R.id.notif_switch)
+    void switchOnCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+        Log.d(TAG, "switchOnCheckedChanged: isChecked: " + isChecked);
 
+        if (isChecked) {
+            Log.d(TAG, "switchOnCheckedChanged: checked");
+            showSnackBar("Notifications enabled");
+        } else {
+            Log.d(TAG, "switchOnCheckedChanged: not checked");
+            showSnackBar("Notifications disabled");
+        }
+    }
+
+    private void getPrefs() {
+        // Retrieve locale
+        String locale = utility.retriveLocaleFromPrefs(this);
         if (locale.equals("fr")) {
             mSpinner.setSelection(1);
         } else {
             mSpinner.setSelection(0);
         }
+
+        // Retrieve notifications status
+        boolean toggle = utility.retrieveToggleFromPrefs(this);
+        if (toggle) {
+            mSwitch.setChecked(true);
+        } else {
+            mSwitch.setChecked(false);
+        }
+    }
+
+
+    private void configAlarm() {
+        Calendar calendar = Calendar.getInstance();
+
+        if (Calendar.HOUR_OF_DAY > 12) {
+            calendar.add(Calendar.DATE, 1);
+        }
+
+        calendar.set(Calendar.HOUR_OF_DAY, 12);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+
+        AlarmManager alarmManager = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(this, NotificationReceiver.class);
+
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
+    }
+
+    private void cancelAlarm() {
+        AlarmManager alarmManager = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(this, NotificationReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this,0,intent,0);
+        alarmManager.cancel(pendingIntent);
     }
 
     private void restart(Activity activity) {

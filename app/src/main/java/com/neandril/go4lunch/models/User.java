@@ -8,17 +8,19 @@ public class User {
     private String user_profile_picture;
     private String restaurantId;
     private String restaurantName;
+    private String restaurantVicinity;
     private List<String> restaurantLikeList;
 
     // Required for Firestore
     public User() { }
 
-    public User(String user_id, String user_name, String user_profile_picture, String restaurantId, String restaurantName, List<String> restaurantLikedList) {
+    public User(String user_id, String user_name, String user_profile_picture, String restaurantId, String restaurantName, String restaurantVicinity, List<String> restaurantLikedList) {
         this.user_id = user_id;
         this.user_name = user_name;
         this.user_profile_picture = user_profile_picture;
         this.restaurantId = restaurantId;
         this.restaurantName = restaurantName;
+        this.restaurantVicinity = restaurantVicinity;
         this.restaurantLikeList = restaurantLikedList;
     }
 
@@ -68,5 +70,13 @@ public class User {
 
     public void setRestaurantLikeList(List<String> restaurantLikeList) {
         this.restaurantLikeList = restaurantLikeList;
+    }
+
+    public String getRestaurantVicinity() {
+        return restaurantVicinity;
+    }
+
+    public void setRestaurantVicinity(String restaurantVicinity) {
+        this.restaurantVicinity = restaurantVicinity;
     }
 }

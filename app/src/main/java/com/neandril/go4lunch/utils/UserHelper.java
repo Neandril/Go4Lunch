@@ -2,19 +2,13 @@ package com.neandril.go4lunch.utils;
 
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.firestore.SetOptions;
 import com.neandril.go4lunch.models.User;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class UserHelper {
 
@@ -32,8 +26,8 @@ public class UserHelper {
 
     // --- CREATE ---
 
-    public static Task<Void> createUser(String uid, String username, String urlPicture, String restaurantId, String restaurantName, List<String> restaurantLikedList) {
-        User userToCreate = new User(uid, username, urlPicture, restaurantId, restaurantName, restaurantLikedList);
+    public static Task<Void> createUser(String uid, String username, String urlPicture, String restaurantId, String restaurantName, String restaurantVicinity, List<String> restaurantLikedList) {
+        User userToCreate = new User(uid, username, urlPicture, restaurantId, restaurantName, restaurantVicinity, restaurantLikedList);
         return UserHelper.getUsersCollection()
                 .document(uid) // Setting uID for Document
                 .set(userToCreate); // Setting object for Document
@@ -65,6 +59,10 @@ public class UserHelper {
 
     public static Task<Void> updateRestaurantName(String uid, String restaurantName) {
         return UserHelper.getUsersCollection().document(uid).update(RESTAURANT_NAME, restaurantName);
+    }
+
+    public static Task<Void> updateRestaurantVicinity(String uid, String restaurantVicinity) {
+        return UserHelper.getUsersCollection().document(uid).update("restaurantVicinity", restaurantVicinity);
     }
 
     public static Task<Void> updateRestaurantLiked(String uid, List<String> like) {

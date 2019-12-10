@@ -46,6 +46,7 @@ public class RestaurantActivity extends BaseActivity {
     public String mWebsite;
     public String mPhone;
     public String mRestaurantName;
+    public String mRestaurantVicinity;
 
     Utility utility = new Utility();
 
@@ -103,12 +104,14 @@ public class RestaurantActivity extends BaseActivity {
 
     private void updateUI(Detail detail) {
         mRestaurantName = detail.getResult().getName();
+        mRestaurantVicinity = detail.getResult().getVicinity();
+
         if (detail.getResult().getName() != null) {
             tvRestaurantName.setText(mRestaurantName);
         }
 
         if (detail.getResult().getVicinity() != null) {
-            tvRestaurantAddress.setText(detail.getResult().getVicinity());
+            tvRestaurantAddress.setText(mRestaurantVicinity);
         }
 
         if (detail.getResult().getPhotos() != null) {
@@ -195,11 +198,13 @@ public class RestaurantActivity extends BaseActivity {
                 // If the firebase restaurant and the placeId are the same, remove the booking
                 UserHelper.updateRestaurantId(RestaurantActivity.this.getCurrentUser().getUid(), "");
                 UserHelper.updateRestaurantName(RestaurantActivity.this.getCurrentUser().getUid(), "");
+                UserHelper.updateRestaurantVicinity(RestaurantActivity.this.getCurrentUser().getUid(), "");
                 mFab.setImageResource(R.drawable.fab_red_cross);
             } else {
                 // If not, it's possible to book the restaurant
                 UserHelper.updateRestaurantId(RestaurantActivity.this.getCurrentUser().getUid(), placeId);
                 UserHelper.updateRestaurantName(RestaurantActivity.this.getCurrentUser().getUid(), mRestaurantName);
+                UserHelper.updateRestaurantVicinity(RestaurantActivity.this.getCurrentUser().getUid(), mRestaurantVicinity);
                 mFab.setImageResource(R.drawable.fab_green_checkmark);
             }
         });

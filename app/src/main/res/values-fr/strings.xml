@@ -86,5 +86,12 @@
     <string name="btn_delete_account">SUPPRIMER LE COMPTE</string>
     <string name="notification_enabled">Notifications activées</string>
     <string name="changes_saved">Modifications enregistrées !</string>
+    <string name="notifs_enabled">Notifications activées</string>
+    <string name="notifs_disabled">Notifications désactivées</string>
+
+    <!-- NOTIFICATIONS STRINGS -->
+    <string name="notif_your_lunch">Votre déjeuner : </string>
+    <string name="notif_with">avec : </string>
+    <string name="notif_nobody">Personne ne vous a encore rejoins</string>
 
 </resources>
