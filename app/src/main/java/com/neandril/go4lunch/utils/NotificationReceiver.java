@@ -1,6 +1,5 @@
 package com.neandril.go4lunch.utils;
 
-import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -10,26 +9,16 @@ import android.content.Intent;
 import android.os.Build;
 import android.util.Log;
 
-import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
-import androidx.work.Worker;
-import androidx.work.WorkerParameters;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.Query;
 import com.neandril.go4lunch.R;
-import com.neandril.go4lunch.controllers.activities.MainActivity;
 import com.neandril.go4lunch.controllers.activities.RestaurantActivity;
-import com.neandril.go4lunch.models.DetailViewModel;
 import com.neandril.go4lunch.models.User;
-import com.neandril.go4lunch.models.details.Detail;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 public class NotificationReceiver extends BroadcastReceiver {
@@ -48,6 +37,7 @@ public class NotificationReceiver extends BroadcastReceiver {
             String restaurantId = Objects.requireNonNull(user).getRestaurantId();
             String restaurantName = user.getRestaurantName();
             String restaurantVicinity = user.getRestaurantVicinity();
+
             currentUserId = user.getUser_id();
 
             if (restaurantId != null) {
@@ -67,8 +57,12 @@ public class NotificationReceiver extends BroadcastReceiver {
                         }
                     }
 
+                    Log.e(TAG, "onReceive: restaurantId: " + restaurantId);
+
                     createNotifications(context, restaurantId, restaurantName, restaurantVicinity, workmatesList);
+
                 });
+
             }
         });
     }
@@ -87,17 +81,22 @@ public class NotificationReceiver extends BroadcastReceiver {
 
         // Create the inbox style (i.e. : multi-lined notification)
         NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
-        inboxStyle.addLine(context.getString(R.string.notif_your_lunch) + restaurant + ": ");
-        inboxStyle.addLine(restaurantVicinity);
 
-        // Display or not workmates
-        if (workmatesList.size() > 0) {
-            inboxStyle.addLine(context.getString(R.string.notif_with));
-            for (int i = 0; i < workmatesList.size(); i++) {
-                inboxStyle.addLine(workmatesList.get(i));
-            }
+        if (restaurantId.equals("")) {
+            inboxStyle.addLine(context.getString(R.string.notif_no_choice));
         } else {
-            inboxStyle.addLine(context.getString(R.string.notif_nobody));
+            inboxStyle.addLine(context.getString(R.string.notif_your_lunch) + restaurant + ": ");
+            inboxStyle.addLine(restaurantVicinity);
+
+            // Display or not workmates
+            if (workmatesList.size() > 0) {
+                inboxStyle.addLine(context.getString(R.string.notif_with));
+                for (int i = 0; i < workmatesList.size(); i++) {
+                    inboxStyle.addLine(workmatesList.get(i));
+                }
+            } else {
+                inboxStyle.addLine(context.getString(R.string.notif_nobody));
+            }
         }
 
         // Manager
@@ -107,7 +106,6 @@ public class NotificationReceiver extends BroadcastReceiver {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "default")
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentTitle(context.getString(R.string.app_name))
-                .setContentText(restaurant + ": ")
                 .setStyle(inboxStyle)
                 .setContentIntent(pendingIntent);
 

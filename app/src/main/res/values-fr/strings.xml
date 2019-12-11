@@ -1,10 +1,6 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <string name="app_name">Go4Lunch</string>
     <string name="app_desc">Trouver un restaurant sympa pour déjeuner avec vos collègues.</string>
-
-    <!-- FACEBOOK PURPOSE -->
-    <string name="facebook_application_id" translatable="false">618856551978201</string>
-    <string name="facebook_login_protocol_scheme" translatable="false" tools:ignore="UnusedResources">fb618856551978201</string>
 
     <string name="common_status_code_resolution_required">Vous devez activer votre GPS</string>
     <string name="location_status_code_change_unavailable">Vous ne pouvez pas utiliser les services de localisation</string>
@@ -39,7 +35,14 @@
     <!-- LOGIN STRINGS -->
     <string name="google_signIn">Connexion avec Google</string>
     <string name="facebook_signIn">Connexion avec Facebook</string>
+    <string name="twitter_signIn">Connexion avec Twitter</string>
+    <string name="email_signIn">Connexion par e-Mail</string>
     <string name="background_image_desc">Background image</string>
+    <string name="connexion_successful">Connecté</string>
+    <string name="connexion_canceled">Connection annulée</string>
+    <string name="connexion_no_network">Pas de connection à Internet</string>
+    <string name="connexion_provider_error">Erreur de fournisseur</string>
+    <string name="connexion_unknown_error">Erreur inconnue</string>
 
     <string name="location_permission_denied">Permission de localisation refusée</string>
     <string name="permission_required_toast">Permission requise</string>
@@ -90,6 +93,7 @@
     <string name="notifs_disabled">Notifications désactivées</string>
 
     <!-- NOTIFICATIONS STRINGS -->
+    <string name="notif_no_choice">Vous n\'avez pas encore choisi de restaurant</string>
     <string name="notif_your_lunch">Votre déjeuner : </string>
     <string name="notif_with">avec : </string>
     <string name="notif_nobody">Personne ne vous a encore rejoins</string>

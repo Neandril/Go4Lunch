@@ -95,6 +95,34 @@
             android:text="@string/facebook_signIn"
             android:textColor="@color/white"/>
 
+        <Button
+            android:id="@+id/twitter_button"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="8dp"
+            android:background="@drawable/custom_twitter_button"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:drawableStart="@drawable/ic_twitter"
+            android:paddingStart="@dimen/button_inner_padding_start"
+            android:paddingEnd="@dimen/button_inner_padding_end"
+            android:text="@string/twitter_signIn"
+            android:textColor="@color/white"/>
+
+        <Button
+            android:id="@+id/mail_button"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="8dp"
+            android:background="@drawable/custom_mail_button"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:drawableStart="@drawable/ic_mail"
+            android:paddingStart="@dimen/button_inner_padding_start"
+            android:paddingEnd="@dimen/button_inner_padding_end"
+            android:text="@string/email_signIn"
+            android:textColor="@color/white"/>
+
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

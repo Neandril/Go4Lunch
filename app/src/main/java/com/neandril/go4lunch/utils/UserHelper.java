@@ -8,6 +8,7 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.neandril.go4lunch.models.User;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class UserHelper {
@@ -16,7 +17,9 @@ public class UserHelper {
     private static final String USER_NAME = "user_name";
     private static final String RESTAURANT_ID = "restaurantId";
     private static final String RESTAURANT_NAME = "restaurantName";
-    public static final String PICTURE_URL = "user_profile_picture";
+    private static final String RESTAURANT_VICINITY = "restaurantVicinity";
+    private static final String RESTAURANT_LIKED_LIST = "restaurantLikedList";
+    private static final String PICTURE_URL = "user_profile_picture";
 
     // --- COLLECTION REFERENCE ---
 
@@ -26,7 +29,13 @@ public class UserHelper {
 
     // --- CREATE ---
 
-    public static Task<Void> createUser(String uid, String username, String urlPicture, String restaurantId, String restaurantName, String restaurantVicinity, List<String> restaurantLikedList) {
+    public static Task<Void> createUser(String uid,
+                                        String username,
+                                        String urlPicture,
+                                        String restaurantId,
+                                        String restaurantName,
+                                        String restaurantVicinity,
+                                        ArrayList<String> restaurantLikedList) {
         User userToCreate = new User(uid, username, urlPicture, restaurantId, restaurantName, restaurantVicinity, restaurantLikedList);
         return UserHelper.getUsersCollection()
                 .document(uid) // Setting uID for Document
@@ -62,11 +71,11 @@ public class UserHelper {
     }
 
     public static Task<Void> updateRestaurantVicinity(String uid, String restaurantVicinity) {
-        return UserHelper.getUsersCollection().document(uid).update("restaurantVicinity", restaurantVicinity);
+        return UserHelper.getUsersCollection().document(uid).update(RESTAURANT_VICINITY, restaurantVicinity);
     }
 
     public static Task<Void> updateRestaurantLiked(String uid, List<String> like) {
-        return UserHelper.getUsersCollection().document(uid).update("restaurantLikeList", like);
+        return UserHelper.getUsersCollection().document(uid).update(RESTAURANT_LIKED_LIST, like);
     }
 
     public static Task<Void> updateProfilePicture(String urlImage, String uid) {

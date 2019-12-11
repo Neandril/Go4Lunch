@@ -15,9 +15,4 @@
         android:id="@+id/navigation_workmates"
         android:icon="@drawable/ic_menu_workmates"
         android:title="@string/menu_workmates" />
-
-    <item
-        android:id="@+id/navigation_chat"
-        android:icon="@drawable/ic_menu_chat"
-        android:title="@string/menu_chat" />
 </menu>

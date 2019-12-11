@@ -17,15 +17,16 @@ import com.firebase.ui.auth.IdpResponse;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.neandril.go4lunch.R;
 import com.neandril.go4lunch.controllers.base.BaseActivity;
-import com.neandril.go4lunch.models.User;
 import com.neandril.go4lunch.utils.UserHelper;
 import com.neandril.go4lunch.utils.Utility;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Locale;
 import java.util.Objects;
 
 import butterknife.BindView;
+import butterknife.OnCheckedChanged;
 import butterknife.OnClick;
 
 public class LoginActivity extends BaseActivity {
@@ -89,6 +90,16 @@ public class LoginActivity extends BaseActivity {
         this.facebookSignIn();
     }
 
+    @OnClick(R.id.mail_button)
+    public void onClickEmailButton() {
+        this.emailSignIn();
+    }
+
+    @OnClick(R.id.twitter_button)
+    public void onClickTwitterButton() {
+        this.twitterSignIn();
+    }
+
     // ***************************
     // AUTHENTIFICATIONS
     // ***************************
@@ -129,6 +140,42 @@ public class LoginActivity extends BaseActivity {
         );
     }
 
+    private void emailSignIn() {
+        Log.d(TAG, "emailSignIn: e-Mail SignIn called");
+        startActivityForResult(
+                AuthUI.getInstance()
+                        .createSignInIntentBuilder()
+                        .setTheme(R.style.LoginTheme)
+                        .setAvailableProviders(
+                                Collections.singletonList(
+                                        new AuthUI.IdpConfig.EmailBuilder().build() // EMAIL
+                                )
+                        )
+                        .setIsSmartLockEnabled(false, true)
+                        .setLogo(R.drawable.lunch_icon)
+                        .build(),
+                RC_SIGN_IN
+        );
+    }
+
+    private void twitterSignIn() {
+        Log.d(TAG, "twitterSignIn: Twitter SignIn called");
+        startActivityForResult(
+                AuthUI.getInstance()
+                        .createSignInIntentBuilder()
+                        .setTheme(R.style.LoginTheme)
+                        .setAvailableProviders(
+                                Collections.singletonList(
+                                        new AuthUI.IdpConfig.TwitterBuilder().build() // TWITTER
+                                )
+                        )
+                        .setIsSmartLockEnabled(false, true)
+                        .setLogo(R.drawable.lunch_icon)
+                        .build(),
+                RC_SIGN_IN
+        );
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -146,17 +193,17 @@ public class LoginActivity extends BaseActivity {
         if (requestCode == RC_SIGN_IN) {
             if (resultCode == RESULT_OK) { // SUCCESS
                 this.createUserInFirestore();
-                showSnackBar("Success");
+                showSnackBar(getString(R.string.connexion_successful));
 
             } else { // ERRORS
                 if (response == null) {
-                    showSnackBar("Canceled");
-                } else if (response.getError().getErrorCode() == ErrorCodes.NO_NETWORK) {
-                    showSnackBar("No Internet");
+                    showSnackBar(getString(R.string.connexion_canceled));
+                } else if (Objects.requireNonNull(response.getError()).getErrorCode() == ErrorCodes.NO_NETWORK) {
+                    showSnackBar(getString(R.string.connexion_no_network));
                 } else if (response.getError().getErrorCode() == ErrorCodes.UNKNOWN_ERROR) {
-                    showSnackBar("Unknown error");
-                } else if (response.getError().getErrorCode() == ErrorCodes.DEVELOPER_ERROR) {
-                    showSnackBar("Adress email already exist");
+                    showSnackBar(getString(R.string.error_unknown_error));
+                } else if (response.getError().getErrorCode() == ErrorCodes.PROVIDER_ERROR) {
+                    showSnackBar(getString(R.string.connexion_provider_error));
                 }
             }
         }
@@ -175,8 +222,9 @@ public class LoginActivity extends BaseActivity {
                        String username = this.getCurrentUser().getDisplayName();
                        String uid = this.getCurrentUser().getUid();
                        String urlPicture = (this.getCurrentUser().getPhotoUrl() != null) ? this.getCurrentUser().getPhotoUrl().toString() : null;
+                       ArrayList<String> restaurantLikeList = new ArrayList<>();
 
-                       UserHelper.createUser(uid, username, urlPicture, "", "", "", null);
+                       UserHelper.createUser(uid, username, urlPicture, "", "", "", restaurantLikeList);
 
                        this.enterInTheApp();
                    }

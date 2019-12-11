@@ -6,6 +6,10 @@
     <string name="facebook_application_id" translatable="false">618856551978201</string>
     <string name="facebook_login_protocol_scheme" translatable="false" tools:ignore="UnusedResources">fb618856551978201</string>
 
+    <!-- TWITTER PURPOSE -->
+    <string name="twitter_consumer_key" translatable="false">HEp9o0oum5zLGZhh8KUdxFBOr</string>
+    <string name="twitter_consumer_secret" translatable="false">174Q2LhTnrS4qga1M9MLwf8hD5EtLO686HxfDfK5BkNyWsCOjr</string>
+
     <string name="common_status_code_resolution_required">Your need to enable your GPS</string>
     <string name="location_status_code_change_unavailable">You can\'t use location services</string>
     <string name="not_implemented">This option is not implemented yet</string>
@@ -39,7 +43,14 @@
     <!-- LOGIN STRINGS -->
     <string name="google_signIn">Sign in with Google</string>
     <string name="facebook_signIn">Sign in with Facebook</string>
+    <string name="twitter_signIn">Sign in with Twitter</string>
+    <string name="email_signIn">Sign in with e-Mail</string>
     <string name="background_image_desc">Background image</string>
+    <string name="connexion_canceled">Connexion canceled</string>
+    <string name="connexion_successful">Connexion successful</string>
+    <string name="connexion_no_network">No Internet connexion</string>
+    <string name="connexion_provider_error">Provider error</string>
+    <string name="connexion_unknown_error">Unknown error</string>
 
     <string name="location_permission_denied">Location permission denied</string>
     <string name="permission_required_toast">Permission required</string>
@@ -90,6 +101,7 @@
     <string name="notifs_disabled">Notifications disabled</string>
 
     <!-- NOTIFICATIONS STRINGS -->
+    <string name="notif_no_choice">You haven\'t picked any restaurant yet</string>
     <string name="notif_your_lunch">Your lunch at: </string>
     <string name="notif_with">with: </string>
     <string name="notif_nobody">Nobody joined yet</string>

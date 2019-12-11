@@ -125,7 +125,6 @@
                 android:background="@drawable/custom_green_button"
                 android:layout_marginBottom="@dimen/margin"
                 android:textColor="@color/white"
-                android:shadowRadius="25"
                 android:text="@string/btn_save" />
 
             <Button
@@ -134,12 +133,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin"
                 android:textColor="@color/white"
-                android:shadowRadius="25"
                 android:background="@drawable/custom_red_button"
                 android:text="@string/btn_delete_account" />
 
         </LinearLayout>
-
 
     </LinearLayout>
 

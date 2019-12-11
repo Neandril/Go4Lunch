@@ -14,7 +14,7 @@
     <!-- LOGIN SCREEN DIMENS -->
     <dimen name="margin">8dp</dimen>
     <dimen name="margin_sides">30dp</dimen>
-    <dimen name="margin_bottom">75dp</dimen>
+    <dimen name="margin_bottom">35dp</dimen>
     <dimen name="text_title_size">65sp</dimen>
     <dimen name="text_size">12sp</dimen>
     <dimen name="button_inner_padding_start">30dp</dimen>

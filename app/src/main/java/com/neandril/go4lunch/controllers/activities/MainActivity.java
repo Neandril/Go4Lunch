@@ -1,9 +1,6 @@
 package com.neandril.go4lunch.controllers.activities;
 
-import android.app.AlarmManager;
 import android.app.AlertDialog;
-import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -47,19 +44,16 @@ import com.google.android.material.navigation.NavigationView;
 import com.neandril.go4lunch.BuildConfig;
 import com.neandril.go4lunch.R;
 import com.neandril.go4lunch.controllers.base.BaseActivity;
-import com.neandril.go4lunch.controllers.fragments.ChatFragment;
 import com.neandril.go4lunch.controllers.fragments.ListViewFragment;
 import com.neandril.go4lunch.controllers.fragments.MapViewFragment;
 import com.neandril.go4lunch.controllers.fragments.WorkmatesFragment;
 import com.neandril.go4lunch.models.RestaurantAutocompleteModel;
 import com.neandril.go4lunch.models.User;
-import com.neandril.go4lunch.utils.NotificationReceiver;
 import com.neandril.go4lunch.utils.UserHelper;
 import com.neandril.go4lunch.utils.Utility;
 import com.neandril.go4lunch.view.AutocompleteAdapter;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 import java.util.Objects;
 
@@ -172,9 +166,6 @@ public class MainActivity extends BaseActivity
                 break;
             case R.id.navigation_workmates:
                 showFragment(new WorkmatesFragment());
-                break;
-            case R.id.navigation_chat:
-                showFragment(new ChatFragment());
                 break;
 
             case R.id.nav_your_lunch:

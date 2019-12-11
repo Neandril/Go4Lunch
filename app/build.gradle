@@ -50,6 +50,7 @@ dependencies {
     implementation 'com.firebaseui:firebase-ui-auth:5.1.0'
     implementation 'com.facebook.android:facebook-android-sdk:[4,5)'
     implementation 'com.firebaseui:firebase-ui-storage:5.1.0'
+    implementation 'com.twitter.sdk.android:twitter-core:3.3.0'
 
     // GOOGLE
     implementation 'com.google.android.gms:play-services-maps:17.0.0'
