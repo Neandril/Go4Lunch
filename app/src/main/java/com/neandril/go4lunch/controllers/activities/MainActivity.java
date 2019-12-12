@@ -12,7 +12,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -50,7 +49,6 @@ import com.neandril.go4lunch.controllers.fragments.WorkmatesFragment;
 import com.neandril.go4lunch.models.RestaurantAutocompleteModel;
 import com.neandril.go4lunch.models.User;
 import com.neandril.go4lunch.utils.UserHelper;
-import com.neandril.go4lunch.utils.Utility;
 import com.neandril.go4lunch.view.AutocompleteAdapter;
 
 import java.util.ArrayList;
@@ -63,10 +61,9 @@ public class MainActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         BottomNavigationView.OnNavigationItemSelectedListener {
 
+    // TAGs and consts
     private static final String TAG = MainActivity.class.getSimpleName();
     public static final String RESTAURANT_TAG = "restaurantId";
-
-    int AUTOCOMPLETE_REQUEST_CODE = 1;
     private static final CharacterStyle STYLE_BOLD = new StyleSpan(Typeface.BOLD);
 
     // Widgets
@@ -75,14 +72,16 @@ public class MainActivity extends BaseActivity
     @BindView(R.id.nav_view) NavigationView mNavigationView;
     @BindView(R.id.bottom_navigation_view) BottomNavigationView mBottomNavigationView;
     @BindView(R.id.toolbar) Toolbar mToolbar;
-    //@BindView(R.id.layout_autocomplete) LinearLayout mLayoutAutocomplete;
-    //@BindView(R.id.autocompleteTextView) AutoCompleteTextView mAutoCompleteTextView;
 
+    // Reference the menu in order to hide or show it depending the fragment
+    private Menu menu;
+    // AutoComplete SearchView
     private SearchView.SearchAutoComplete mSearchAutocomplete;
     private LatLngBounds mLatLngBounds;
+    // Restaurant basics infos
     private String restaurantName;
     private String restaurantVicinity;
-    private ArrayAdapter<String> mArrayAdapter;
+    // Autocomplete adapter
     private AutocompleteAdapter mAutocompleteAdapter;
 
     // ***************************
@@ -112,14 +111,12 @@ public class MainActivity extends BaseActivity
         configureBottomNavigationView();
 
         getUserInformations();
-
-        Utility utility = new Utility();
-        utility.getWeekday();
     }
 
     // ***************************
     // CONFIGURATIONS
     // ***************************
+
     private void configureToolbar() {
         Log.d(TAG, "configureToolbar: Toolbar configuration");
         setSupportActionBar(mToolbar);
@@ -127,7 +124,6 @@ public class MainActivity extends BaseActivity
             getActionBar().setHomeButtonEnabled(true);
         }
         setTitle(R.string.title_main);
-        //mToolbar.setTitle(R.string.title_main);
     }
 
     private void configureDrawer() {
@@ -160,12 +156,15 @@ public class MainActivity extends BaseActivity
         switch (menuItem.getItemId()) {
             case R.id.navigation_map:
                 showFragment(new MapViewFragment());
+                menu.findItem(R.id.action_search).setVisible(true);
                 break;
             case R.id.navigation_list:
                 showFragment(new ListViewFragment());
+                menu.findItem(R.id.action_search).setVisible(true);
                 break;
             case R.id.navigation_workmates:
                 showFragment(new WorkmatesFragment());
+                menu.findItem(R.id.action_search).setVisible(false);
                 break;
 
             case R.id.nav_your_lunch:
@@ -182,14 +181,21 @@ public class MainActivity extends BaseActivity
         return true;
     }
 
+    // ***************************
+    // AUTOCOMPLETE
+    // ***************************
+
+    // Retrieve LatLngBounds
     public LatLngBounds getLatLngBounds() {
         return mLatLngBounds;
     }
 
+    // Set the LatLngBounds
     public void setmLatLngBounds(LatLngBounds latLngBounds) {
         this.mLatLngBounds = latLngBounds;
     }
 
+    // Get predictions
     private void configurePredictions(String str) {
         Log.d(TAG, "configurePredictions: " + str);
         PlacesClient placesClient = Places.createClient(this);
@@ -207,7 +213,7 @@ public class MainActivity extends BaseActivity
 
         placesClient.findAutocompletePredictions(request).addOnSuccessListener((response) -> {
             List<RestaurantAutocompleteModel> restaurants = new ArrayList<>();
-
+            Log.d(TAG, "configurePredictions: LIST OF PREDICTIONS : " + response.getAutocompletePredictions());
             for (AutocompletePrediction prediction : response.getAutocompletePredictions()) {
                 restaurantName = prediction.getPrimaryText(STYLE_BOLD).toString();
                 restaurantVicinity = prediction.getSecondaryText(null).toString();
@@ -269,22 +275,6 @@ public class MainActivity extends BaseActivity
     }
 
     // ***************************
-    // REQUESTS
-    // ***************************
-
-    private void signOutUserFromFirebase() {
-        Log.d(TAG, "signOutUserFromFirebase: Log out user from Firebase");
-        AuthUI.getInstance()
-                .signOut(this)
-                .addOnSuccessListener(this, this.updateUIAfterRESTRequestsCompleted());
-    }
-
-    private OnSuccessListener<Void> updateUIAfterRESTRequestsCompleted(){
-        Log.d(TAG, "updateUIAfterRESTRequestsCompleted: logged off");
-        return aVoid -> finish();
-    }
-
-    // ***************************
     // UI
     // ***************************
 
@@ -293,7 +283,6 @@ public class MainActivity extends BaseActivity
         mNavigationView.setNavigationItemSelectedListener(this);
 
         String email;
-        String username;
 
         View headerView = mNavigationView.getHeaderView(0);
         ImageView profileThumbnail = headerView.findViewById(R.id.nav_header_profile_thumbnail);
@@ -335,6 +324,7 @@ public class MainActivity extends BaseActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        this.menu = menu;
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_search, menu);
 
@@ -385,21 +375,37 @@ public class MainActivity extends BaseActivity
         return true;
     }
 
+    // ***************************
+    // REQUESTS
+    // ***************************
+
+    private void signOutUserFromFirebase() {
+        Log.d(TAG, "signOutUserFromFirebase: Log out user from Firebase");
+        AuthUI.getInstance()
+                .signOut(this)
+                .addOnSuccessListener(this, this.updateUIAfterRESTRequestsCompleted());
+    }
+
+    private OnSuccessListener<Void> updateUIAfterRESTRequestsCompleted(){
+        Log.d(TAG, "updateUIAfterRESTRequestsCompleted: logged off");
+        return aVoid -> finish();
+    }
+
     /**
      * Start your lunch with the restaurant picked
      */
     private void startYourLunchActivy() {
         UserHelper.getUser(this.getCurrentUser().getUid()).addOnSuccessListener(documentSnapshot -> {
-           User user = documentSnapshot.toObject(User.class);
-           String restaurantId = Objects.requireNonNull(user).getRestaurantId();
+            User user = documentSnapshot.toObject(User.class);
+            String restaurantId = Objects.requireNonNull(user).getRestaurantId();
 
-           if (!restaurantId.equals("")) {
-               Intent intent = new Intent(this, RestaurantActivity.class);
-               intent.putExtra(RESTAURANT_TAG, restaurantId);
-               startActivity(intent);
-           } else {
-               showSnackBar(getResources().getString(R.string.no_restaurant_picked));
-           }
+            if (!restaurantId.equals("")) {
+                Intent intent = new Intent(this, RestaurantActivity.class);
+                intent.putExtra(RESTAURANT_TAG, restaurantId);
+                startActivity(intent);
+            } else {
+                showSnackBar(getResources().getString(R.string.no_restaurant_picked));
+            }
         });
     }
 }

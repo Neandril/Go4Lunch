@@ -10,7 +10,6 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.DisplayMetrics;
@@ -155,8 +154,10 @@ public class SettingsActivity extends BaseActivity {
                 (dialog, which) -> {
                     if (this.getCurrentUser() != null) {
                         UserHelper.deleteUser(this.getCurrentUser().getUid());
+                        AuthUI.getInstance()
+                                .delete(this)
+                                .addOnSuccessListener(this, this.updateUIAfterRESTRequestsCompleted());
                         Log.d(TAG, "btnDeleteAcountOnClick: account deleted");
-                        finish();
                     }
                 }
         ).setNegativeButton(
@@ -166,6 +167,11 @@ public class SettingsActivity extends BaseActivity {
 
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
+    }
+
+    private OnSuccessListener<Void> updateUIAfterRESTRequestsCompleted(){
+        Log.d(TAG, "updateUIAfterRESTRequestsCompleted: logged off");
+        return aVoid -> finish();
     }
 
     @OnClick(R.id.btn_save)

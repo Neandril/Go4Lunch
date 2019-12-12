@@ -1,17 +1,25 @@
 package com.neandril.go4lunch.controllers.fragments;
 
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.firebase.firestore.Query;
 import com.neandril.go4lunch.R;
+import com.neandril.go4lunch.controllers.activities.MainActivity;
 import com.neandril.go4lunch.controllers.base.BaseFragment;
 import com.neandril.go4lunch.models.User;
 import com.neandril.go4lunch.utils.UserHelper;
 import com.neandril.go4lunch.view.WorkmateAdapter;
+
+import java.util.Objects;
 
 import butterknife.BindView;
 
@@ -31,7 +39,6 @@ public class WorkmatesFragment extends BaseFragment {
 
     @Override
     protected void configureFragment() {
-
         this.configureRecyclerView();
     }
 
@@ -53,4 +60,5 @@ public class WorkmatesFragment extends BaseFragment {
         this.mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         this.mRecyclerView.setAdapter(mAdapter);
     }
+
 }

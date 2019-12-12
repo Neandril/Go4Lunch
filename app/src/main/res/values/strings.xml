@@ -2,14 +2,6 @@
     <string name="app_name">Go4Lunch</string>
     <string name="app_desc">Find a nice restaurant and invite your coworkers to lunch</string>
 
-    <!-- FACEBOOK PURPOSE -->
-    <string name="facebook_application_id" translatable="false">618856551978201</string>
-    <string name="facebook_login_protocol_scheme" translatable="false" tools:ignore="UnusedResources">fb618856551978201</string>
-
-    <!-- TWITTER PURPOSE -->
-    <string name="twitter_consumer_key" translatable="false">HEp9o0oum5zLGZhh8KUdxFBOr</string>
-    <string name="twitter_consumer_secret" translatable="false">174Q2LhTnrS4qga1M9MLwf8hD5EtLO686HxfDfK5BkNyWsCOjr</string>
-
     <string name="common_status_code_resolution_required">Your need to enable your GPS</string>
     <string name="location_status_code_change_unavailable">You can\'t use location services</string>
     <string name="not_implemented">This option is not implemented yet</string>
