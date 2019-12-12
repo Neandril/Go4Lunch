@@ -1,6 +1,5 @@
 package com.neandril.go4lunch.view;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,9 +13,8 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
-import com.neandril.go4lunch.models.User;
 import com.neandril.go4lunch.R;
-import com.neandril.go4lunch.controllers.activities.RestaurantActivity;
+import com.neandril.go4lunch.models.User;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -44,7 +42,7 @@ public class WorkmateCheckedInAdapter extends FirestoreRecyclerAdapter<User, Wor
         @BindView(R.id.tv_workmate_name) TextView tv_workmate_name;
         @BindView(R.id.iv_workmate_picture) ImageView iv_workmate_picture;
 
-        public WorkmateCheckedInViewHolder(@NonNull View itemView) {
+        WorkmateCheckedInViewHolder(@NonNull View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
         }

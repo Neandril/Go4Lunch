@@ -1,21 +1,13 @@
 package com.neandril.go4lunch.utils;
 
-import android.app.Activity;
-import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
-
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.neandril.go4lunch.models.DetailViewModel;
-import com.neandril.go4lunch.models.details.Detail;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -38,29 +30,6 @@ public class Utility {
     public float convertRating(double rating) {
         rating = (rating * 3) / 5;
         return (float) rating;
-    }
-
-    /**
-     * Get the current time in Google api's format
-     * Ex : 10:50 = 1050
-     * @return - current time
-     */
-    public String getCurrentTime() {
-        Calendar calendar = Calendar.getInstance();
-
-        int currentHour = calendar.get(Calendar.HOUR);
-        int currentMinutes = calendar.get(Calendar.MINUTE);
-
-        return Integer.toString(currentHour) + currentMinutes;
-    }
-
-    /**
-     * Get the current day
-     * @return - day
-     */
-    public Integer getWeekday() {
-        Calendar calendar = Calendar.getInstance();
-        return calendar.get(Calendar.DAY_OF_WEEK) -1;
     }
 
     /**
@@ -135,6 +104,11 @@ public class Utility {
         return list;
     }
 
+    /**
+     * PREFERENCES - sharedpreferences ; get and set notifications toggle ;
+     * @param context - context
+     * @param toggle - boolean
+     */
     public void setNotifToggleInPrefs(Context context, boolean toggle) {
         getSharedPreferences(context)
                 .edit()

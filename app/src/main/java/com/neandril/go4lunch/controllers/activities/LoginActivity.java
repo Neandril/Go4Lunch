@@ -26,7 +26,6 @@ import java.util.Locale;
 import java.util.Objects;
 
 import butterknife.BindView;
-import butterknife.OnCheckedChanged;
 import butterknife.OnClick;
 
 public class LoginActivity extends BaseActivity {
@@ -231,8 +230,6 @@ public class LoginActivity extends BaseActivity {
                }
            }
         }).addOnFailureListener(this.onFailureListener());
-
-
     }
 
     // ***************************

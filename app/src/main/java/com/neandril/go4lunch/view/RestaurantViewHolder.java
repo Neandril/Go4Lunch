@@ -102,6 +102,8 @@ class RestaurantViewHolder extends RecyclerView.ViewHolder {
         }
 
         // Display number of participant
+        mImageViewPpl.setVisibility(View.INVISIBLE);
+        mNumberOfParticipants.setText("");
         UserHelper.getRestaurant(result.getPlaceId()).addOnCompleteListener(task -> {
            if (task.isSuccessful()) {
                if (Objects.requireNonNull(task.getResult()).size() > 0) {

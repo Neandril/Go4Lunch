@@ -1,9 +1,6 @@
 package com.neandril.go4lunch.controllers.fragments;
 
 import android.content.Intent;
-import android.graphics.Typeface;
-import android.text.style.CharacterStyle;
-import android.text.style.StyleSpan;
 import android.util.Log;
 
 import androidx.lifecycle.Observer;
@@ -28,11 +25,9 @@ import butterknife.BindView;
 public class ListViewFragment extends BaseFragment {
 
     private static final String TAG = ListViewFragment.class.getSimpleName();
-    public static final String RESTAURANT_TAG = "restaurantId";
+    private static final String RESTAURANT_TAG = "restaurantId";
 
     @BindView(R.id.fragment_listView_recyclerView) RecyclerView mRecyclerView;
-
-    private static final CharacterStyle STYLE_BOLD = new StyleSpan(Typeface.BOLD);
 
     private List<PlacesDetail> mPlaces;
     private RestaurantAdapter mAdapter;
@@ -89,4 +84,9 @@ public class ListViewFragment extends BaseFragment {
                 });
     }
 
+    @Override
+    public void onResume() {
+        updateList();
+        super.onResume();
+    }
 }

@@ -2,15 +2,13 @@ package com.neandril.go4lunch.utils;
 
 import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 
 import com.neandril.go4lunch.api.GoogleApiCall;
 import com.neandril.go4lunch.api.GoogleApiInterface;
 import com.neandril.go4lunch.models.details.Detail;
-import com.neandril.go4lunch.models.details.Result;
 import com.neandril.go4lunch.models.places.PlacesDetail;
-
-import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -37,14 +35,14 @@ public class Repository {
         MutableLiveData<PlacesDetail> datas = new MutableLiveData<>();
         googleApiInterface.getNearbyPlaces(location).enqueue(new Callback<PlacesDetail>() {
             @Override
-            public void onResponse(Call<PlacesDetail> call, Response<PlacesDetail> response) {
+            public void onResponse(@NonNull Call<PlacesDetail> call, @NonNull Response<PlacesDetail> response) {
                 if (response.isSuccessful()) {
                     datas.setValue(response.body());
                 }
             }
 
             @Override
-            public void onFailure(Call<PlacesDetail> call, Throwable t) {
+            public void onFailure(@NonNull Call<PlacesDetail> call, @NonNull Throwable t) {
                 datas.setValue(null);
             }
         });
@@ -57,7 +55,7 @@ public class Repository {
         MutableLiveData<Detail> datas = new MutableLiveData<>();
         googleApiInterface.getDetailInfos(placeId).enqueue(new Callback<Detail>() {
             @Override
-            public void onResponse(Call<Detail> call, Response<Detail> response) {
+            public void onResponse(@NonNull Call<Detail> call, @NonNull Response<Detail> response) {
                 if (response.isSuccessful()) {
                     Log.e("getRestaurant", "onResponse: " + response.body());
                     datas.setValue(response.body());
@@ -65,7 +63,7 @@ public class Repository {
             }
 
             @Override
-            public void onFailure(Call<Detail> call, Throwable t) {
+            public void onFailure(@NonNull Call<Detail> call, @NonNull Throwable t) {
 
             }
         });
