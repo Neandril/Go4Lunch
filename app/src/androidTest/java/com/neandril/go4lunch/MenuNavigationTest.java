@@ -2,18 +2,15 @@ package com.neandril.go4lunch;
 
 import android.Manifest;
 import android.app.Activity;
-import android.app.Instrumentation;
 
 import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner;
-import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.rule.GrantPermissionRule;
 
 import com.neandril.go4lunch.controllers.activities.MainActivity;
-import com.neandril.go4lunch.controllers.activities.YourLunchActivity;
 
 import org.junit.After;
 import org.junit.Before;
@@ -49,6 +46,7 @@ public class MenuNavigationTest {
 
     @Before
     public void before() {
+
         activityTestRule.getActivity();
     }
 
@@ -66,7 +64,7 @@ public class MenuNavigationTest {
         onView(
                 allOf(
                         withId(R.id.largeLabel),
-                        withText("Map View")
+                        withText(R.string.menu_map_view)
                 )
         ).check(
                 matches(isDisplayed())
@@ -76,7 +74,7 @@ public class MenuNavigationTest {
         onView(
                 allOf(
                         withId(R.id.smallLabel),
-                        withText("List View")
+                        withText(R.string.menu_list_view)
                 )
         ).check(
                 matches(isDisplayed())
@@ -86,7 +84,7 @@ public class MenuNavigationTest {
         onView(
                 allOf(
                         withId(R.id.smallLabel),
-                        withText("Workmates")
+                        withText(R.string.menu_workmates)
                 )
         ).check(
                 matches(isDisplayed())
@@ -97,25 +95,25 @@ public class MenuNavigationTest {
      * Check bottom menu items click
      */
     @Test
-    public void bottomNavigation_itemsClick_shouldDiaplayFragments() throws InterruptedException {
+    public void bottomNavigation_itemsClick_shouldDisplayFragments() throws InterruptedException {
         //TODO: Use idling resources (espresso) instead of sleep
-/*        Thread.sleep(1000);
+        Thread.sleep(1000);
         // Check List View Fragment
         onView(
                 allOf(
                         withId(R.id.navigation_list),
-                        withContentDescription("List View")
+                        withContentDescription(R.string.menu_list_view)
                 )
         ).perform(click());
 
-        onView(withId(R.id.fragment_listView)).check(matches(isDisplayed()));*/
+        onView(withId(R.id.fragment_listView)).check(matches(isDisplayed()));
 
         Thread.sleep(1000);
         // Check Workmates Fragment
         onView(
                 allOf(
                         withId(R.id.navigation_workmates),
-                        withContentDescription("Workmates")
+                        withContentDescription(R.string.menu_workmates)
                 )
         ).perform(click());
 
@@ -126,7 +124,7 @@ public class MenuNavigationTest {
         onView(
                 allOf(
                         withId(R.id.navigation_map),
-                        withContentDescription("Map View")
+                        withContentDescription(R.string.menu_map_view)
                 )
         ).perform(click());
 
@@ -134,7 +132,7 @@ public class MenuNavigationTest {
     }
 
     @Test
-    public void navDrawer_itemsClick_shouldOpenCorrectAcitivties() {
+    public void navDrawer_itemsClick_shouldOpenCorrectActivity() {
         //        // Check "Settings" drawer item
         onView(
                 withContentDescription(R.string.navigation_drawer_open)

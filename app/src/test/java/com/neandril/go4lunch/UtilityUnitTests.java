@@ -6,11 +6,6 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-/**
- * Example local unit test, which will execute on the development machine (host).
- *
- * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
- */
 public class UtilityUnitTests {
 
     Utility utility = new Utility();
@@ -28,7 +23,7 @@ public class UtilityUnitTests {
         // Coords of a restaurant in Brest
         double targetLat = 48.443126;
         double targetLng = -4.413226;
-        // Coords few meters aways from above restaurant
+        // Coords few meters aways from the above restaurant
         double userLat = 48.442296;
         double userLng = -4.411621;
 
