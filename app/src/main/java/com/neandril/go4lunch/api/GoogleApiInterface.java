@@ -1,8 +1,10 @@
 package com.neandril.go4lunch.api;
 
-
 import com.neandril.go4lunch.BuildConfig;
+import com.neandril.go4lunch.models.Predictions.Prediction;
+import com.neandril.go4lunch.models.Predictions.PredictionsModel;
 import com.neandril.go4lunch.models.details.Detail;
+import com.neandril.go4lunch.models.details.DetailsResult;
 import com.neandril.go4lunch.models.places.PlacesDetail;
 
 import retrofit2.Call;
@@ -21,4 +23,9 @@ public interface GoogleApiInterface {
     @GET("details/json?&key=" + key)
     Call<Detail> getDetailInfos(
             @Query("placeid") String placeid);
+
+    @GET("autocomplete/json?radius=5000&type=establishment&key=" + key)
+    Call<PredictionsModel> getPredictions (
+            @Query("input") String input,
+            @Query("location") String location);
 }

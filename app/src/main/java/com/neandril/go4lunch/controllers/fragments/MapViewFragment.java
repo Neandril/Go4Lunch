@@ -153,6 +153,18 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback 
         }
     }
 
+    public void updateUiWithPredictions(PlacesDetail placesDetail) {
+        Log.d(TAG, "updateUiWithPredictions: " + placesDetail.getResults().get(0).getName());
+        mMap.clear();
+        updateUiWithMarkers(placesDetail);
+    }
+
+    public void updateMap() {
+        Log.d(TAG, "updateMap: ");
+        mMap.clear();
+        getLastKnownLocation();
+    }
+
     @SuppressLint("MissingPermission")
     private void getLastKnownLocation() {
         Log.d(TAG, "getLastKnownLocation: ");
@@ -165,30 +177,25 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback 
                 LatLng latLng = new LatLng(latitude, longitude);
                 position = latitude + "," + longitude;
 
-                // buildRetrofitRequest(latitude, longitude);
                 cameraUpdate(latLng);
 
                 // Build LatLngBounds and pass it to MainActivity for autocomplete
-                LatLngBounds.Builder builder = new LatLngBounds.Builder();
+/*                LatLngBounds.Builder builder = new LatLngBounds.Builder();
                 builder.include(latLng);
                 LatLngBounds bounds = builder.build();
-                ((MainActivity) Objects.requireNonNull(getActivity())).setmLatLngBounds(bounds);
+                ((MainActivity) Objects.requireNonNull(getActivity())).setmLatLngBounds(bounds);*/
 
                 Singleton.getInstance().setUserLat(latitude);
                 Singleton.getInstance().setUserLng(longitude);
+                Singleton.getInstance().setPosition(position);
 
                 // Request
                 viewModel = ViewModelProviders.of(Objects.requireNonNull(getActivity())).get(PlacesViewModel.class);
-                viewModel.init(position);
-                final Observer<PlacesDetail> observer = (PlacesDetail placesDetail) -> {
-                    Log.e(TAG, "onChanged: " + placesDetail.getResults().size());
-                    updateUiWithMarkers(placesDetail);
-                };
-
-                viewModel.getRepository().observe(this, observer);
+                viewModel.getPlacesLiveData().observe(this, this::updateUiWithMarkers);
+                viewModel.getPlaces(position);
 
             } else {
-                Toast.makeText(getContext(), "Cannot get user current location at the moment", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), R.string.cannot_get_location, Toast.LENGTH_SHORT).show();
             }
         });
     }

@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.neandril.go4lunch.BuildConfig;
 import com.neandril.go4lunch.R;
-import com.neandril.go4lunch.models.places.Result;
+import com.neandril.go4lunch.models.places.PlacesResult;
 import com.neandril.go4lunch.utils.Singleton;
 import com.neandril.go4lunch.utils.UserHelper;
 import com.neandril.go4lunch.utils.Utility;
@@ -44,7 +44,7 @@ class RestaurantViewHolder extends RecyclerView.ViewHolder {
         ButterKnife.bind(this, itemView);
     }
 
-    void updateRestaurantsList(Result result) {
+    void updateRestaurantsList(PlacesResult result) {
         Log.d(TAG, "updateUi: ");
 
         Utility utility = new Utility();

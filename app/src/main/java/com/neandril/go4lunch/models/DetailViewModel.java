@@ -1,31 +1,35 @@
 package com.neandril.go4lunch.models;
 
+import android.util.Log;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.neandril.go4lunch.models.details.Detail;
-import com.neandril.go4lunch.models.places.PlacesDetail;
 import com.neandril.go4lunch.utils.Repository;
 
 public class DetailViewModel extends ViewModel {
 
-    private final Repository repository;
-    private MutableLiveData<Detail> mutableLiveData;
+    private Repository repository = Repository.getInstance();
+    private MutableLiveData<Detail> detailLiveData = new MutableLiveData<>();
 
-    public DetailViewModel() {
-        repository = Repository.getInstance();
+    public LiveData<Detail> getDetailsLiveData() {
+        return detailLiveData;
     }
 
-    public void init(String placeid) {
-        if (mutableLiveData != null) {
-            return;
-        }
+    public void getDetails(String placeId) {
+        Log.d("DetailsViewModel", "getPredictions: input: " + placeId);
+        repository.getRestaurant(placeId, new Repository.RestaurantDetailsCallback() {
+            @Override
+            public void onSuccess(Detail model) {
+                detailLiveData.setValue(model);
+            }
 
-        mutableLiveData = repository.getRestaurant(placeid);
-    }
-
-    public LiveData<Detail> getRepository() {
-        return mutableLiveData;
+            @Override
+            public void onError() {
+                detailLiveData.setValue(null);
+            }
+        });
     }
 }

@@ -2,11 +2,13 @@ package com.neandril.go4lunch.models.places;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.neandril.go4lunch.models.details.Geometry;
+import com.neandril.go4lunch.models.details.OpeningHours;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Result {
+public class PlacesResult {
 
     @SerializedName("geometry")
     @Expose
@@ -25,7 +27,7 @@ public class Result {
     private OpeningHours openingHours;
     @SerializedName("photos")
     @Expose
-    private List<Photo> photos = new ArrayList<Photo>();
+    private List<PhotoPlaces> photos = new ArrayList<PhotoPlaces>();
     @SerializedName("place_id")
     @Expose
     private String placeId;
@@ -143,7 +145,7 @@ public class Result {
      * @return
      * The photos
      */
-    public List<Photo> getPhotos() {
+    public List<PhotoPlaces> getPhotos() {
         return photos;
     }
 
@@ -152,7 +154,7 @@ public class Result {
      * @param photos
      * The photos
      */
-    public void setPhotos(List<Photo> photos) {
+    public void setPhotos(List<PhotoPlaces> photos) {
         this.photos = photos;
     }
 

@@ -9,6 +9,7 @@ public class Singleton {
     private static final Singleton instance = new Singleton();
     private Double userLat;
     private Double userLng;
+    private String position;
 
     private Singleton() {
     }
@@ -31,5 +32,13 @@ public class Singleton {
 
     public void setUserLng(Double userLng) {
         this.userLng = userLng;
+    }
+
+    public String getPosition() {
+        return position;
+    }
+
+    public void setPosition(String position) {
+        this.position = position;
     }
 }

@@ -14,7 +14,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -25,6 +24,7 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.ViewModelProviders;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -32,12 +32,6 @@ import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.libraries.places.api.Places;
-import com.google.android.libraries.places.api.model.AutocompletePrediction;
-import com.google.android.libraries.places.api.model.AutocompleteSessionToken;
-import com.google.android.libraries.places.api.model.RectangularBounds;
-import com.google.android.libraries.places.api.model.TypeFilter;
-import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRequest;
-import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.neandril.go4lunch.BuildConfig;
@@ -46,8 +40,14 @@ import com.neandril.go4lunch.controllers.base.BaseActivity;
 import com.neandril.go4lunch.controllers.fragments.ListViewFragment;
 import com.neandril.go4lunch.controllers.fragments.MapViewFragment;
 import com.neandril.go4lunch.controllers.fragments.WorkmatesFragment;
+import com.neandril.go4lunch.models.DetailViewModel;
+import com.neandril.go4lunch.models.Predictions.Prediction;
+import com.neandril.go4lunch.models.PredictionsViewModel;
 import com.neandril.go4lunch.models.RestaurantAutocompleteModel;
 import com.neandril.go4lunch.models.User;
+import com.neandril.go4lunch.models.places.PlacesDetail;
+import com.neandril.go4lunch.models.places.PlacesResult;
+import com.neandril.go4lunch.utils.Singleton;
 import com.neandril.go4lunch.utils.UserHelper;
 import com.neandril.go4lunch.view.AutocompleteAdapter;
 
@@ -78,11 +78,20 @@ public class MainActivity extends BaseActivity
     // AutoComplete SearchView
     private SearchView.SearchAutoComplete mSearchAutocomplete;
     private LatLngBounds mLatLngBounds;
+    private String mPosition;
     // Restaurant basics infos
     private String restaurantName;
     private String restaurantVicinity;
     // Autocomplete adapter
     private AutocompleteAdapter mAutocompleteAdapter;
+
+    private ListViewFragment mListViewFragment;
+    private List<Prediction> predictionArrayList = new ArrayList<>();
+    private PredictionsViewModel predictionsViewModel;
+    private List<PlacesDetail> mPlacesDetailList = new ArrayList<>();
+
+    private String placeName;
+    private String placeVicinity;
 
     // ***************************
     // BASE METHODS
@@ -109,8 +118,10 @@ public class MainActivity extends BaseActivity
         configureDrawer();
         configureNavigationView();
         configureBottomNavigationView();
+        retrievePredictions();
 
         getUserInformations();
+
     }
 
     // ***************************
@@ -179,57 +190,6 @@ public class MainActivity extends BaseActivity
                 break;
         }
         return true;
-    }
-
-    // ***************************
-    // AUTOCOMPLETE
-    // ***************************
-
-    // Retrieve LatLngBounds
-    public LatLngBounds getLatLngBounds() {
-        return mLatLngBounds;
-    }
-
-    // Set the LatLngBounds
-    public void setmLatLngBounds(LatLngBounds latLngBounds) {
-        this.mLatLngBounds = latLngBounds;
-    }
-
-    // Get predictions
-    private void configurePredictions(String str) {
-        Log.d(TAG, "configurePredictions: " + str);
-        PlacesClient placesClient = Places.createClient(this);
-
-        AutocompleteSessionToken token = AutocompleteSessionToken.newInstance();
-        RectangularBounds rectangularBounds = RectangularBounds.newInstance(getLatLngBounds().southwest, getLatLngBounds().northeast);
-
-        FindAutocompletePredictionsRequest request = FindAutocompletePredictionsRequest.builder()
-                .setLocationBias(rectangularBounds)
-                .setCountry("FR")
-                .setQuery(str)
-                .setTypeFilter(TypeFilter.ESTABLISHMENT)
-                .setSessionToken(token)
-                .build();
-
-        placesClient.findAutocompletePredictions(request).addOnSuccessListener((response) -> {
-            List<RestaurantAutocompleteModel> restaurants = new ArrayList<>();
-            Log.d(TAG, "configurePredictions: LIST OF PREDICTIONS : " + response.getAutocompletePredictions());
-            for (AutocompletePrediction prediction : response.getAutocompletePredictions()) {
-                restaurantName = prediction.getPrimaryText(STYLE_BOLD).toString();
-                restaurantVicinity = prediction.getSecondaryText(null).toString();
-
-                restaurants.add(new RestaurantAutocompleteModel(
-                        prediction.getPlaceId(),
-                        restaurantName,
-                        restaurantVicinity));
-                Log.d(TAG, "configurePredictions: Name:" + prediction.getPrimaryText(STYLE_BOLD).toString());
-                Log.d(TAG, "configurePredictions: Id:" + prediction.getPlaceId());
-            }
-
-            mAutocompleteAdapter = new AutocompleteAdapter(this, restaurants);
-            mSearchAutocomplete.setAdapter(mAutocompleteAdapter);
-
-        });
     }
 
     // ***************************
@@ -354,17 +314,16 @@ public class MainActivity extends BaseActivity
             public boolean onQueryTextChange(String newText) {
                 Log.d(TAG, "onQueryTextChange: " + newText);
                 if (newText.length() > 2 ) {
-                    configurePredictions(newText);
-                } else {
+                    // Retrieve coords
+                    mPosition = Singleton.getInstance().getPosition();
+                    Log.d(TAG, "onQueryTextChange: input: " + newText + ", location: " + mPosition);
+                    getPredictions(newText, mPosition);
+                } else if (newText.length() < 2) {
                     Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
                     if (fragment instanceof ListViewFragment) {
-                        Toast.makeText(MainActivity.this, "ListView Fragment", Toast.LENGTH_SHORT).show();
+                        ((ListViewFragment) Objects.requireNonNull(fragment)).updateList();
                     } else if (fragment instanceof MapViewFragment) {
-                        Toast.makeText(MainActivity.this, "MapView Fragment", Toast.LENGTH_SHORT).show();
-                    } else if (fragment instanceof WorkmatesFragment) {
-                        Toast.makeText(MainActivity.this, "Not implemented yet", Toast.LENGTH_SHORT).show();
-                        mSearchAutocomplete.setHint("Not implemented yet");
-                        searchView.setEnabled(false);
+                        ((MapViewFragment) fragment).updateMap();
                     }
                 }
 
@@ -374,6 +333,29 @@ public class MainActivity extends BaseActivity
 
         return true;
     }
+
+    public void retrievePredictions() {
+        predictionsViewModel = ViewModelProviders.of(this).get(PredictionsViewModel.class);
+        predictionsViewModel.getPredictionLiveData().observe(this, placesResults -> {
+            PlacesDetail placesDetail = new PlacesDetail();
+            placesDetail.setResults(placesResults);
+
+            Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
+            if (fragment instanceof ListViewFragment) {
+                ((ListViewFragment) fragment).updatePredictions(placesDetail);
+            } else if (fragment instanceof MapViewFragment) {
+                ((MapViewFragment) fragment).updateUiWithPredictions(placesDetail);
+            }
+
+        });
+    }
+
+    public void getPredictions(String input, String location) {
+        Log.d(TAG, "getPredictions: input: " + input + ", location: " + location);
+        predictionsViewModel.getPredictions(input, location);
+
+    }
+
 
     // ***************************
     // REQUESTS

@@ -11,7 +11,7 @@ public class Detail {
     private List<Object> htmlAttributions = null;
     @SerializedName("result")
     @Expose
-    private Result result;
+    private DetailsResult result;
     @SerializedName("status")
     @Expose
     private String status;
@@ -24,11 +24,11 @@ public class Detail {
         this.htmlAttributions = htmlAttributions;
     }
 
-    public Result getResult() {
+    public DetailsResult getResult() {
         return result;
     }
 
-    public void setResult(Result result) {
+    public void setResult(DetailsResult result) {
         this.result = result;
     }
 

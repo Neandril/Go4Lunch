@@ -1,6 +1,7 @@
 package com.neandril.go4lunch.controllers.fragments;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.util.Log;
 
 import androidx.lifecycle.Observer;
@@ -14,6 +15,7 @@ import com.neandril.go4lunch.controllers.base.BaseFragment;
 import com.neandril.go4lunch.models.PlacesViewModel;
 import com.neandril.go4lunch.models.places.PlacesDetail;
 import com.neandril.go4lunch.utils.ItemClickSupport;
+import com.neandril.go4lunch.utils.Singleton;
 import com.neandril.go4lunch.view.RestaurantAdapter;
 
 import java.util.ArrayList;
@@ -31,6 +33,7 @@ public class ListViewFragment extends BaseFragment {
 
     private List<PlacesDetail> mPlaces;
     private RestaurantAdapter mAdapter;
+    private PlacesViewModel viewModel;
 
     // ***************************
     // BASE METHODS
@@ -53,21 +56,18 @@ public class ListViewFragment extends BaseFragment {
         this.mRecyclerView.setAdapter(mAdapter);
     }
 
-    private void updateList() {
+    public void updateList() {
         this.mPlaces.clear();
+        String location = Singleton.getInstance().getPosition();
 
         try {
-            PlacesViewModel placesViewModel = ViewModelProviders.of(Objects.requireNonNull(getActivity())).get(PlacesViewModel.class);
-
-            final Observer<PlacesDetail> observer = (PlacesDetail placesDetail) -> {
+            viewModel = ViewModelProviders.of(Objects.requireNonNull(getActivity())).get(PlacesViewModel.class);
+            viewModel.getPlacesLiveData().observe(this, placesDetail -> {
                 mPlaces.add(placesDetail);
                 mAdapter.notifyDataSetChanged();
-                for (int i = 0; i < mPlaces.get(0).getResults().size(); i++) {
-                    Log.e(TAG, "updateList: Name: " + mPlaces.get(0).getResults().get(i).getName() + " - " + mPlaces.get(0).getResults().get(i).getVicinity());
-                }
+            });
+            viewModel.getPlaces(location);
 
-            };
-            placesViewModel.getRepository().observe(this, observer);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -82,6 +82,13 @@ public class ListViewFragment extends BaseFragment {
                     intent.putExtra(RESTAURANT_TAG, placeId);
                     startActivity(intent);
                 });
+    }
+
+    public void updatePredictions(PlacesDetail placesDetails) {
+        mPlaces.clear();
+
+        mPlaces.add(placesDetails);
+        mAdapter.notifyDataSetChanged();
     }
 
     @Override

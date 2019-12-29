@@ -16,7 +16,7 @@ public class PlacesDetail {
     private String nextPageToken;
     @SerializedName("results")
     @Expose
-    private List<Result> results = new ArrayList<Result>();
+    private List<PlacesResult> results = new ArrayList<PlacesResult>();
     @SerializedName("status")
     @Expose
     private String status;
@@ -62,7 +62,7 @@ public class PlacesDetail {
      * @return
      * The results
      */
-    public List<Result> getResults() {
+    public List<PlacesResult> getResults() {
         return results;
     }
 
@@ -71,7 +71,7 @@ public class PlacesDetail {
      * @param results
      * The results
      */
-    public void setResults(List<Result> results) {
+    public void setResults(List<PlacesResult> results) {
         this.results = results;
     }
 

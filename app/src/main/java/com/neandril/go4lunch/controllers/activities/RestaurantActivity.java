@@ -12,7 +12,6 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -58,6 +57,8 @@ public class RestaurantActivity extends BaseActivity {
     @BindView(R.id.recyclerView_workmates_checkedIn) RecyclerView mRecyclerView;
     @BindView(R.id.restaurant_like_button) ImageButton mLikeButton;
 
+    private DetailViewModel viewModel;
+
     // ***************************
     // BASE METHODS
     // ***************************
@@ -80,10 +81,11 @@ public class RestaurantActivity extends BaseActivity {
         placeId = intent.getStringExtra(MapViewFragment.RESTAURANT_TAG);
 
         Log.d(TAG, "onCreate: Marker retrieved :" + placeId);
+
         this.retrieveRestaurantDetails();
+        this.getDetails(placeId);
         this.updateFabStatus();
         this.checkLikes();
-
     }
 
     // ***************************
@@ -91,11 +93,19 @@ public class RestaurantActivity extends BaseActivity {
     // ***************************
 
     private void retrieveRestaurantDetails() {
-        DetailViewModel viewModel = ViewModelProviders.of(this).get(DetailViewModel.class);
-        viewModel.init(placeId);
-        final Observer<Detail> observer = this::updateUI;
+        Log.d(TAG, "retrieveRestaurantDetails: ");
 
-        viewModel.getRepository().observe(this, observer);
+        viewModel = ViewModelProviders.of(this).get(DetailViewModel.class);
+        viewModel.getDetailsLiveData().observe(this, detail -> {
+
+            Log.d(TAG, "retrieveRestaurantDetails: " + detail.getResult().getName());
+
+            updateUI(detail);
+        });
+    }
+
+    public void getDetails(String placeId) {
+        viewModel.getDetails(placeId);
     }
 
     // ***************************
@@ -162,7 +172,7 @@ public class RestaurantActivity extends BaseActivity {
                 User user = Objects.requireNonNull(task.getResult()).toObject(User.class);
 
                 // Compare the lists in firebase and from prefs, and update icon and list accordingly
-                if (Objects.requireNonNull(user).getRestaurantLikeList().contains(placeId)) {
+                if (Objects.requireNonNull(user).getRestaurantLikedList().contains(placeId)) {
                     Log.d(TAG, "onLikeButton: Already liked");
                     likeList.remove(placeId);
                     mLikeButton.setImageResource(R.drawable.ic_star_empty);
@@ -266,10 +276,10 @@ public class RestaurantActivity extends BaseActivity {
             User user = documentSnapshot.toObject(User.class);
 
             if (likeList == null || likeList.isEmpty()) {
-                List<String> remoteList = Objects.requireNonNull(user).getRestaurantLikeList();
+                List<String> remoteList = Objects.requireNonNull(user).getRestaurantLikedList();
                 Log.d(TAG, "checkLikes: remote list : " + remoteList);
                 utility.setLikeListInPrefs(this, remoteList);
-                if (remoteList.contains(placeId)) {
+                if (remoteList != null && remoteList.contains(placeId)) {
                     mLikeButton.setImageResource(R.drawable.ic_like);
                 } else {
                     mLikeButton.setImageResource(R.drawable.ic_star_empty);

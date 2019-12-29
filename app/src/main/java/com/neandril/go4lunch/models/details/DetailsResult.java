@@ -5,7 +5,7 @@ import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Result {
+public class DetailsResult {
     @SerializedName("address_components")
     @Expose
     private List<AddressComponent> addressComponents = null;
@@ -38,7 +38,7 @@ public class Result {
     private OpeningHours openingHours;
     @SerializedName("photos")
     @Expose
-    private List<Photo> photos = null;
+    private List<PhotoDetails> photos = null;
     @SerializedName("place_id")
     @Expose
     private String placeId;
@@ -153,11 +153,11 @@ public class Result {
         this.openingHours = openingHours;
     }
 
-    public List<Photo> getPhotos() {
+    public List<PhotoDetails> getPhotos() {
         return photos;
     }
 
-    public void setPhotos(List<Photo> photos) {
+    public void setPhotos(List<PhotoDetails> photos) {
         this.photos = photos;
     }
 

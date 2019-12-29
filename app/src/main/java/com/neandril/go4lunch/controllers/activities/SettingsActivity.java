@@ -110,6 +110,7 @@ public class SettingsActivity extends BaseActivity {
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
+        setTitle(R.string.title_activity_settings);
     }
 
     private void configureSpinner() {

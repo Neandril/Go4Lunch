@@ -98,4 +98,7 @@
     <string name="notif_with">avec : </string>
     <string name="notif_nobody">Personne ne vous a encore rejoins</string>
 
+    <!-- OTHERS -->
+    <string name="cannot_get_location">Impossible de récuperer la localisation pour le moment</string>
+
 </resources>

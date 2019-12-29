@@ -2,9 +2,12 @@ package com.neandril.go4lunch.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.neandril.go4lunch.models.Predictions.Prediction;
+import com.neandril.go4lunch.models.places.PlacesDetail;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -21,6 +24,16 @@ public class Utility {
     private static final String PREFS_LIKES = "likes";
     private static final String PREFS_TOGGLE = "toggle";
     private final Gson gson = new Gson();
+
+    public List<PlacesDetail> convertPredictionToPlaces(List<Prediction> predictionList) {
+        List<PlacesDetail> result = new ArrayList<>();
+
+        for (Prediction p : predictionList) {
+
+        }
+
+        return result;
+    }
 
     /**
      * Convert 5-stars rating into 3-stars
@@ -118,6 +131,15 @@ public class Utility {
 
     public boolean retrieveToggleFromPrefs(Context context) {
         return getSharedPreferences(context).getBoolean(PREFS_TOGGLE, true);
+    }
+
+    public static List<PlacesDetail> transformsTest(List<PlacesDetail> list, List<Prediction> predictions) {
+        List<PlacesDetail> newResult = new ArrayList<>();
+
+        Log.d("Utility", "transformsTest: " + newResult);
+
+        return newResult;
+
     }
 
 }
