@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.util.Log;
 import android.widget.Toast;
 
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.google.android.gms.common.api.ApiException;
@@ -25,7 +24,6 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.Task;
@@ -37,7 +35,6 @@ import com.karumi.dexter.listener.PermissionGrantedResponse;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.single.PermissionListener;
 import com.neandril.go4lunch.R;
-import com.neandril.go4lunch.controllers.activities.MainActivity;
 import com.neandril.go4lunch.controllers.activities.RestaurantActivity;
 import com.neandril.go4lunch.controllers.base.BaseFragment;
 import com.neandril.go4lunch.models.PlacesViewModel;
@@ -107,7 +104,7 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback 
     }
 
     // ***************************
-    // LOCATIONS
+    // UI
     // ***************************
 
     private void updateUiWithMarkers(PlacesDetail placesDetail) {
@@ -153,22 +150,27 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback 
         }
     }
 
+    // Update the map accordingly to predictions
     public void updateUiWithPredictions(PlacesDetail placesDetail) {
         Log.d(TAG, "updateUiWithPredictions: " + placesDetail.getResults().get(0).getName());
         mMap.clear();
         updateUiWithMarkers(placesDetail);
     }
 
+    // Update the map
     public void updateMap() {
         Log.d(TAG, "updateMap: ");
         mMap.clear();
         getLastKnownLocation();
     }
 
+    // ***************************
+    // LOCATION
+    // ***************************
+
     @SuppressLint("MissingPermission")
     private void getLastKnownLocation() {
         Log.d(TAG, "getLastKnownLocation: ");
-        // call getLastLocation
         mFusedLocationProviderClient.getLastLocation().addOnSuccessListener(location -> {
             if (location != null) {
                 // Display the current location on the device screen
@@ -178,12 +180,6 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback 
                 position = latitude + "," + longitude;
 
                 cameraUpdate(latLng);
-
-                // Build LatLngBounds and pass it to MainActivity for autocomplete
-/*                LatLngBounds.Builder builder = new LatLngBounds.Builder();
-                builder.include(latLng);
-                LatLngBounds bounds = builder.build();
-                ((MainActivity) Objects.requireNonNull(getActivity())).setmLatLngBounds(bounds);*/
 
                 Singleton.getInstance().setUserLat(latitude);
                 Singleton.getInstance().setUserLng(longitude);
@@ -205,17 +201,11 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback 
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, DEFAULT_ZOOM));
     }
 
-    @OnClick(R.id.fab_mylocation)
-    void myLocationOnClick() {
-        Log.d(TAG, "myLocationOnClick: clicked!");
-        getLastKnownLocation();
-    }
-
-
     // ***************************
     // PERMISSIONS
     // ***************************
 
+    // Check locations settings of the phone
     private void getLocationSettings() {
         Log.d(TAG, "getLocationSettings: ");
         // Create a location request
@@ -253,6 +243,7 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback 
         });
     }
 
+    // Ask for permission (using Dexter)
     private void getPermissions() {
         Log.d(TAG, "getPermissions: Getting user location");
         // Manage permissions
@@ -265,7 +256,8 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback 
                     public void onPermissionGranted(PermissionGrantedResponse response) {
                         Log.d(TAG, "onPermissionGranted: Granted");
                         getLastKnownLocation();
-                        mMap.setMyLocationEnabled(false);
+                        mMap.getUiSettings().setMyLocationButtonEnabled(false);
+                        mMap.setMyLocationEnabled(true);
                     }
 
                     @Override
@@ -279,6 +271,17 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback 
                     }
                 })
                 .check();
+    }
+
+    // ***************************
+    // ACTIONS
+    // ***************************
+
+    // Handle click on customized MyLocation Button
+    @OnClick(R.id.fab_mylocation)
+    void myLocationOnClick() {
+        Log.d(TAG, "myLocationOnClick: clicked!");
+        getLastKnownLocation();
     }
 
     @Override

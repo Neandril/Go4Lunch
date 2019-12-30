@@ -62,13 +62,14 @@ public class LoginActivity extends BaseActivity {
         if (this.isCurrentUsedLogged()) {
             this.enterInTheApp();
         } else {
-            Log.e("Login", "Not logged");
+            Log.e(TAG, "Not logged");
         }
     }
 
     // ***************************
     // BASE METHODS
     // ***************************
+
     @Override
     protected int getActivityLayout() { return R.layout.activity_login; }
 

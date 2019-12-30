@@ -49,6 +49,10 @@ public class ListViewFragment extends BaseFragment {
         this.updateList();
     }
 
+    // ***************************
+    // UI
+    // ***************************
+
     private void configureRecyclerView() {
         this.mPlaces = new ArrayList<>();
         this.mAdapter = new RestaurantAdapter(mPlaces);

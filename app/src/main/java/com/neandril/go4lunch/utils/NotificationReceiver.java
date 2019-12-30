@@ -23,7 +23,7 @@ import java.util.Objects;
 
 public class NotificationReceiver extends BroadcastReceiver {
 
-    private static final String TAG = "NotificationsReceiver";
+    private static final String TAG = NotificationReceiver.class.getSimpleName();
     public static final String RESTAURANT_TAG = "restaurantId";
 
     private String currentUserId;
@@ -57,8 +57,6 @@ public class NotificationReceiver extends BroadcastReceiver {
                         }
                     }
 
-                    Log.e(TAG, "onReceive: restaurantId: " + restaurantId);
-
                     createNotifications(context, restaurantId, restaurantName, restaurantVicinity, workmatesList);
 
                 });
@@ -85,7 +83,7 @@ public class NotificationReceiver extends BroadcastReceiver {
         if (restaurantId.equals("")) {
             inboxStyle.addLine(context.getString(R.string.notif_no_choice));
         } else {
-            inboxStyle.addLine(context.getString(R.string.notif_your_lunch) + restaurant + ": ");
+            inboxStyle.addLine(context.getString(R.string.notif_your_lunch) + restaurant);
             inboxStyle.addLine(restaurantVicinity);
 
             // Display or not workmates

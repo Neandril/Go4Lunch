@@ -36,7 +36,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin"
             android:layout_marginEnd="@dimen/margin"
-            android:text="Your name :" />
+            android:text="@string/your_name" />
 
         <EditText
             android:id="@+id/editText_user_name"
@@ -44,8 +44,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin"
             android:layout_marginEnd="@dimen/margin"
-            android:layout_marginBottom="@dimen/margin"
-            android:text="@string/display_name" />
+            android:layout_marginBottom="@dimen/margin" />
 
         <View
             android:layout_width="match_parent"

@@ -41,14 +41,9 @@ public class RestaurantActivity extends BaseActivity {
 
     private static final String TAG = RestaurantActivity.class.getSimpleName();
 
-    public String placeId;
-    public String mWebsite;
-    public String mPhone;
-    public String mRestaurantName;
-    public String mRestaurantVicinity;
-
     Utility utility = new Utility();
 
+    // Widgets
     @BindView(R.id.activity_restaurant_main_layout) ConstraintLayout mConstraintLayout;
     @BindView(R.id.tv_restaurantName) TextView tvRestaurantName;
     @BindView(R.id.tv_restaurantAddress) TextView tvRestaurantAddress;
@@ -57,11 +52,18 @@ public class RestaurantActivity extends BaseActivity {
     @BindView(R.id.recyclerView_workmates_checkedIn) RecyclerView mRecyclerView;
     @BindView(R.id.restaurant_like_button) ImageButton mLikeButton;
 
+    // Variables
+    public String placeId;
+    public String mWebsite;
+    public String mPhone;
+    public String mRestaurantName;
+    public String mRestaurantVicinity;
     private DetailViewModel viewModel;
 
     // ***************************
     // BASE METHODS
     // ***************************
+
     @Override
     protected int getActivityLayout() {
         return R.layout.activity_restaurant;

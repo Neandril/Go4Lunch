@@ -100,10 +100,10 @@ public class SettingsActivity extends BaseActivity {
         this.handleResponse(requestCode, resultCode, data);
     }
 
-
     // ***************************
     // UI
     // ***************************
+
     private void configureToolbar() {
         Log.d(TAG, "configureToolbar: Toolbar configuration");
         setSupportActionBar(mToolbar);
@@ -190,11 +190,9 @@ public class SettingsActivity extends BaseActivity {
 
         if (mSwitch.isChecked()) {
             Log.d(TAG, "switchOnCheckedChanged: checked");
-            showSnackBar("Notifications enabled");
             configAlarm();
         } else {
             Log.d(TAG, "switchOnCheckedChanged: not checked");
-            showSnackBar("Notifications disabled");
             cancelAlarm();
         }
 
@@ -231,6 +229,20 @@ public class SettingsActivity extends BaseActivity {
                 .check();
     }
 
+
+    @OnCheckedChanged(R.id.notif_switch)
+    void switchOnCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+        Log.d(TAG, "switchOnCheckedChanged: isChecked: " + isChecked);
+
+        if (isChecked) {
+            Log.d(TAG, "switchOnCheckedChanged: checked");
+            showSnackBar(getResources().getString(R.string.notifs_enabled));
+        } else {
+            Log.d(TAG, "switchOnCheckedChanged: not checked");
+            showSnackBar(getResources().getString(R.string.notifs_disabled));
+        }
+    }
+
     private void chooseLocalPicture() {
         Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(intent, RC_CHOOSE_PHOTO);
@@ -244,7 +256,7 @@ public class SettingsActivity extends BaseActivity {
                 Glide.with(this).load(localImage).into(mProfileThumbnail);
                 uploadProfilePictureAndUpdateUser();
             } else {
-                Toast.makeText(this, "No image selected", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.no_image, Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -260,6 +272,10 @@ public class SettingsActivity extends BaseActivity {
         })).addOnFailureListener(this.onFailureListener());
     }
 
+    // ***************************
+    // PREFERENCES
+    // ***************************
+
     private void setLocale(String lang) {
         Log.d(TAG, "setLocale: Lang: " + lang);
         Locale locale = new Locale(lang);
@@ -273,19 +289,6 @@ public class SettingsActivity extends BaseActivity {
         utility.setLocaleInPrefs(this, lang);
 
         restart(this);
-    }
-
-    @OnCheckedChanged(R.id.notif_switch)
-    void switchOnCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-        Log.d(TAG, "switchOnCheckedChanged: isChecked: " + isChecked);
-
-        if (isChecked) {
-            Log.d(TAG, "switchOnCheckedChanged: checked");
-            showSnackBar("Notifications enabled");
-        } else {
-            Log.d(TAG, "switchOnCheckedChanged: not checked");
-            showSnackBar("Notifications disabled");
-        }
     }
 
     private void getPrefs() {
@@ -320,7 +323,7 @@ public class SettingsActivity extends BaseActivity {
         AlarmManager alarmManager = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(this, NotificationReceiver.class);
 
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(SettingsActivity.this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(SettingsActivity.this, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
         alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
     }
 

@@ -29,7 +29,6 @@ import androidx.lifecycle.ViewModelProviders;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.firebase.ui.auth.AuthUI;
-import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -40,19 +39,13 @@ import com.neandril.go4lunch.controllers.base.BaseActivity;
 import com.neandril.go4lunch.controllers.fragments.ListViewFragment;
 import com.neandril.go4lunch.controllers.fragments.MapViewFragment;
 import com.neandril.go4lunch.controllers.fragments.WorkmatesFragment;
-import com.neandril.go4lunch.models.DetailViewModel;
-import com.neandril.go4lunch.models.Predictions.Prediction;
 import com.neandril.go4lunch.models.PredictionsViewModel;
 import com.neandril.go4lunch.models.RestaurantAutocompleteModel;
 import com.neandril.go4lunch.models.User;
 import com.neandril.go4lunch.models.places.PlacesDetail;
-import com.neandril.go4lunch.models.places.PlacesResult;
 import com.neandril.go4lunch.utils.Singleton;
 import com.neandril.go4lunch.utils.UserHelper;
-import com.neandril.go4lunch.view.AutocompleteAdapter;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 import butterknife.BindView;
@@ -64,7 +57,6 @@ public class MainActivity extends BaseActivity
     // TAGs and consts
     private static final String TAG = MainActivity.class.getSimpleName();
     public static final String RESTAURANT_TAG = "restaurantId";
-    private static final CharacterStyle STYLE_BOLD = new StyleSpan(Typeface.BOLD);
 
     // Widgets
     @BindView(R.id.activity_main_constraint_layout) ConstraintLayout mConstraintLayout;
@@ -73,25 +65,11 @@ public class MainActivity extends BaseActivity
     @BindView(R.id.bottom_navigation_view) BottomNavigationView mBottomNavigationView;
     @BindView(R.id.toolbar) Toolbar mToolbar;
 
-    // Reference the menu in order to hide or show it depending the fragment
+    // Variables
     private Menu menu;
-    // AutoComplete SearchView
     private SearchView.SearchAutoComplete mSearchAutocomplete;
-    private LatLngBounds mLatLngBounds;
     private String mPosition;
-    // Restaurant basics infos
-    private String restaurantName;
-    private String restaurantVicinity;
-    // Autocomplete adapter
-    private AutocompleteAdapter mAutocompleteAdapter;
-
-    private ListViewFragment mListViewFragment;
-    private List<Prediction> predictionArrayList = new ArrayList<>();
     private PredictionsViewModel predictionsViewModel;
-    private List<PlacesDetail> mPlacesDetailList = new ArrayList<>();
-
-    private String placeName;
-    private String placeVicinity;
 
     // ***************************
     // BASE METHODS
@@ -118,10 +96,9 @@ public class MainActivity extends BaseActivity
         configureDrawer();
         configureNavigationView();
         configureBottomNavigationView();
-        retrievePredictions();
+        configurePredictions();
 
         getUserInformations();
-
     }
 
     // ***************************
@@ -334,7 +311,7 @@ public class MainActivity extends BaseActivity
         return true;
     }
 
-    public void retrievePredictions() {
+    public void configurePredictions() {
         predictionsViewModel = ViewModelProviders.of(this).get(PredictionsViewModel.class);
         predictionsViewModel.getPredictionLiveData().observe(this, placesResults -> {
             PlacesDetail placesDetail = new PlacesDetail();
@@ -346,16 +323,13 @@ public class MainActivity extends BaseActivity
             } else if (fragment instanceof MapViewFragment) {
                 ((MapViewFragment) fragment).updateUiWithPredictions(placesDetail);
             }
-
         });
     }
 
     public void getPredictions(String input, String location) {
         Log.d(TAG, "getPredictions: input: " + input + ", location: " + location);
         predictionsViewModel.getPredictions(input, location);
-
     }
-
 
     // ***************************
     // REQUESTS

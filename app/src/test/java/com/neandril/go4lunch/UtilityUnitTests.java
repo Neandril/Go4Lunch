@@ -8,7 +8,7 @@ import static org.junit.Assert.assertEquals;
 
 public class UtilityUnitTests {
 
-    Utility utility = new Utility();
+    private Utility utility = new Utility();
 
     @Test
     public void should_ratingConvertedInto3stars() {
@@ -29,5 +29,6 @@ public class UtilityUnitTests {
 
         assertEquals("150m", utility.distance(userLat, targetLat, userLng, targetLng));
     }
+
 
 }

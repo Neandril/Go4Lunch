@@ -25,7 +25,7 @@ import butterknife.ButterKnife;
 
 class RestaurantViewHolder extends RecyclerView.ViewHolder {
 
-    private static final String TAG = "RestaurantViewHolder";
+    private static final String TAG = RestaurantViewHolder.class.getSimpleName();
 
     @BindView(R.id.tv_recyclerView_restaurantName) TextView mRestaurantName;
     @BindView(R.id.tv_recyclerView_restaurantAddress) TextView mRestaurantAddress;

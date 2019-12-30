@@ -25,16 +25,6 @@ public class Utility {
     private static final String PREFS_TOGGLE = "toggle";
     private final Gson gson = new Gson();
 
-    public List<PlacesDetail> convertPredictionToPlaces(List<Prediction> predictionList) {
-        List<PlacesDetail> result = new ArrayList<>();
-
-        for (Prediction p : predictionList) {
-
-        }
-
-        return result;
-    }
-
     /**
      * Convert 5-stars rating into 3-stars
      * @param rating - retrieved from Google
@@ -132,14 +122,4 @@ public class Utility {
     public boolean retrieveToggleFromPrefs(Context context) {
         return getSharedPreferences(context).getBoolean(PREFS_TOGGLE, true);
     }
-
-    public static List<PlacesDetail> transformsTest(List<PlacesDetail> list, List<Prediction> predictions) {
-        List<PlacesDetail> newResult = new ArrayList<>();
-
-        Log.d("Utility", "transformsTest: " + newResult);
-
-        return newResult;
-
-    }
-
 }

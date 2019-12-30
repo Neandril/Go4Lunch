@@ -20,6 +20,10 @@ public class YourLunchActivity extends BaseActivity {
     @BindView(R.id.your_lunch_layout) ConstraintLayout mConstraintLayout;
     @BindView(R.id.toolbar) Toolbar mToolbar;
 
+    // ***************************
+    // BASE METHODS
+    // ***************************
+
     @Override
     protected int getActivityLayout() {
         return R.layout.activity_your_lunch;

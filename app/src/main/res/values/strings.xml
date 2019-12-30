@@ -84,13 +84,14 @@
         <item>English</item>
         <item>French</item>
     </string-array>
-    <string name="display_name">Display name</string>
+    <string name="your_name">Your Name</string>
     <string name="btn_save">SAVE</string>
     <string name="btn_delete_account">DELETE ACCOUNT</string>
     <string name="notification_enabled">Enable notifications</string>
     <string name="changes_saved">Changes saved!</string>
     <string name="notifs_enabled">Notifications enabled</string>
     <string name="notifs_disabled">Notifications disabled</string>
+    <string name="no_image">No image selected</string>
 
     <!-- NOTIFICATIONS STRINGS -->
     <string name="notif_no_choice">You haven\'t picked any restaurant yet</string>
