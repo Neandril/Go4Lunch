@@ -21,7 +21,9 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyBkjaxczMoqyJzCQnRRIJgeJoubLGdSEK0"/>
 
-        <activity android:name=".controllers.activities.LoginActivity">
+        <activity
+            android:name=".controllers.activities.LoginActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -31,17 +33,21 @@
 
         <activity
             android:name=".controllers.activities.MainActivity"
+            android:screenOrientation="portrait"
             android:label="@string/title_main"/>
         <activity
             android:name=".controllers.activities.YourLunchActivity"
+            android:screenOrientation="portrait"
             android:label="@string/title_activity_yourlunch"
             android:parentActivityName=".controllers.activities.MainActivity" />
         <activity
             android:name=".controllers.activities.SettingsActivity"
+            android:screenOrientation="portrait"
             android:label="@string/title_activity_settings"
             android:parentActivityName=".controllers.activities.MainActivity" />
         <activity
             android:name=".controllers.activities.RestaurantActivity"
+            android:screenOrientation="portrait"
             android:parentActivityName=".controllers.activities.MainActivity" />
 
         <receiver
