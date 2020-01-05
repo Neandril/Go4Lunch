@@ -229,7 +229,7 @@ public class SettingsActivity extends BaseActivity {
                 .check();
     }
 
-
+    @SuppressWarnings("unused")
     @OnCheckedChanged(R.id.notif_switch)
     void switchOnCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
         Log.d(TAG, "switchOnCheckedChanged: isChecked: " + isChecked);

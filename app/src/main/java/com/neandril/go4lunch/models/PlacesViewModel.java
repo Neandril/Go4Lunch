@@ -6,12 +6,14 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.neandril.go4lunch.api.GoogleApiCall;
+import com.neandril.go4lunch.api.GoogleApiInterface;
 import com.neandril.go4lunch.models.places.PlacesDetail;
 import com.neandril.go4lunch.utils.Repository;
 
 public class PlacesViewModel extends ViewModel {
 
-    private Repository repository = Repository.getInstance();
+    private Repository repository = Repository.getInstance(GoogleApiCall.retrofit.create(GoogleApiInterface.class));
     private MutableLiveData<PlacesDetail> placesDetailLiveData = new MutableLiveData<>();
 
     public LiveData<PlacesDetail> getPlacesLiveData() {
@@ -22,7 +24,7 @@ public class PlacesViewModel extends ViewModel {
         Log.d("DetailsViewModel", "getPredictions: input: " + location);
         repository.getPlaces(location, new Repository.PlacesCallback() {
             @Override
-            public void onSuccuess(PlacesDetail model) {
+            public void onSuccess(PlacesDetail model) {
                 placesDetailLiveData.setValue(model);
             }
 

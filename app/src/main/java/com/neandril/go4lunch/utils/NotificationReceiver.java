@@ -15,6 +15,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.neandril.go4lunch.R;
+import com.neandril.go4lunch.controllers.activities.MainActivity;
 import com.neandril.go4lunch.controllers.activities.RestaurantActivity;
 import com.neandril.go4lunch.models.User;
 
@@ -53,14 +54,12 @@ public class NotificationReceiver extends BroadcastReceiver {
 
                         if (!userId.equals(currentUserId)) {
                             workmatesList.add(userName);
-                            // mMessageContent.add(userName);
                         }
                     }
 
                     createNotifications(context, restaurantId, restaurantName, restaurantVicinity, workmatesList);
 
                 });
-
             }
         });
     }
@@ -72,17 +71,22 @@ public class NotificationReceiver extends BroadcastReceiver {
                                      ArrayList<String> workmatesList) {
         Log.d(TAG, "createNotifications: ");
 
-        // Create intent with the placeId to run the restaurant activity when notification is clicked
-        Intent intent = new Intent(context, RestaurantActivity.class);
-        intent.putExtra(RESTAURANT_TAG, restaurantId);
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_ONE_SHOT);
-
         // Create the inbox style (i.e. : multi-lined notification)
         NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
 
-        if (restaurantId.equals("")) {
+        PendingIntent pendingIntent;
+        if (restaurantId.equals("")) { // If no restaurant picked, create an intent to the MainActivity
+            Intent intent = new Intent(context, MainActivity.class);
+            intent.putExtra(RESTAURANT_TAG, restaurantId);
+            pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_ONE_SHOT);
+
             inboxStyle.addLine(context.getString(R.string.notif_no_choice));
-        } else {
+        } else { // If a restaurant is picked, create an itent to the Restaurant Activity
+            // Create intent with the placeId to run the restaurant activity when notification is clicked
+            Intent intent = new Intent(context, RestaurantActivity.class);
+            intent.putExtra(RESTAURANT_TAG, restaurantId);
+            pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_ONE_SHOT);
+
             inboxStyle.addLine(context.getString(R.string.notif_your_lunch) + restaurant);
             inboxStyle.addLine(restaurantVicinity);
 

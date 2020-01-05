@@ -6,12 +6,14 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.neandril.go4lunch.api.GoogleApiCall;
+import com.neandril.go4lunch.api.GoogleApiInterface;
 import com.neandril.go4lunch.models.details.Detail;
 import com.neandril.go4lunch.utils.Repository;
 
 public class DetailViewModel extends ViewModel {
 
-    private Repository repository = Repository.getInstance();
+    private Repository repository = Repository.getInstance(GoogleApiCall.retrofit.create(GoogleApiInterface.class));
     private MutableLiveData<Detail> detailLiveData = new MutableLiveData<>();
 
     public LiveData<Detail> getDetailsLiveData() {

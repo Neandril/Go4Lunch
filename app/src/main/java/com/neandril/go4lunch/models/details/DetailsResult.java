@@ -2,13 +2,11 @@ package com.neandril.go4lunch.models.details;
 
 
 import java.util.List;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class DetailsResult {
-    @SerializedName("address_components")
-    @Expose
-    private List<AddressComponent> addressComponents = null;
     @SerializedName("adr_address")
     @Expose
     private String adrAddress;
@@ -42,9 +40,6 @@ public class DetailsResult {
     @SerializedName("place_id")
     @Expose
     private String placeId;
-    @SerializedName("plus_code")
-    @Expose
-    private PlusCode plusCode;
     @SerializedName("rating")
     @Expose
     private Double rating;
@@ -72,14 +67,6 @@ public class DetailsResult {
     @SerializedName("website")
     @Expose
     private String website;
-
-    public List<AddressComponent> getAddressComponents() {
-        return addressComponents;
-    }
-
-    public void setAddressComponents(List<AddressComponent> addressComponents) {
-        this.addressComponents = addressComponents;
-    }
 
     public String getAdrAddress() {
         return adrAddress;
@@ -167,14 +154,6 @@ public class DetailsResult {
 
     public void setPlaceId(String placeId) {
         this.placeId = placeId;
-    }
-
-    public PlusCode getPlusCode() {
-        return plusCode;
-    }
-
-    public void setPlusCode(PlusCode plusCode) {
-        this.plusCode = plusCode;
     }
 
     public Double getRating() {

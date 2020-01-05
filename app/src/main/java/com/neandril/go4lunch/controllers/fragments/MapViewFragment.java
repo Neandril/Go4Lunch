@@ -152,7 +152,7 @@ public class MapViewFragment extends BaseFragment implements OnMapReadyCallback 
 
     // Update the map accordingly to predictions
     public void updateUiWithPredictions(PlacesDetail placesDetail) {
-        Log.d(TAG, "updateUiWithPredictions: " + placesDetail.getResults().get(0).getName());
+        Log.d(TAG, "updateUiWithPredictions: ");
         mMap.clear();
         updateUiWithMarkers(placesDetail);
     }

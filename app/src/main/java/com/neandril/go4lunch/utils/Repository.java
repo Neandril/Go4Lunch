@@ -4,7 +4,6 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
-import com.neandril.go4lunch.api.GoogleApiCall;
 import com.neandril.go4lunch.api.GoogleApiInterface;
 import com.neandril.go4lunch.models.Predictions.Prediction;
 import com.neandril.go4lunch.models.Predictions.PredictionsModel;
@@ -24,15 +23,15 @@ public class Repository {
     private static Repository repository;
     private GoogleApiInterface googleApiInterface;
 
-    public static Repository getInstance() {
+    public static Repository getInstance(GoogleApiInterface apiInterface) {
         if (repository == null) {
-            repository = new Repository();
+            repository = new Repository(apiInterface);
         }
         return repository;
     }
 
-    private Repository() {
-        googleApiInterface = GoogleApiCall.retrofit.create(GoogleApiInterface.class);
+    private Repository(GoogleApiInterface apiInterface) {
+        googleApiInterface = apiInterface;
     }
 
 
@@ -47,7 +46,7 @@ public class Repository {
             public void onResponse(@NonNull Call<PlacesDetail> call, @NonNull Response<PlacesDetail> response) {
                 if (response.isSuccessful()) {
                     PlacesDetail body = response.body();
-                    callback.onSuccuess(body);
+                    callback.onSuccess(body);
                 } else {
                     callback.onError();
                 }
@@ -146,7 +145,7 @@ public class Repository {
     }
 
     public interface PlacesCallback {
-        void onSuccuess(PlacesDetail placesDetail);
+        void onSuccess(PlacesDetail placesDetail);
         void onError();
     }
 
