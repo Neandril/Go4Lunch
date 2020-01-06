@@ -206,14 +206,6 @@ public class SettingsActivity extends BaseActivity {
         }
         setLocale(locale);
 
-        if (mSwitch.isChecked()) {
-            Log.d(TAG, "switchOnCheckedChanged: checked");
-            configAlarm();
-        } else {
-            Log.d(TAG, "switchOnCheckedChanged: not checked");
-            cancelAlarm();
-        }
-
         utility.setNotifToggleInPrefs(this, mSwitch.isChecked());
 
         showSnackBar(getResources().getString(R.string.changes_saved));
@@ -254,9 +246,11 @@ public class SettingsActivity extends BaseActivity {
 
         if (isChecked) {
             Log.d(TAG, "switchOnCheckedChanged: checked");
+            configAlarm();
             showSnackBar(getResources().getString(R.string.notifs_enabled));
         } else {
             Log.d(TAG, "switchOnCheckedChanged: not checked");
+            cancelAlarm();
             showSnackBar(getResources().getString(R.string.notifs_disabled));
         }
     }
@@ -330,18 +324,13 @@ public class SettingsActivity extends BaseActivity {
     private void configAlarm() {
         Calendar calendar = Calendar.getInstance();
 
-        if (Calendar.HOUR_OF_DAY > 12) {
-            calendar.add(Calendar.DATE, 1);
-        }
-
         calendar.set(Calendar.HOUR_OF_DAY, 12);
-        calendar.set(Calendar.MINUTE, 0);
-        calendar.set(Calendar.SECOND, 0);
+        calendar.add(Calendar.DATE, 1);
 
         AlarmManager alarmManager = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(this, NotificationReceiver.class);
 
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(SettingsActivity.this, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
         alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
     }
 

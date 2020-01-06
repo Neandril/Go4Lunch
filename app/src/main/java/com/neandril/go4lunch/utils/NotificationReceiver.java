@@ -50,7 +50,6 @@ public class NotificationReceiver extends BroadcastReceiver {
 
                         String userName = Objects.requireNonNull(workmate).getUser_name();
                         String userId = workmate.getUser_id();
-                        Log.d(TAG, "onReceive: " + userId + " , " + userName);
 
                         if (!userId.equals(currentUserId)) {
                             workmatesList.add(userName);
@@ -110,6 +109,8 @@ public class NotificationReceiver extends BroadcastReceiver {
                 .setContentTitle(context.getString(R.string.app_name))
                 .setStyle(inboxStyle)
                 .setContentIntent(pendingIntent);
+        // Remove the notification when clicked
+        builder.setAutoCancel(true);
 
         // Create channel for build > oreo)
         if (notificationManager != null) {

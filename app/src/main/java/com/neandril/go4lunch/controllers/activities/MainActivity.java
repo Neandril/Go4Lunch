@@ -96,6 +96,7 @@ public class MainActivity extends BaseActivity
         configurePredictions();
 
         getUserInformations();
+
     }
 
     // ***************************
