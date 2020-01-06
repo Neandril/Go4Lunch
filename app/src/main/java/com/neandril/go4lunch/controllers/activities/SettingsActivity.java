@@ -149,11 +149,7 @@ public class SettingsActivity extends BaseActivity {
                 R.string.positive_button,
                 (dialog, which) -> {
                     if (this.getCurrentUser() != null) {
-                        UserHelper.deleteUser(this.getCurrentUser().getUid());
-                        AuthUI.getInstance()
-                                .delete(this)
-                                .addOnSuccessListener(this, this.updateUIAfterRESTRequestsCompleted());
-                        Log.d(TAG, "btnDeleteAcountOnClick: account deleted");
+                        signOutAndDeleteUserFromFirebase();
                     }
                 }
         ).setNegativeButton(
@@ -165,9 +161,31 @@ public class SettingsActivity extends BaseActivity {
         alertDialog.show();
     }
 
+    private void signOutAndDeleteUserFromFirebase() {
+        Log.d(TAG, "signOutUserFromFirebase: Log out user from Firebase");
+        // Singing out
+        AuthUI.getInstance()
+                .signOut(this)
+                .addOnSuccessListener(this, this.updateUIAfterRESTRequestsCompleted());
+        // Delete account
+        UserHelper.deleteUser(this.getCurrentUser().getUid());
+        AuthUI.getInstance()
+                .delete(this)
+                .addOnSuccessListener(this, this.updateUIAfterRESTRequestsCompleted());
+        finish();
+    }
+
     private OnSuccessListener<Void> updateUIAfterRESTRequestsCompleted(){
         Log.d(TAG, "updateUIAfterRESTRequestsCompleted: logged off");
-        return aVoid -> finish();
+        return aVoid -> {
+            finish();
+            // Reset activity stacks, and go back to login activity
+            Intent intent = new Intent(this, LoginActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+                    | Intent.FLAG_ACTIVITY_CLEAR_TASK
+                    | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+        };
     }
 
     @OnClick(R.id.btn_save)

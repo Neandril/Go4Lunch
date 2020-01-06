@@ -28,7 +28,7 @@ public class LiveDataTests {
     @Before
     public void init() {
         mockRepository = Mockito.mock(Repository.class);
-        placesViewModel = new PlacesViewModel();
+        placesViewModel = Mockito.mock(PlacesViewModel.class);
     }
 
     @Test

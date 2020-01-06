@@ -2,11 +2,8 @@ package com.neandril.go4lunch.controllers.activities;
 
 import android.app.AlertDialog;
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.text.style.CharacterStyle;
-import android.text.style.StyleSpan;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -254,7 +251,6 @@ public class MainActivity extends BaseActivity
                            .apply(RequestOptions.circleCropTransform())
                            .into(profileThumbnail);
                }
-
             });
         }
     }
