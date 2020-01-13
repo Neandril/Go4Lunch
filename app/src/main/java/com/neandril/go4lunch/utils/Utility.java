@@ -2,14 +2,9 @@ package com.neandril.go4lunch.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Log;
 
-import com.firebase.ui.auth.AuthUI;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.neandril.go4lunch.models.Predictions.Prediction;
-import com.neandril.go4lunch.models.places.PlacesDetail;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -20,8 +15,6 @@ import java.util.List;
  */
 
 public class Utility {
-
-    private static final String TAG = Utility.class.getSimpleName();
 
     private static final String PREFS = "com.neandril.go4lunch.prefs";
     private static final String LOCALE_KEY = "locale";

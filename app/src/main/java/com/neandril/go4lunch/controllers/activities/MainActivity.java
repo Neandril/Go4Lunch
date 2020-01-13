@@ -42,6 +42,7 @@ import com.neandril.go4lunch.models.User;
 import com.neandril.go4lunch.models.places.PlacesDetail;
 import com.neandril.go4lunch.utils.Singleton;
 import com.neandril.go4lunch.utils.UserHelper;
+import com.neandril.go4lunch.utils.Utility;
 
 import java.util.Objects;
 
@@ -94,6 +95,7 @@ public class MainActivity extends BaseActivity
         configureNavigationView();
         configureBottomNavigationView();
         configurePredictions();
+        configurePreferences();
 
         getUserInformations();
 
@@ -133,6 +135,15 @@ public class MainActivity extends BaseActivity
     private void configureBottomNavigationView() {
         Log.d(TAG, "configureBottomNavigationView: BottomNavigationView configuration");
         mBottomNavigationView.setOnNavigationItemSelectedListener(this);
+    }
+
+    private void configurePreferences() {
+        Utility utility = new Utility();
+
+        // Configure alarm for taking in consideration the first launch
+        if (utility.retrieveToggleFromPrefs(this)) {
+            configureAlarm();
+        }
     }
 
     // Handle click on menus

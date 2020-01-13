@@ -20,7 +20,7 @@ public class UtilityUnitTests {
 
     @Test
     public void should_distanceBetweenUserAndRestaurant_computedCorrectly() {
-        // Coords of a restaurant in Brest
+        // Coords of a restaurant
         double targetLat = 48.443126;
         double targetLng = -4.413226;
         // Coords few meters aways from the above restaurant

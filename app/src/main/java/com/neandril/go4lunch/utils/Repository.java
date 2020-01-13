@@ -30,10 +30,9 @@ public class Repository {
         return repository;
     }
 
-    private Repository(GoogleApiInterface apiInterface) {
+    public Repository(GoogleApiInterface apiInterface) {
         googleApiInterface = apiInterface;
     }
-
 
     // ***************************
     // REQUESTS
@@ -104,19 +103,6 @@ public class Repository {
             public void onResponse(@NonNull Call<PredictionsModel> call, @NonNull Response<PredictionsModel> response) {
                 if (response.isSuccessful()) {
                     PredictionsModel body = response.body();
-                    List<Prediction> predictions = Objects.requireNonNull(body).getPredictions();
-
-                    for (Prediction prediction : predictions) {
-                        getRestaurant(prediction.getPlaceId(), new RestaurantDetailsCallback() {
-                            @Override
-                            public void onSuccess(Detail detail) {
-                                Log.d("getPrediction", "onSuccess: " + detail.getResult().getName());
-                            }
-
-                            @Override
-                            public void onError() { }
-                        });
-                    }
                     callback.onSuccess(body);
 
                 } else {
