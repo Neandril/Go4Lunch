@@ -1,4 +1,4 @@
-package com.neandril.go4lunch.controllers.activities;
+package com.neandril.go4lunch.view.activities;
 
 import android.app.AlertDialog;
 import android.content.Intent;
@@ -32,16 +32,16 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.neandril.go4lunch.BuildConfig;
 import com.neandril.go4lunch.R;
-import com.neandril.go4lunch.controllers.base.BaseActivity;
-import com.neandril.go4lunch.controllers.fragments.ListViewFragment;
-import com.neandril.go4lunch.controllers.fragments.MapViewFragment;
-import com.neandril.go4lunch.controllers.fragments.WorkmatesFragment;
-import com.neandril.go4lunch.models.PredictionsViewModel;
+import com.neandril.go4lunch.view.base.BaseActivity;
+import com.neandril.go4lunch.view.fragments.ListViewFragment;
+import com.neandril.go4lunch.view.fragments.MapViewFragment;
+import com.neandril.go4lunch.view.fragments.WorkmatesFragment;
+import com.neandril.go4lunch.viewmodels.PredictionsViewModel;
 import com.neandril.go4lunch.models.RestaurantAutocompleteModel;
 import com.neandril.go4lunch.models.User;
 import com.neandril.go4lunch.models.places.PlacesDetail;
 import com.neandril.go4lunch.utils.Singleton;
-import com.neandril.go4lunch.utils.UserHelper;
+import com.neandril.go4lunch.models.UserHelper;
 import com.neandril.go4lunch.utils.Utility;
 
 import java.util.Objects;

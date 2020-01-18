@@ -15,8 +15,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.neandril.go4lunch.R;
-import com.neandril.go4lunch.controllers.activities.MainActivity;
-import com.neandril.go4lunch.controllers.activities.RestaurantActivity;
+import com.neandril.go4lunch.models.UserHelper;
+import com.neandril.go4lunch.view.activities.MainActivity;
+import com.neandril.go4lunch.view.activities.RestaurantActivity;
 import com.neandril.go4lunch.models.User;
 
 import java.util.ArrayList;

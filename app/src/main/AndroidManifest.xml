@@ -22,7 +22,7 @@
             android:value="AIzaSyBkjaxczMoqyJzCQnRRIJgeJoubLGdSEK0"/>
 
         <activity
-            android:name=".controllers.activities.LoginActivity"
+            android:name=".view.activities.LoginActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -32,23 +32,23 @@
         </activity>
 
         <activity
-            android:name=".controllers.activities.MainActivity"
+            android:name=".view.activities.MainActivity"
             android:screenOrientation="portrait"
             android:label="@string/title_main"/>
         <activity
-            android:name=".controllers.activities.YourLunchActivity"
+            android:name=".view.activities.YourLunchActivity"
             android:screenOrientation="portrait"
             android:label="@string/title_activity_yourlunch"
-            android:parentActivityName=".controllers.activities.MainActivity" />
+            android:parentActivityName=".view.activities.MainActivity" />
         <activity
-            android:name=".controllers.activities.SettingsActivity"
+            android:name=".view.activities.SettingsActivity"
             android:screenOrientation="portrait"
             android:label="@string/title_activity_settings"
-            android:parentActivityName=".controllers.activities.MainActivity" />
+            android:parentActivityName=".view.activities.MainActivity" />
         <activity
-            android:name=".controllers.activities.RestaurantActivity"
+            android:name=".view.activities.RestaurantActivity"
             android:screenOrientation="portrait"
-            android:parentActivityName=".controllers.activities.MainActivity" />
+            android:parentActivityName=".view.activities.MainActivity" />
 
         <receiver
             android:name=".utils.NotificationReceiver"

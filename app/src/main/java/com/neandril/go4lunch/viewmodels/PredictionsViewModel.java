@@ -1,4 +1,4 @@
-package com.neandril.go4lunch.models;
+package com.neandril.go4lunch.viewmodels;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -12,7 +12,7 @@ import com.neandril.go4lunch.models.details.Detail;
 import com.neandril.go4lunch.models.details.PhotoDetails;
 import com.neandril.go4lunch.models.places.PhotoPlaces;
 import com.neandril.go4lunch.models.places.PlacesResult;
-import com.neandril.go4lunch.utils.Repository;
+import com.neandril.go4lunch.models.Repository;
 
 import java.util.ArrayList;
 import java.util.List;

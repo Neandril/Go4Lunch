@@ -1,4 +1,4 @@
-package com.neandril.go4lunch.controllers.fragments;
+package com.neandril.go4lunch.view.fragments;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -35,12 +35,12 @@ import com.karumi.dexter.listener.PermissionGrantedResponse;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.single.PermissionListener;
 import com.neandril.go4lunch.R;
-import com.neandril.go4lunch.controllers.activities.RestaurantActivity;
-import com.neandril.go4lunch.controllers.base.BaseFragment;
-import com.neandril.go4lunch.models.PlacesViewModel;
+import com.neandril.go4lunch.view.activities.RestaurantActivity;
+import com.neandril.go4lunch.view.base.BaseFragment;
+import com.neandril.go4lunch.viewmodels.PlacesViewModel;
 import com.neandril.go4lunch.models.places.PlacesDetail;
 import com.neandril.go4lunch.utils.Singleton;
-import com.neandril.go4lunch.utils.UserHelper;
+import com.neandril.go4lunch.models.UserHelper;
 
 import java.util.Objects;
 

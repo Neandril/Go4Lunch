@@ -1,4 +1,4 @@
-package com.neandril.go4lunch.controllers.base;
+package com.neandril.go4lunch.view.base;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;

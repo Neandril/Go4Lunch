@@ -1,4 +1,4 @@
-package com.neandril.go4lunch.controllers.fragments;
+package com.neandril.go4lunch.view.fragments;
 
 import android.util.Log;
 
@@ -8,10 +8,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.firebase.firestore.Query;
 import com.neandril.go4lunch.R;
-import com.neandril.go4lunch.controllers.base.BaseFragment;
+import com.neandril.go4lunch.view.base.BaseFragment;
 import com.neandril.go4lunch.models.User;
-import com.neandril.go4lunch.utils.UserHelper;
-import com.neandril.go4lunch.view.WorkmateAdapter;
+import com.neandril.go4lunch.models.UserHelper;
+import com.neandril.go4lunch.view.adapters.WorkmateAdapter;
 
 import butterknife.BindView;
 

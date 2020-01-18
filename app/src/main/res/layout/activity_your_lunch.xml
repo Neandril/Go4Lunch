@@ -6,7 +6,7 @@
     android:id="@+id/your_lunch_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".controllers.activities.YourLunchActivity">
+    tools:context=".view.activities.YourLunchActivity">
 
     <!-- Include the toolbar -->
     <include layout="@layout/toolbar"

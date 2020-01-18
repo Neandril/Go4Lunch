@@ -1,18 +1,13 @@
-package com.neandril.go4lunch.utils;
-
-import android.util.Log;
+package com.neandril.go4lunch.models;
 
 import androidx.annotation.NonNull;
 
 import com.neandril.go4lunch.api.GoogleApiInterface;
-import com.neandril.go4lunch.models.Predictions.Prediction;
 import com.neandril.go4lunch.models.Predictions.PredictionsModel;
 import com.neandril.go4lunch.models.details.Detail;
 import com.neandril.go4lunch.models.places.PlacesDetail;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;

@@ -1,4 +1,4 @@
-package com.neandril.go4lunch.controllers.base;
+package com.neandril.go4lunch.view.base;
 
 import android.os.Bundle;
 import android.util.Log;

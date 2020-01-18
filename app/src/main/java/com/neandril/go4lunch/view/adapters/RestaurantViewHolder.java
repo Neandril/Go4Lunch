@@ -1,4 +1,4 @@
-package com.neandril.go4lunch.view;
+package com.neandril.go4lunch.view.adapters;
 
 import android.graphics.Color;
 import android.util.Log;
@@ -15,7 +15,7 @@ import com.neandril.go4lunch.BuildConfig;
 import com.neandril.go4lunch.R;
 import com.neandril.go4lunch.models.places.PlacesResult;
 import com.neandril.go4lunch.utils.Singleton;
-import com.neandril.go4lunch.utils.UserHelper;
+import com.neandril.go4lunch.models.UserHelper;
 import com.neandril.go4lunch.utils.Utility;
 
 import java.util.Objects;

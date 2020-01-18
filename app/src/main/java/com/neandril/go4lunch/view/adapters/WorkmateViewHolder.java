@@ -1,4 +1,4 @@
-package com.neandril.go4lunch.view;
+package com.neandril.go4lunch.view.adapters;
 
 import android.view.View;
 import android.widget.ImageView;

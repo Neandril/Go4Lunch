@@ -1,4 +1,4 @@
-package com.neandril.go4lunch.controllers.activities;
+package com.neandril.go4lunch.view.activities;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -22,14 +22,14 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.Query;
 import com.neandril.go4lunch.BuildConfig;
 import com.neandril.go4lunch.R;
-import com.neandril.go4lunch.controllers.base.BaseActivity;
-import com.neandril.go4lunch.controllers.fragments.MapViewFragment;
-import com.neandril.go4lunch.models.DetailViewModel;
+import com.neandril.go4lunch.view.base.BaseActivity;
+import com.neandril.go4lunch.view.fragments.MapViewFragment;
+import com.neandril.go4lunch.viewmodels.DetailViewModel;
 import com.neandril.go4lunch.models.User;
 import com.neandril.go4lunch.models.details.Detail;
-import com.neandril.go4lunch.utils.UserHelper;
+import com.neandril.go4lunch.models.UserHelper;
 import com.neandril.go4lunch.utils.Utility;
-import com.neandril.go4lunch.view.WorkmateCheckedInAdapter;
+import com.neandril.go4lunch.view.adapters.WorkmateCheckedInAdapter;
 
 import java.util.List;
 import java.util.Objects;

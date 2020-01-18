@@ -1,4 +1,4 @@
-package com.neandril.go4lunch.utils;
+package com.neandril.go4lunch.models;
 
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
@@ -6,7 +6,6 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.neandril.go4lunch.models.User;
 
 import java.util.ArrayList;
 import java.util.List;

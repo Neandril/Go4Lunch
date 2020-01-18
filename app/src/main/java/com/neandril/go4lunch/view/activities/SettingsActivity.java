@@ -1,11 +1,8 @@
-package com.neandril.go4lunch.controllers.activities;
+package com.neandril.go4lunch.view.activities;
 
 import android.Manifest;
 import android.app.Activity;
-import android.app.AlarmManager;
 import android.app.AlertDialog;
-import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
@@ -40,13 +37,11 @@ import com.karumi.dexter.listener.PermissionGrantedResponse;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.single.PermissionListener;
 import com.neandril.go4lunch.R;
-import com.neandril.go4lunch.controllers.base.BaseActivity;
+import com.neandril.go4lunch.view.base.BaseActivity;
 import com.neandril.go4lunch.models.User;
-import com.neandril.go4lunch.utils.NotificationReceiver;
-import com.neandril.go4lunch.utils.UserHelper;
+import com.neandril.go4lunch.models.UserHelper;
 import com.neandril.go4lunch.utils.Utility;
 
-import java.util.Calendar;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.UUID;

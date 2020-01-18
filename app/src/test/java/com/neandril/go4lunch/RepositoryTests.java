@@ -4,7 +4,7 @@ import com.neandril.go4lunch.api.GoogleApiInterface;
 import com.neandril.go4lunch.models.Predictions.PredictionsModel;
 import com.neandril.go4lunch.models.details.Detail;
 import com.neandril.go4lunch.models.places.PlacesDetail;
-import com.neandril.go4lunch.utils.Repository;
+import com.neandril.go4lunch.models.Repository;
 
 import org.junit.After;
 import org.junit.Before;

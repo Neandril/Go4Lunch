@@ -1,4 +1,4 @@
-package com.neandril.go4lunch.controllers.activities;
+package com.neandril.go4lunch.view.activities;
 
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -16,8 +16,8 @@ import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.IdpResponse;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.neandril.go4lunch.R;
-import com.neandril.go4lunch.controllers.base.BaseActivity;
-import com.neandril.go4lunch.utils.UserHelper;
+import com.neandril.go4lunch.view.base.BaseActivity;
+import com.neandril.go4lunch.models.UserHelper;
 import com.neandril.go4lunch.utils.Utility;
 
 import java.util.ArrayList;

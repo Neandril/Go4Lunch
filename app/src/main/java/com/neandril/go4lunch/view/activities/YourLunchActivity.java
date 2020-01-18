@@ -1,4 +1,4 @@
-package com.neandril.go4lunch.controllers.activities;
+package com.neandril.go4lunch.view.activities;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -8,7 +8,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.neandril.go4lunch.R;
-import com.neandril.go4lunch.controllers.base.BaseActivity;
+import com.neandril.go4lunch.view.base.BaseActivity;
 
 import butterknife.BindView;
 

@@ -1,4 +1,4 @@
-package com.neandril.go4lunch.models;
+package com.neandril.go4lunch.viewmodels;
 
 import android.util.Log;
 
@@ -9,7 +9,7 @@ import androidx.lifecycle.ViewModel;
 import com.neandril.go4lunch.api.GoogleApiCall;
 import com.neandril.go4lunch.api.GoogleApiInterface;
 import com.neandril.go4lunch.models.details.Detail;
-import com.neandril.go4lunch.utils.Repository;
+import com.neandril.go4lunch.models.Repository;
 
 public class DetailViewModel extends ViewModel {
 
