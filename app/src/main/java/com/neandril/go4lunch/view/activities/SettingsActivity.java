@@ -281,7 +281,7 @@ public class SettingsActivity extends BaseActivity {
     // PREFERENCES
     // ***************************
 
-    private void setLocale(String lang) {
+    public void setLocale(String lang) {
         Log.d(TAG, "setLocale: Lang: " + lang);
         Locale locale = new Locale(lang);
         Resources res = getResources();

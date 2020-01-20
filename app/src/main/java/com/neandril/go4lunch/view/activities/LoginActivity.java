@@ -43,7 +43,6 @@ public class LoginActivity extends BaseActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, "onCreate: onCreate");
-        super.onCreate(savedInstanceState);
 
         // Update language
         String language = Locale.getDefault().getLanguage();
@@ -58,6 +57,8 @@ public class LoginActivity extends BaseActivity {
             conf.setLocale(new Locale(storedLocale.toLowerCase()));
             res.updateConfiguration(conf, metrics);
         }
+
+        super.onCreate(savedInstanceState);
 
         if (this.isCurrentUsedLogged()) {
             this.enterInTheApp();
