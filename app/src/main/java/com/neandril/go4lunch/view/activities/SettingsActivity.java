@@ -158,14 +158,14 @@ public class SettingsActivity extends BaseActivity {
 
     private void signOutAndDeleteUserFromFirebase() {
         Log.d(TAG, "signOutUserFromFirebase: Log out user from Firebase");
-        // Singing out
-        AuthUI.getInstance()
-                .signOut(this)
-                .addOnSuccessListener(this, this.updateUIAfterRESTRequestsCompleted());
         // Delete account
         UserHelper.deleteUser(this.getCurrentUser().getUid());
         AuthUI.getInstance()
                 .delete(this)
+                .addOnSuccessListener(this, this.updateUIAfterRESTRequestsCompleted());
+        // Singing out
+        AuthUI.getInstance()
+                .signOut(this)
                 .addOnSuccessListener(this, this.updateUIAfterRESTRequestsCompleted());
         finish();
     }
