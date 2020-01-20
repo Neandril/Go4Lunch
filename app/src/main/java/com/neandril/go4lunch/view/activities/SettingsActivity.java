@@ -242,11 +242,9 @@ public class SettingsActivity extends BaseActivity {
         if (isChecked) {
             Log.d(TAG, "switchOnCheckedChanged: checked");
             configureAlarm();
-            showSnackBar(getResources().getString(R.string.notifs_enabled));
         } else {
             Log.d(TAG, "switchOnCheckedChanged: not checked");
             stopAlarm();
-            showSnackBar(getResources().getString(R.string.notifs_disabled));
         }
     }
 

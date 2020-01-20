@@ -37,21 +37,4 @@ jobs:
       - store_test_results:
           path: app/build/test-results
 
-      # Build APKs
-      - run:
-          name: Assemble APKs
-          #command: ./gradlew assembleAndroidTest assemble
-          command: ./gradlew assembleDebugAndroidTest assembleDebug
-
-      # Configure Google gcloud SDK
-      - run:
-          name: Dump Google Cloud Credentials to file
-          command: echo ${GOOGLE_AUTH} > ${HOME}/gcp-key.json
-      - run: gcloud auth activate-service-account --key-file ${HOME}/gcp-key.json
-      - run: gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
-      - run:
-          name: Configure environment
-          command: |
-            echo 'export APK_PATH=`find . -path "*.apk" ! -path "*unaligned.apk" ! -path "*Test*.apk" -print -quit`' >> $BASH_ENV
-            echo 'export TEST_APK_PATH=`find "." "-path" "*Test*.apk" -print -quit`' >> $BASH_ENV
 # More infos : https://www.brightec.co.uk/ideas/firebase-test-lab-circleci
